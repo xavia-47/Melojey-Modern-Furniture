@@ -1,0 +1,1187 @@
+/* ═══════════════════════════════════════════
+       TOKENS — edit brand colors here
+    ═══════════════════════════════════════════ */
+    :root {
+      /* Eagle Gold Palette — precisely color-picked and texture-sampled from the eagle in logo.png */
+      --gold:                #C89850;   /* Dominant metallic gold from eagle body and wings */
+      --gold-lt:             #E5BE7E;   /* Champagne gold highlight from illuminated feather edges */
+      --gold-dk:             #966A37;   /* Deep burnished bronze shadow tone from eagle */
+      --gold-deep:           #583818;   /* Shadow contour tone */
+      --gold-gradient:       linear-gradient(135deg, #E5BE7E 0%, #C89850 45%, #B38035 80%, #966A37 100%);
+      --gold-gradient-hover: linear-gradient(135deg, #F0CF96 0%, #D8A95E 45%, #C28E40 80%, #A5742C 100%);
+      --gold-glow:           none;
+
+      /* Compatibility aliases */
+      --orange:              var(--gold);
+      --orange-dk:           var(--gold-dk);
+      --brand-brown:         #966A37;
+
+      --black:               #090E0F;   /* Exact matte charcoal/black color-picked from logo background */
+      --dark-texture:        #090E0F url('../images/dark-texture.png') repeat; /* Exact texture and color from logo */
+      --bg:                  #FAFAF8;   /* off-white page background */
+      --surface:             #FFFFFF;
+      --border:              #E8E4DC;
+      --muted:               #6B6560;
+      --radius:              6px;
+      --gap:                 1.5rem;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ═══════════════════════════════════════════
+       CUSTOM LUXURY SCROLLBARS
+       Harmonized with Eagle Gold & Matte Charcoal
+    ═══════════════════════════════════════════ */
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold) #070A0B;
+    }
+
+    /* WebKit & Chromium (Chrome, Edge, Safari, Opera, Brave) */
+    ::-webkit-scrollbar {
+      width: 9px;
+      height: 9px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #070A0B;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #E5BE7E 0%, #C89850 48%, #966A37 100%);
+      border-radius: 999px;
+      border: 2px solid #070A0B; /* Inset gap effect for sleek floating appearance */
+      min-height: 40px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #F0CF96 0%, #D8A95E 48%, #B38035 100%);
+      border-color: #070A0B;
+      box-shadow: 0 0 10px rgba(200, 152, 80, 0.45);
+    }
+
+    ::-webkit-scrollbar-thumb:active {
+      background: linear-gradient(180deg, #D8A95E 0%, #B38035 48%, #7D5224 100%);
+    }
+
+    ::-webkit-scrollbar-corner {
+      background: #070A0B;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--black);
+      font-size: 15px;
+      line-height: 1.65;
+      letter-spacing: -0.005em;
+    }
+
+    /* ═══════════════════════════════════════════
+       NAV
+    ═══════════════════════════════════════════ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--dark-texture);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      height: 64px;
+      gap: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    /* ═════════════════════════════════════════════════════════════════════════════════
+       MELOJEY CIRCULAR LOGO
+       ─────────────────────────────────────────────────────────────────────────────
+       - Gold circle outline removed: logo.jpg fills the entire circle (100%).
+       - Overall logo and circle are the exact same size.
+       - Matches the site's dark color (#090E0F) and texture from logo.jpg.
+
+       HOW TO EDIT LATER:
+       • To change overall logo size: Modify 'width' and 'height' in .logo-badge (default: 46px).
+       • The image (.logo-badge img) is set to 100% width and 100% height to match the circle.
+       ═════════════════════════════════════════════════════════════════════════════════ */
+
+    /* 1. Logo Container
+       - Set to transparent so your transparent logo.png floats cleanly on the navbar without any circle behind it.
+       - If you ever want a background circle again, add 'border-radius: 50%' and 'background: var(--black)'. */
+    .logo-badge {
+      width: 48px;                  /* Overall logo badge width */
+      height: 48px;                 /* Overall logo badge height */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: transparent;      /* Transparent: removes the black circle behind the eagle */
+    }
+
+    /* 2. Logo Image (transparent logo.png) */
+    .logo-badge img {
+      width: 100%;                  /* Fills badge dimensions */
+      height: 100%;
+      object-fit: contain;          /* Preserves full eagle & globe artwork without stretching */
+      display: block;
+    }
+
+    /* 3. Footer Logo Badge Size */
+    .footer-brand .logo-badge {
+      width: 38px;
+      height: 38px;
+    }
+
+    .nav-brand-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 44px;
+      padding: 1px 0 0 0;
+    }
+
+    .nav-brand {
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #FFF1D6 0%, #E8C382 35%, #C89850 70%, #A87834 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+    }
+
+    .nav-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.54rem;
+      color: #C89850;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      line-height: 1;
+      opacity: 0.9;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Montserrat', sans-serif;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.18s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ═══════════════════════════════════════════
+       HERO FULLSCREEN LANDING FOLD
+       Ensures Navbar (64px) + Hero + Category Bar = exactly 100vh on load
+    ═══════════════════════════════════════════ */
+    .hero-fullscreen-wrap {
+      min-height: calc(100vh - 64px);
+      min-height: calc(100dvh - 64px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--dark-texture);
+    }
+
+    .hero {
+      background: transparent;
+      color: #fff;
+      padding: 24px 5% 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-bottom: 1rem;
+    }
+
+    /* .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--gold);
+    } */
+
+    .hero-text h1 {
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      font-size: clamp(2.2rem, 4.3vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: 0.03em;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-text h1 .orange {
+      background: linear-gradient(135deg, #FFF1D6 0%, #E8C382 35%, #C89850 70%, #A87834 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+    }
+
+    .hero-text p {
+      font-family: 'Montserrat', sans-serif;
+      color: rgba(255,255,255,0.72);
+      font-size: 0.92rem;
+      font-weight: 400;
+      max-width: 420px;
+      line-height: 1.8;
+      letter-spacing: 0.01em;
+      margin-bottom: 2rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Montserrat', sans-serif;
+      background: var(--gold-gradient);
+      color: #0E0903;
+      padding: 0.82rem 2.1rem;
+      border-radius: var(--radius);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      box-shadow: none;
+      border: none;
+      outline: none;
+      transition: transform 0.18s, background 0.18s;
+    }
+
+    .hero-cta:hover {
+      background: var(--gold-gradient-hover);
+      color: #0E0903;
+      transform: translateY(-2px);
+      box-shadow: none;
+    }
+
+    /* ═══════════════════════════════════════════
+       HERO VISUAL: 3-Circle Cluster (Trinity / Trefoil arrangement)
+       Inspired by interlocking rings motif with eagle gold metallic borders
+    ═══════════════════════════════════════════ */
+    .hero-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .hero-circle-cluster {
+      position: relative;
+      width: 410px;
+      height: 370px;
+      max-width: 100%;
+    }
+
+    /* Common circular photo container */
+    .hero-circle {
+      position: absolute;
+      width: 215px;
+      height: 215px;
+      border-radius: 50%;
+      border: 4px solid var(--gold);
+      box-shadow: 
+        0 0 0 1.5px rgba(229, 190, 126, 0.5),
+        0 14px 34px rgba(0, 0, 0, 0.75),
+        0 0 22px rgba(200, 152, 80, 0.25);
+      overflow: hidden;
+      background: var(--black);
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, z-index 0.35s ease;
+      cursor: pointer;
+    }
+
+    .hero-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    /* 1. Circle Top (centered above) */
+    .hero-circle.circle-top {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+
+    /* 2. Circle Bottom Left */
+    .hero-circle.circle-bottom-left {
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    /* 3. Circle Bottom Right */
+    .hero-circle.circle-bottom-right {
+      bottom: 0;
+      right: 0;
+      z-index: 3;
+    }
+
+    /* Interactive hover elevation */
+    .hero-circle:hover {
+      z-index: 10 !important;
+      box-shadow: 
+        0 0 0 2px rgba(229, 190, 126, 0.85),
+        0 18px 42px rgba(0, 0, 0, 0.9),
+        0 0 32px rgba(200, 152, 80, 0.45);
+    }
+
+    .hero-circle.circle-top:hover {
+      transform: translateX(-50%) scale(1.05);
+    }
+
+    .hero-circle.circle-bottom-left:hover {
+      transform: scale(1.05);
+    }
+
+    .hero-circle.circle-bottom-right:hover {
+      transform: scale(1.05);
+    }
+
+    .hero-circle:hover img {
+      transform: scale(1.08);
+    }
+
+    /* ═══════════════════════════════════════════
+       NOTE: The previous hero value cards have been replaced by the
+       Categories Navigation Bar and 8 Showcase Cards.
+       See showcase.css for the new layout styles!
+    ═══════════════════════════════════════════ */
+
+    /* ═══════════════════════════════════════════
+       CATALOGUE SECTION
+    ═══════════════════════════════════════════ */
+    .section { padding: 40px 5% 56px; }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 1.6rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .section-header h2 {
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .section-header small {
+      font-family: 'Montserrat', sans-serif;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── CATEGORY CHIPS ── */
+    .chips-wrap {
+      display: flex;
+      gap: 0.55rem;
+      overflow-x: auto;
+      padding-bottom: 0.4rem;
+      margin-bottom: 2rem;
+      scrollbar-width: none;
+    }
+
+    .chips-wrap::-webkit-scrollbar { display: none; }
+
+    /* Search bar styles have moved to showcase.css for the navbar search bar */
+
+    .chip {
+      flex-shrink: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      color: var(--black);
+      padding: 0.44rem 1.15rem;
+      border-radius: 100px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .chip:hover { border-color: var(--gold); color: var(--gold-dk); }
+    .chip.active {
+      background: var(--gold-gradient);
+      border: 1.5px solid transparent;
+      color: #0E0903;
+      font-weight: 700;
+      box-shadow: none;
+    }
+
+    /* ── PRODUCT GRID ── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: var(--gap);
+    }
+
+    .product-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .card-img-wrap {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: var(--border);
+    }
+
+    .card-img-wrap .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .product-card:hover .card-img {
+      transform: scale(1.06);
+    }
+
+    .card-discount-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--gold-gradient);
+      color: #090E0F;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .card-body { padding: 0.95rem 1.05rem 1.1rem; }
+
+    .card-cat {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--gold-dk);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 0.35rem;
+    }
+
+    .card-name {
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.35rem;
+    }
+
+    .card-desc {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .card-price-group {
+      display: flex;
+      align-items: baseline;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+
+    .card-price {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      color: var(--black);
+    }
+
+    .card-price-original {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: line-through;
+      opacity: 0.75;
+    }
+
+    .btn-order {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: 'Montserrat', sans-serif;
+      background: var(--gold-gradient);
+      color: #0E0903;
+      border: none;
+      outline: none;
+      padding: 0.46rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: none;
+      transition: transform 0.15s, background 0.15s;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .btn-order:hover {
+      background: var(--gold-gradient-hover);
+      color: #0E0903;
+      transform: translateY(-1px);
+      box-shadow: none;
+    }
+
+    /* ── STATES ── */
+    .state-box {
+      grid-column: 1 / -1;
+      padding: 4rem 2rem;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .state-box .icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
+    .state-box p { font-size: 0.88rem; }
+
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--orange);
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+      margin: 0 auto 0.75rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ═══════════════════════════════════════════
+       ABOUT STRIP
+    ═══════════════════════════════════════════ */
+    .about-strip {
+      background: var(--dark-texture);
+      color: #fff;
+      padding: 56px 5%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+
+    .about-strip h2 {
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      font-size: 2.1rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      line-height: 1.25;
+      letter-spacing: 0.03em;
+    }
+
+    .about-strip h2 .orange {
+      background: linear-gradient(135deg, #FFF1D6 0%, #E8C382 35%, #C89850 70%, #A87834 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .about-strip p {
+      font-family: 'Montserrat', sans-serif;
+      color: rgba(255,255,255,0.72);
+      font-size: 0.88rem;
+      font-weight: 400;
+      line-height: 1.85;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .stat { border-left: 3px solid var(--gold); padding-left: 1rem; }
+
+    .stat-num {
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-top: 0.35rem;
+    }
+
+    /* ═══════════════════════════════════════════
+       FLOATING WHATSAPP WIDGET & SHOWROOM CHOOSER
+    ═══════════════════════════════════════════ */
+    .wa-float-wrapper {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 200;
+    }
+
+    .wa-float {
+      background: #090E10;
+      border: 1.5px solid rgba(200, 152, 80, 0.75);
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      outline: none;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65), 0 0 22px rgba(200, 152, 80, 0.3);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .wa-float:hover {
+      border-color: #F2D18B;
+      transform: scale(1.08) translateY(-3px);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.75), 0 0 30px rgba(200, 152, 80, 0.5);
+    }
+
+    .wa-float svg {
+      width: 34px;
+      height: 34px;
+      display: block;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+    }
+
+    .wa-float-menu {
+      position: absolute;
+      bottom: 72px;
+      right: 0;
+      width: 300px;
+      max-width: 90vw;
+      background: var(--dark-texture);
+      border: 1px solid rgba(200, 152, 80, 0.4);
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .wa-float-menu.open {
+      display: flex;
+      animation: waPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes waPopIn {
+      from { opacity: 0; transform: translateY(8px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .wa-float-menu-header {
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .wa-float-menu-title {
+      display: block;
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      color: #FFF1D6;
+      text-transform: uppercase;
+    }
+
+    .wa-float-menu-sub {
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.66rem;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .wa-float-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.65rem 0.8rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.16s, transform 0.16s;
+    }
+
+    .wa-float-menu-item:hover {
+      background: rgba(200, 152, 80, 0.18);
+      transform: translateX(2px);
+    }
+
+    .wa-menu-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(200, 152, 80, 0.12);
+      border: 1px solid rgba(200, 152, 80, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.16s, border-color 0.16s;
+    }
+
+    .wa-float-menu-item:hover .wa-menu-icon {
+      background: rgba(200, 152, 80, 0.25);
+      border-color: rgba(200, 152, 80, 0.65);
+    }
+
+    .wa-menu-icon svg {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+
+    .wa-menu-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wa-menu-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #FFF;
+      letter-spacing: 0.04em;
+    }
+
+    .wa-menu-desc {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.66rem;
+      color: rgba(255, 255, 255, 0.55);
+      margin-top: 1px;
+    }
+
+    /* ═══════════════════════════════════════════
+       MODAL & SHOWROOM ORDER LINES
+    ═══════════════════════════════════════════ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 10px;
+      max-width: 480px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold) #F4F1EA;
+    }
+
+    .modal::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .modal::-webkit-scrollbar-track {
+      background: #F4F1EA;
+      border-radius: 0 10px 10px 0;
+    }
+
+    .modal::-webkit-scrollbar-thumb {
+      background: var(--gold-gradient);
+      border-radius: 999px;
+      border: 1px solid #F4F1EA;
+    }
+
+    .modal::-webkit-scrollbar-thumb:hover {
+      background: var(--gold-gradient-hover);
+    }
+
+    .modal-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-radius: 10px 10px 0 0;
+      display: block;
+      background: var(--border);
+    }
+
+    .modal-body { padding: 1.4rem 1.5rem 1.6rem; }
+
+    .modal-cat {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--gold-dk);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 0.35rem;
+    }
+
+    .modal-name {
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.4rem;
+      line-height: 1.25;
+    }
+
+    .modal-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.65rem;
+      margin-bottom: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    .modal-price {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      color: var(--black);
+    }
+
+    .modal-price-original {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: line-through;
+      opacity: 0.75;
+    }
+
+    .modal-discount-tag {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: #9A6B24;
+      background: rgba(200, 152, 80, 0.15);
+      border: 1px solid rgba(200, 152, 80, 0.4);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .modal-desc {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.86rem;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 1.3rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .modal-order-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .modal-order-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .btn-order-line {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      text-decoration: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      transition: transform 0.16s, background 0.16s;
+    }
+
+    .btn-order-line:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-order-line-1 {
+      background: var(--gold-gradient);
+      color: #0E0903;
+    }
+
+    .btn-order-line-1:hover {
+      background: var(--gold-gradient-hover);
+    }
+
+    .btn-order-line-2 {
+      background: #181E20;
+      color: #FFF1D6;
+    }
+
+    .btn-order-line-2:hover {
+      background: #242D30;
+      color: #FFF;
+    }
+
+    .btn-order-text {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .btn-order-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 1.25;
+    }
+
+    .btn-order-subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      opacity: 0.75;
+      letter-spacing: 0.04em;
+      margin-top: 1px;
+    }
+
+    .btn-close {
+      width: 100%;
+      font-family: 'Montserrat', sans-serif;
+      background: none;
+      border: 1.5px solid var(--border);
+      color: var(--muted);
+      padding: 0.65rem;
+      border-radius: var(--radius);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .btn-close:hover { border-color: var(--black); color: var(--black); }
+
+    /* ═══════════════════════════════════════════
+       FOOTER — kept deliberately small: one brand row,
+       one compact contact line, one thin copyright line
+    ═══════════════════════════════════════════ */
+    footer {
+      background: var(--dark-texture);
+      color: rgba(255,255,255,0.5);
+      padding: 28px 5% 20px;
+      font-size: 0.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .footer-brand-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 35px;
+      padding: 1px 0 0 0;
+    }
+
+    .footer-brand-name {
+      font-family: 'Cinzel', 'Times New Roman', serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #FFF1D6 0%, #E8C382 35%, #C89850 70%, #A87834 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+    }
+
+    .footer-brand-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.5rem;
+      color: #C89850;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      line-height: 1;
+      opacity: 0.9;
+    }
+
+    .footer-contact {
+      display: flex;
+      gap: 1.4rem;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+    }
+
+    .footer-contact a {
+      font-family: 'Montserrat', sans-serif;
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      transition: color 0.15s;
+    }
+
+    .footer-contact a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      font-family: 'Montserrat', sans-serif;
+      margin-top: 1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.72rem;
+      letter-spacing: 0.03em;
+      color: rgba(255,255,255,0.35);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      /* Hero wrap: release the fullscreen lock — size to content on mobile */
+      .hero-fullscreen-wrap { min-height: unset; height: auto; }
+      /* Hero: single column, no enforced min-height, comfortable padding */
+      .hero { grid-template-columns: 1fr; min-height: auto; padding: 2rem 5% 2.5rem; }
+      .hero-visual { display: none !important; }
+      .about-strip { grid-template-columns: 1fr; gap: 2rem; }
+      .nav-links { display: none; }
+      .product-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+      .footer-row { flex-direction: column; align-items: flex-start; }
+      .footer-bottom { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }

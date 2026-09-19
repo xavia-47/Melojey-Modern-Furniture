@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coffee &amp; Accent Tables — Melojey Modern Furniture</title>
+  <link rel="shortcut icon" type="image/png" href="../assets/images/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/showcase.css" />
+</head>
+<body data-page-category="TABLES">
+
+<!-- ═══ TOP NAVBAR ════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="../index.html">
+    <div class="logo-badge">
+      <img src="../assets/images/logo.png" alt="Melojey Modern Furniture">
+    </div>
+    <div class="nav-brand-group">
+      <div class="nav-brand">MELOJEY</div>
+      <div class="nav-sub">Modern Furniture</div>
+    </div>
+  </a>
+
+  <!-- NAVBAR SEARCH BAR with Mobile Expandable Icon & Live Suggestions -->
+  <div class="nav-search-container" id="nav-search-container">
+    <button class="nav-search-toggle-btn" id="nav-search-toggle" aria-label="Open Search" type="button">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+      </svg>
+    </button>
+
+    <div class="nav-search-wrap" id="nav-search-wrap">
+      <div class="nav-search-input-box">
+        <svg class="nav-search-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="text" id="search-input" placeholder="Search sofas, beds, dining, rugs…" autocomplete="off" />
+        <button class="nav-search-clear" id="search-clear" aria-label="Clear search" type="button">✕</button>
+      </div>
+      <button class="nav-search-close-mobile" id="search-close-mobile" aria-label="Cancel search" type="button">Cancel</button>
+      <div class="nav-search-suggestions" id="nav-search-suggestions" aria-hidden="true"></div>
+    </div>
+    <div class="mobile-search-backdrop" id="mobile-search-backdrop" aria-hidden="true"></div>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="../index.html#catalogue">Catalogue</a></li>
+    <li><a href="../index.html#about">About Us</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ PINNED CATEGORIES NAVIGATION BAR (Sticky at top) ═════════════════ -->
+<nav class="category-nav-bar" id="category-nav-bar" aria-label="Product Categories">
+  <div class="category-nav-scroll" id="category-nav-scroll">
+    <a href="../index.html" class="cat-tab" data-category="HOME">HOME</a>
+    <a href="sofas.html" class="cat-tab" data-category="SOFAS">SOFAS</a>
+    <a href="beds.html" class="cat-tab" data-category="BEDS">BEDS</a>
+    <a href="dining.html" class="cat-tab" data-category="DINING">DINING</a>
+    <a href="office.html" class="cat-tab" data-category="OFFICE">OFFICE</a>
+    <a href="wardrobes.html" class="cat-tab" data-category="WARDROBES">WARDROBES</a>
+    <a href="bar.html" class="cat-tab" data-category="BAR">BAR</a>
+    <a href="tables.html" class="cat-tab active" data-category="TABLES">TABLES</a>
+    <a href="rugs.html" class="cat-tab" data-category="RUGS">RUGS</a>
+    <a href="decor.html" class="cat-tab" data-category="DECOR">DECOR</a>
+    <a href="others.html" class="cat-tab" data-category="OTHERS">OTHERS</a>
+  </div>
+</nav>
+
+<!-- ═══ CATEGORY HEADER BANNER ════════════════ -->
+<section class="category-header-banner">
+  <div class="cat-header-eyebrow">Melojey Modern Furniture • Showrooms</div>
+  <h1>Coffee &amp; <span class="gold-accent">Accent Tables</span></h1>
+  <p>Tempered glass coffee tables, dual Carrara marble nesting sets, and solid oak hallway consoles.</p>
+  <div class="cat-header-meta" id="category-product-count">Loading Collection…</div>
+</section>
+
+<!-- ═══ PRODUCTS GRID ═════════════════════════ -->
+<main class="category-page-container">
+  <div class="product-grid" id="category-product-grid"></div>
+</main>
+
+<!-- ═══ FLOATING WHATSAPP WIDGET ═══════════════ -->
+<div class="wa-float-wrapper">
+  <div class="wa-float-menu" id="wa-float-menu" aria-hidden="true">
+    <div class="wa-float-menu-header">
+      <span class="wa-float-menu-title">WhatsApp Orders &amp; Enquiries</span>
+      <span class="wa-float-menu-sub">Choose your showroom line:</span>
+    </div>
+    <a class="wa-float-menu-item" id="wa-float-line-1" target="_blank" rel="noopener">
+      <div class="wa-menu-icon">
+        <svg width="20" height="20" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="#C89850" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+          <path fill="#090E0F" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
+        </svg>
+      </div>
+      <div class="wa-menu-text">
+        <span class="wa-menu-name">Line 1: 0803 321 8845</span>
+        <span class="wa-menu-desc">+234 803 321 8845 • Factory Rd</span>
+      </div>
+    </a>
+    <a class="wa-float-menu-item" id="wa-float-line-2" target="_blank" rel="noopener">
+      <div class="wa-menu-icon">
+        <svg width="20" height="20" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="#C89850" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+          <path fill="#090E0F" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
+        </svg>
+      </div>
+      <div class="wa-menu-text">
+        <span class="wa-menu-name">Line 2: 0803 776 8889</span>
+        <span class="wa-menu-desc">+234 803 776 8889 • St Michael's</span>
+      </div>
+    </a>
+  </div>
+  <button class="wa-float" id="wa-float-btn" aria-label="Open WhatsApp Chat Options" type="button">
+    <svg width="34" height="34" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="waGoldGradBtn" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#F2D18B"/>
+          <stop offset="45%" stop-color="#C89850"/>
+          <stop offset="100%" stop-color="#9A6B24"/>
+        </linearGradient>
+      </defs>
+      <path fill="#070A0B" d="m12.966 161.238 10.439-38.114a73.42 73.42 0 0 1-9.821-36.772c.017-40.556 33.021-73.55 73.578-73.55 19.681.01 38.154 7.669 52.047 21.572s21.537 32.383 21.53 52.037c-.018 40.553-33.027 73.553-73.578 73.553h-.032c-12.313-.005-24.412-3.094-35.159-8.954z"/>
+      <path fill="url(#waGoldGradBtn)" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+      <path fill="#070A0B" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
+    </svg>
+  </button>
+</div>
+
+<!-- ═══ PRODUCT MODAL ════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal">
+    <img class="modal-img" id="modal-img" src="" alt="" width="480" height="270" />
+    <div class="modal-body">
+      <div class="modal-cat" id="modal-cat"></div>
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-price-row">
+        <span class="modal-price" id="modal-price"></span>
+        <span class="modal-price-original" id="modal-price-original"></span>
+        <span class="modal-discount-tag" id="modal-discount-tag"></span>
+      </div>
+      <div class="modal-desc" id="modal-desc"></div>
+
+      <div class="modal-actions">
+        <div class="modal-order-label">Select Showroom Line to Place Order:</div>
+        <div class="modal-order-options">
+          <a class="btn-order-line btn-order-line-1" id="wa-order-1" target="_blank" rel="noopener">
+            <svg width="22" height="22" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path fill="#C89850" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+              <path fill="#090E0F" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
+            </svg>
+            <div class="btn-order-text">
+              <span class="btn-order-title">Order via Line 1 (+234 803 321 8845)</span>
+              <span class="btn-order-subtitle">Factory Road Showroom</span>
+            </div>
+          </a>
+          <a class="btn-order-line btn-order-line-2" id="wa-order-2" target="_blank" rel="noopener">
+            <svg width="22" height="22" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path fill="#C89850" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+              <path fill="#090E0F" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
+            </svg>
+            <div class="btn-order-text">
+              <span class="btn-order-title">Order via Line 2 (+234 803 776 8889)</span>
+              <span class="btn-order-subtitle">St Michael's Road Showroom</span>
+            </div>
+          </a>
+        </div>
+        <button class="btn-close" id="modal-close" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══════════════════════════════ -->
+<footer id="contact">
+  <div class="footer-row">
+    <div class="footer-brand">
+      <div class="logo-badge">
+        <img src="../assets/images/logo.png" alt="Melojey Modern Furniture">
+      </div>
+      <div class="footer-brand-group">
+        <div class="footer-brand-name">MELOJEY</div>
+        <div class="footer-brand-sub">Modern Furniture</div>
+      </div>
+    </div>
+
+    <div class="footer-contact">
+      <a href="tel:+2348033218845">0803 321 8845</a>
+      <a href="tel:+2348037768889">0803 776 8889</a>
+      <a href="tel:+2348150622838">0815 062 2838</a>
+      <a href="mailto:melojey@yahoo.com">melojey@yahoo.com</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>Plot 1 Factory Road (beside UBA, near Railway Road) &amp; 48 St Michael's Road, Aba</span>
+    <span>© 2026 Melojey Modern Furniture</span>
+  </div>
+</footer>
+
+<script src="../data/products.js"></script>
+<script src="../assets/js/category.js"></script>
+</body>
+</html>

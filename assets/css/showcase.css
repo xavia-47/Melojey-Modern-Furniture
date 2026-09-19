@@ -1,0 +1,1057 @@
+/* ═════════════════════════════════════════════════════════════════════════════════
+   MELOJEY MODERN FURNITURE — SHOWCASE & NAVBAR CONTROLS (showcase.css)
+   ─────────────────────────────────────────────────────────────────────────────
+   This stylesheet handles:
+   1. NAVBAR SEARCH BAR (Desktop centered + Mobile Search Icon without background circle)
+   2. LIVE SEARCH SUGGESTIONS DROPDOWN (Thumbnails, categories, prices, matches)
+   3. CATEGORIES NAVIGATION BAR (Center-aligned from HOME to OTHERS)
+   4. 8 SHOWCASE CARDS & RECENTLY VIEWED (Styled in the Light Mode / Theme)
+
+   BEGINNER EDITING GUIDE:
+   - The light theme uses:
+     --bg: #FAFAF8 (clean off-white background)
+     --surface: #FFFFFF (crisp white card background)
+     --border: #E8E4DC (subtle luxury border)
+     --gold-dk: #966A37 (rich eagle-gold price & accent)
+═════════════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════
+   1. NAVBAR SEARCH CONTAINER
+   Desktop: Clean centered input between brand and nav links
+   Mobile: Pure search icon (no background circle) that expands on click
+═══════════════════════════════════════════ */
+.nav-search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  max-width: 460px;
+  min-width: 180px;
+  margin: 0 1.2rem;
+  position: relative;
+}
+
+/* Mobile Search Toggle Button (Pure Icon Only — No background circle) */
+.nav-search-toggle-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--gold);
+  cursor: pointer;
+  padding: 0.35rem;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  flex-shrink: 0;
+  outline: none;
+}
+
+.nav-search-toggle-btn:hover {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  transform: scale(1.12);
+  opacity: 0.95;
+}
+
+.nav-search-toggle-btn svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+/* Search Input Box Wrapper */
+.nav-search-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.nav-search-input-box {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.nav-search-icon {
+  position: absolute;
+  left: 0.95rem;
+  color: var(--gold);
+  opacity: 0.85;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 2;
+}
+
+#search-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 2.2rem 0 2.6rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(200, 152, 80, 0.32);
+  border-radius: 999px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  letter-spacing: 0.02em;
+  outline: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+
+#search-input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 400;
+}
+
+#search-input:focus {
+  background: rgba(0, 0, 0, 0.75);
+  border-color: var(--gold);
+  box-shadow: 0 0 14px rgba(200, 152, 80, 0.35);
+}
+
+#search-input:focus ~ .nav-search-icon,
+.nav-search-input-box:focus-within .nav-search-icon {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.nav-search-clear {
+  position: absolute;
+  right: 0.75rem;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  font-size: 0.7rem;
+  line-height: 1;
+  padding: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+  z-index: 2;
+}
+
+.nav-search-clear:hover {
+  background: rgba(200, 152, 80, 0.35);
+  color: var(--gold);
+  transform: scale(1.1);
+}
+
+.nav-search-clear.show {
+  display: flex;
+}
+
+/* Mobile Cancel Button */
+.nav-search-close-mobile {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--gold);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  padding: 0.4rem 0.65rem;
+  line-height: 1;
+  white-space: nowrap;
+  transition: color 0.18s, transform 0.18s;
+  flex-shrink: 0;
+}
+
+.nav-search-close-mobile:hover {
+  color: #F6D896;
+}
+
+/* Mobile Search Backdrop */
+.mobile-search-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(5, 9, 11, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 240;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  pointer-events: none;
+}
+
+.mobile-search-backdrop.show {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ═══════════════════════════════════════════
+   2. LIVE SEARCH SUGGESTIONS DROPDOWN
+   Shows as the user types with thumbnail, title,
+   category badge, price, and instant click to view!
+═══════════════════════════════════════════ */
+.nav-search-suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #090E0F;
+  background: linear-gradient(180deg, #101719 0%, #090E0F 100%);
+  border: 1px solid rgba(200, 152, 80, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 16px rgba(200, 152, 80, 0.15);
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 300;
+  display: none;
+  animation: searchDropFade 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes searchDropFade {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nav-search-suggestions.show {
+  display: block;
+}
+
+.suggestion-header {
+  padding: 0.6rem 0.95rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.18s ease;
+}
+
+.suggestion-item:hover,
+.suggestion-item.focused {
+  background: rgba(200, 152, 80, 0.12);
+}
+
+.suggestion-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #141b1d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.suggestion-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0.2rem;
+}
+
+.suggestion-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.suggestion-name mark.match {
+  background: transparent;
+  color: var(--gold);
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.suggestion-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.suggestion-cat {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.suggestion-price-group {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.suggestion-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.suggestion-orig-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: line-through;
+}
+
+.suggestion-footer {
+  padding: 0.65rem 0.95rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.18s, color 0.18s;
+}
+
+.suggestion-footer:hover {
+  background: rgba(200, 152, 80, 0.15);
+  color: #FFF1D6;
+}
+
+.suggestion-empty {
+  padding: 1.4rem;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ═══════════════════════════════════════════
+   3. CATEGORIES NAVIGATION BAR
+   Center-aligned bar from HOME to OTHERS
+═══════════════════════════════════════════ */
+.category-nav-bar {
+  position: sticky;
+  top: 64px;
+  z-index: 95;
+  background: #090E0F url('../images/dark-texture.png') repeat;
+  border-bottom: 1px solid rgba(200, 152, 80, 0.22);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  justify-content: center; /* Center aligned */
+  width: 100%;
+}
+
+.category-nav-scroll {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0.15rem 0.5rem;
+  margin: 0 auto; /* Keeps centered */
+}
+
+@media (min-width: 900px) {
+  .category-nav-scroll {
+    justify-content: center; /* Perfectly centers on desktop */
+  }
+}
+
+.category-nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Category Tab Buttons */
+.cat-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.cat-tab:hover {
+  color: #FFF;
+  text-decoration: none;
+  border-color: rgba(200, 152, 80, 0.35);
+  background: rgba(200, 152, 80, 0.08);
+}
+
+/* Active Category Pill (e.g. HOME, SOFAS) */
+.cat-tab.active {
+  background: var(--gold-gradient);
+  color: #090E0F;
+  border-color: transparent;
+  font-weight: 800;
+  box-shadow: 0 2px 10px rgba(200, 152, 80, 0.35);
+}
+
+/* ═══════════════════════════════════════════
+   4. SHOWCASE SECTION (LIGHT THEME)
+   Replaces the collection grid with the Vendor Hub cards
+   in the clean off-white / light theme of the site!
+═══════════════════════════════════════════ */
+.home-showcase-section {
+  padding: 2.5rem 5% 4rem;
+  background: var(--bg); /* Off-white #FAFAF8 */
+  color: var(--black);
+}
+
+/* 4-Column Grid on Desktop */
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.35rem;
+  margin-bottom: 2rem;
+}
+
+/* Base Showcase Card (Clean White Surface with subtle shadow & border) */
+.showcase-card {
+  background: #FFFFFF;
+  border: 1px solid #E8E4DC;
+  border-radius: 14px;
+  padding: 1.2rem 1.2rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s, box-shadow 0.28s;
+  min-height: 410px;
+}
+
+.showcase-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gold);
+  box-shadow: 0 14px 30px rgba(200, 152, 80, 0.16), 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Card Header Title */
+.showcase-card-header {
+  margin-bottom: 0.95rem;
+}
+
+.showcase-card-title {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #090E0F;
+  line-height: 1.3;
+}
+
+.showcase-card-title .gold-accent {
+  color: #966A37;
+  background: linear-gradient(135deg, #B38035 0%, #966A37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Card Body */
+.showcase-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+/* TYPE A: 4-Tile Square Image Grid */
+.tile-grid-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  height: 100%;
+}
+
+.tile-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tile-img-box {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #F4EFEA;
+  border: 1px solid #E8E2D8;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.tile-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.tile-item:hover .tile-img-box img {
+  transform: scale(1.08);
+}
+
+.tile-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #4A443D;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+  text-align: center;
+  transition: color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.tile-item:hover .tile-label {
+  color: var(--gold-dk);
+}
+
+/* TYPE B: 1 Large Featured Portrait Image */
+.tile-single {
+  width: 100%;
+  height: 100%;
+  min-height: 275px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  background: #F4EFEA;
+  border: 1px solid #E8E2D8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+}
+
+.tile-single img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.tile-single:hover img {
+  transform: scale(1.06);
+}
+
+.tile-single-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 65%, rgba(9, 14, 15, 0.38) 100%);
+  pointer-events: none;
+}
+
+/* Card Footer: Explore More Link */
+.showcase-card-footer {
+  padding-top: 0.75rem;
+  border-top: 1px solid #EDE8E0;
+}
+
+.showcase-explore-btn {
+  background: none;
+  border: none;
+  color: #966A37;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  transition: gap 0.2s ease, color 0.2s ease;
+}
+
+.showcase-explore-btn:hover {
+  color: var(--gold);
+  gap: 0.65rem;
+}
+
+/* ═══════════════════════════════════════════
+   5. RECENTLY VIEWED SECTION (LIGHT THEME)
+   Matches the off-white showcase section below the hero:
+   - #FAFAF8 background, #FFFFFF cards, #E8E4DC borders
+   - Dark gold (#966A37) prices & accents, dark text (#090E0F)
+   - Subtle shadows, no dark panel
+═══════════════════════════════════════════ */
+.recently-viewed-panel,
+.recently-viewed-section {
+  background: var(--bg, #FAFAF8);
+  border: none;
+  border-radius: 0;
+  /* No horizontal padding — parent .home-showcase-section already applies 5% sides.
+     The recently viewed content therefore aligns to the same edge as the grid above. */
+  padding: 2rem 0 2.5rem;
+  margin-top: 0;
+  box-shadow: none;
+  position: relative;
+  border-top: 1px solid #E8E4DC;
+}
+
+.recent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.4rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid #E8E4DC;
+}
+
+.recent-title-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.recent-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #966A37;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.recent-title-bullet {
+  display: inline-block;
+  width: 4px;
+  height: 14px;
+  background: linear-gradient(180deg, #C89850 0%, #966A37 100%);
+  border-radius: 2px;
+}
+
+.recent-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #A09890;
+  letter-spacing: 0.04em;
+}
+
+/* Recent Cards Grid (Exactly 5 items in a balanced row) */
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1.15rem;
+}
+
+/* Single Recent Product Card (Clean White Surface) */
+.recent-card {
+  background: #FFFFFF;
+  border: 1px solid #E8E4DC;
+  border-radius: 14px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+}
+
+.recent-card:hover {
+  transform: translateY(-4px);
+  border-color: #C89850;
+  box-shadow: 0 14px 30px rgba(200, 152, 80, 0.14), 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Recent Card Image Container */
+.recent-img-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  background: #F4EFEA;
+  border: 1px solid #EDE8E0;
+  margin-bottom: 0.75rem;
+}
+
+.recent-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.recent-card:hover .recent-img-wrap img {
+  transform: scale(1.06);
+}
+
+/* Discount Badge — soft translucent warm pill */
+.recent-discount-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(150, 106, 55, 0.12);
+  border: 1px solid rgba(150, 106, 55, 0.32);
+  color: #966A37;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+  z-index: 2;
+}
+
+/* Card Info */
+.recent-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Product Name */
+.recent-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #090E0F;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.25rem;
+  margin-bottom: 0.4rem;
+}
+
+.recent-highlight {
+  color: #966A37;
+  font-weight: 700;
+}
+
+.recent-price-group {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin-top: auto;
+  padding-top: 0.3rem;
+}
+
+.recent-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: #966A37;
+  letter-spacing: 0.01em;
+}
+
+.recent-original-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.74rem;
+  color: #B0A898;
+  text-decoration: line-through;
+  font-weight: 500;
+}
+
+
+/* ═══════════════════════════════════════════
+   6. RESPONSIVE BREAKPOINTS
+   Mobile search expands on icon click!
+═══════════════════════════════════════════ */
+@media (max-width: 1200px) {
+  .showcase-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.15rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .recent-grid {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.85rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(200, 152, 80, 0.4) transparent;
+  }
+
+  .recent-grid::-webkit-scrollbar {
+    height: 4px;
+  }
+  .recent-grid::-webkit-scrollbar-track {
+    background: #EDE8E0;
+    border-radius: 999px;
+  }
+  .recent-grid::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, #C89850 0%, #966A37 100%);
+    border-radius: 999px;
+  }
+
+  .recent-card {
+    flex: 0 0 175px;
+    min-width: 175px;
+    max-width: 185px;
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 768px) {
+  nav {
+    height: 64px;
+    padding: 0 4%;
+    position: sticky;
+    top: 0;
+  }
+
+  .nav-search-container {
+    flex: initial;
+    margin: 0 0.5rem;
+    min-width: auto;
+  }
+
+  /* Show the mobile search icon button (pure icon, no circle background) */
+  .nav-search-toggle-btn {
+    display: flex;
+  }
+
+  /* Search input is initially hidden on mobile */
+  .nav-search-wrap {
+    display: none;
+  }
+
+  /* When search is toggled open on mobile, it expands across the entire navbar */
+  .nav-search-wrap.open {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: rgba(9, 14, 16, 0.98) url('../images/dark-texture.png') repeat;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(200, 152, 80, 0.35);
+    z-index: 250;
+    padding: 0 0.85rem;
+    gap: 0.65rem;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+    animation: mobileSearchSlideDown 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes mobileSearchSlideDown {
+    from { opacity: 0; transform: translateY(-100%); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .nav-search-wrap.open .nav-search-input-box {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-search-wrap.open #search-input {
+    width: 100%;
+    height: 42px;
+    padding-left: 2.55rem;
+    padding-right: 2.3rem;
+    font-size: 0.88rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(200, 152, 80, 0.45);
+    border-radius: 999px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 12px rgba(200, 152, 80, 0.12);
+  }
+
+  .nav-search-wrap.open #search-input:focus {
+    background: rgba(12, 18, 22, 0.95);
+    border-color: var(--gold);
+    box-shadow: 0 0 16px rgba(200, 152, 80, 0.38);
+  }
+
+  .nav-search-wrap.open .nav-search-icon {
+    left: 0.85rem;
+    width: 17px;
+    height: 17px;
+    color: var(--gold);
+  }
+
+  .nav-search-wrap.open .nav-search-clear {
+    right: 0.75rem;
+    width: 20px;
+    height: 20px;
+  }
+
+  .nav-search-wrap.open .nav-search-close-mobile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-search-wrap.open .nav-search-suggestions {
+    position: fixed;
+    top: 64px;
+    left: 10px;
+    right: 10px;
+    max-height: calc(85vh - 76px);
+    border-radius: 0 0 16px 16px;
+    border-top: none;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(200, 152, 80, 0.2);
+  }
+
+  .category-nav-bar {
+    top: 64px;
+    padding: 0.4rem 0.5rem;
+  }
+
+  .showcase-grid {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+
+  .showcase-card {
+    min-height: auto;
+  }
+
+  .recently-viewed-panel,
+  .recently-viewed-section {
+    /* Still no extra horizontal padding on mobile — parent handles it */
+    padding: 1.5rem 0 2rem;
+    border-radius: 0;
+    margin-top: 0;
+  }
+
+  .recent-card {
+    flex: 0 0 155px;
+    min-width: 155px;
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .recent-card {
+    flex: 0 0 145px;
+    min-width: 145px;
+    padding: 0.7rem;
+  }
+
+  .recent-name {
+    font-size: 0.76rem;
+    min-height: 2.1rem;
+  }
+
+  .recent-price {
+    font-size: 0.84rem;
+  }
+
+  .recent-original-price {
+    font-size: 0.68rem;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   7. DEDICATED CATEGORY PAGES
+   Header banner & container for individual category pages
+═══════════════════════════════════════════ */
+.category-header-banner {
+  padding: 2.8rem 5% 1.8rem;
+  background: var(--bg);
+  border-bottom: 1px solid #EBE6DE;
+  text-align: center;
+}
+
+.cat-header-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #966A37;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.category-header-banner h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.9rem, 3.8vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #090E0F;
+  margin-bottom: 0.6rem;
+}
+
+.category-header-banner p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  color: #5E5852;
+  max-width: 620px;
+  margin: 0 auto 0.8rem;
+  line-height: 1.65;
+}
+
+.cat-header-meta {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #966A37;
+  background: rgba(200, 152, 80, 0.12);
+  padding: 0.25rem 0.85rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.category-page-container {
+  padding: 2.5rem 5% 4rem;
+  background: var(--bg);
+}
