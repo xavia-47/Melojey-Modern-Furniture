@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shopping Cart — Melojey Modern Furniture</title>
   <link rel="shortcut icon" type="image/png" href="../assets/images/favicon.png" />
+  <!-- PWA Manifest & Theme -->
+  <link rel="manifest" href="../manifest.json" />
+  <meta name="theme-color" content="#C89850" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Melojey" />
+  <link rel="apple-touch-icon" href="../assets/images/pwa-icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -14,9 +21,9 @@
   <style>
     /* ═══ CART PAGE RESPONSIVE STYLES ═══ */
     .cart-page-wrap {
-      max-width: 1240px;
+      max-width: 1300px;
       margin: 0 auto;
-      padding: 2.5rem 5% 4.5rem;
+      padding: 1.5rem 1.25rem 4rem;
     }
     .cart-layout {
       display: grid;
@@ -938,6 +945,13 @@
   document.addEventListener("DOMContentLoaded", () => {
     renderCartPage();
   });
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('../sw.js').catch(function(){});
+    });
+  }
 </script>
 </body>
 </html>

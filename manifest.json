@@ -1,0 +1,48 @@
+{
+  "name": "Melojey Modern Furniture",
+  "short_name": "Melojey",
+  "description": "Nigeria's premium modern furniture showroom — Aba, delivering nationwide.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0E0B06",
+  "theme_color": "#C89850",
+  "orientation": "any",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["shopping", "lifestyle"],
+  "icons": [
+    {
+      "src": "assets/images/pwa-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/images/pwa-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Browse Sofas",
+      "short_name": "Sofas",
+      "url": "/categories/sofas.html",
+      "icons": [{ "src": "assets/images/pwa-icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My Cart",
+      "short_name": "Cart",
+      "url": "/pages/cart.html",
+      "icons": [{ "src": "assets/images/pwa-icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My Wishlist",
+      "short_name": "Wishlist",
+      "url": "/pages/wishlist.html",
+      "icons": [{ "src": "assets/images/pwa-icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

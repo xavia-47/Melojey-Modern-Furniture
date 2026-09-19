@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Melojey Modern Furniture — Nigeria</title>
   <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png" />
+  <!-- PWA Manifest & Theme -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C89850" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Melojey" />
+  <link rel="apple-touch-icon" href="assets/images/pwa-icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- FONTS: Cinzel (luxury regal serif for headings & insignia) + Montserrat (classic haute-couture typography) -->
@@ -310,5 +317,12 @@
 <script src="assets/js/script.js"></script>
 <!-- SHOWCASE CONTROLLER: Controls category switching, 8 cards, and recently viewed -->
 <script src="assets/js/showcase.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').catch(function(){});
+    });
+  }
+</script>
 </body>
 </html>

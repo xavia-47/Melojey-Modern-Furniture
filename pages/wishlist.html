@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Saved Wishlist — Melojey Modern Furniture</title>
   <link rel="shortcut icon" type="image/png" href="../assets/images/favicon.png" />
+  <!-- PWA Manifest & Theme -->
+  <link rel="manifest" href="../manifest.json" />
+  <meta name="theme-color" content="#C89850" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Melojey" />
+  <link rel="apple-touch-icon" href="../assets/images/pwa-icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -96,7 +103,7 @@
 </section>
 
 <!-- ═══ WISHLIST MAIN CONTENT ══════════════════════ -->
-<main class="wishlist-page-container" style="max-width: 1240px; margin: 0 auto; padding: 2.5rem 5% 4.5rem;">
+<main class="category-page-container">
   <div id="wishlist-content-wrap">
     <!-- Rendered dynamically by script below -->
   </div>
@@ -250,7 +257,7 @@
         <button id="btn-clear-wishlist" type="button" style="background: none; border: none; font-family: 'Montserrat', sans-serif; font-size: 0.78rem; color: #C0392B; cursor: pointer; text-decoration: underline;">Clear Wishlist</button>
       </div>
 
-      <div class="product-grid" id="wishlist-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.35rem;">
+      <div class="product-grid" id="wishlist-grid">
         ${items.map(p => `
           <div class="product-card" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${p.name}">
             <div class="card-img-wrap">
@@ -379,6 +386,13 @@
   }
 
   document.addEventListener("DOMContentLoaded", renderWishlistPage);
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('../sw.js').catch(function(){});
+    });
+  }
 </script>
 </body>
 </html>
