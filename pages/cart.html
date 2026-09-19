@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopping Cart — Melojey Modern Furniture</title>
+  <link rel="shortcut icon" type="image/png" href="../assets/images/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/showcase.css" />
+  <link rel="stylesheet" href="../assets/css/shop.css" />
+  <style>
+    /* ═══ CART PAGE RESPONSIVE STYLES ═══ */
+    .cart-page-wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 2.5rem 5% 4.5rem;
+    }
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 2rem;
+      align-items: start;
+    }
+    .cart-items-column {
+      min-width: 0;
+    }
+    .cart-items-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid #E8E2D8;
+    }
+    .cart-items-header-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #4A3A2C;
+    }
+    .btn-clear-cart {
+      background: none;
+      border: none;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #C0392B;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    .btn-clear-cart:hover {
+      background: #FDEDEC;
+    }
+    .cart-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .cart-item-card {
+      display: flex;
+      gap: 1.25rem;
+      background: #FFFFFF;
+      border: 1px solid #E8E2D8;
+      border-radius: 14px;
+      padding: 1.1rem;
+      align-items: center;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .cart-item-card:hover {
+      border-color: #C89850;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    }
+    .cart-item-thumb {
+      width: 100px;
+      height: 85px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #F5EFEB;
+      flex-shrink: 0;
+      border: 1px solid #EFEAE3;
+    }
+    .cart-item-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .cart-item-main {
+      flex: 1;
+      min-width: 0;
+    }
+    .cart-item-category {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #966A37;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.25rem;
+    }
+    .cart-item-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1A1209;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 0.35rem;
+      line-height: 1.35;
+    }
+    .cart-item-unit-price {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #8C7B6B;
+    }
+    .cart-item-controls-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-shrink: 0;
+    }
+    .cart-item-total {
+      min-width: 110px;
+      text-align: right;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #966A37;
+    }
+    .btn-remove-item {
+      background: #FBF8F5;
+      border: 1px solid #E8E0D5;
+      color: #A69280;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      padding: 0;
+      line-height: 1;
+    }
+    .btn-remove-item:hover {
+      color: #E74C3C;
+      background: #FDEDEC;
+      border-color: #F5B7B1;
+    }
+    .cart-summary-box {
+      background: #FFFFFF;
+      border: 1px solid #E8E2D8;
+      border-radius: 14px;
+      padding: 1.6rem;
+      position: sticky;
+      top: 120px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+    }
+    .cart-continue-link {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #966A37;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1.5rem;
+      transition: color 0.15s;
+    }
+    .cart-continue-link:hover {
+      color: #C89850;
+      text-decoration: underline;
+    }
+
+    /* ── Empty State ── */
+    .cart-empty-state-box {
+      text-align: center;
+      padding: 4.5rem 1.5rem;
+      background: #FFFFFF;
+      border: 1px solid #E8E2D8;
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+    }
+    .cart-empty-icon-wrap {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 1.35rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FFFDF8 0%, #F5ECDD 100%);
+      border: 1.5px solid #E4D5BE;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+    .cart-empty-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      color: #1A1209;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.02em;
+    }
+    .cart-empty-desc {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      color: #7A6A5A;
+      max-width: 440px;
+      margin: 0 auto 1.8rem;
+      line-height: 1.6;
+    }
+
+    /* ── Mobile Layout (< 860px) ── */
+    @media (max-width: 860px) {
+      .cart-page-wrap {
+        padding: 1.5rem 1rem 3.5rem;
+      }
+      .cart-layout {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .cart-item-card {
+        display: grid;
+        grid-template-columns: 78px 1fr auto;
+        gap: 0.6rem 0.85rem;
+        padding: 0.95rem;
+        align-items: start;
+      }
+      .cart-item-thumb {
+        grid-row: 1 / 3;
+        width: 78px;
+        height: 78px;
+      }
+      .cart-item-main {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+      }
+      .cart-item-title {
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        font-size: 0.88rem;
+        line-height: 1.35;
+        margin-bottom: 0.3rem;
+      }
+      .btn-remove-item {
+        grid-column: 3 / 4;
+        grid-row: 1 / 2;
+        width: 28px;
+        height: 28px;
+        font-size: 0.85rem;
+      }
+      .cart-item-controls-wrap {
+        grid-column: 2 / 4;
+        grid-row: 2 / 3;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding-top: 0.5rem;
+        border-top: 1px dashed #EDE8E0;
+        gap: 0.5rem;
+      }
+      .cart-item-total {
+        min-width: auto;
+        font-size: 0.95rem;
+      }
+      .cart-summary-box {
+        position: static;
+        top: auto;
+        padding: 1.35rem 1.15rem;
+      }
+    }
+  </style>
+</head>
+<body data-page="CART">
+
+<!-- ═══ TOP NAVBAR ════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="../index.html">
+    <div class="logo-badge">
+      <img src="../assets/images/logo.png" alt="Melojey Modern Furniture">
+    </div>
+    <div class="nav-brand-group">
+      <div class="nav-brand">MELOJEY</div>
+      <div class="nav-sub">Modern Furniture</div>
+    </div>
+  </a>
+
+  <!-- NAVBAR SEARCH BAR with Mobile Expandable Icon & Live Suggestions -->
+  <div class="nav-search-container" id="nav-search-container">
+    <button class="nav-search-toggle-btn" id="nav-search-toggle" aria-label="Open Search" type="button">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+      </svg>
+    </button>
+
+    <div class="nav-search-wrap" id="nav-search-wrap">
+      <div class="nav-search-input-box">
+        <svg class="nav-search-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="search" id="search-input" placeholder="Search sofas, beds, dining, rugs…" autocomplete="off" enterkeyhint="search" autocapitalize="off" spellcheck="false" />
+        <button class="nav-search-clear" id="search-clear" aria-label="Clear search" type="button">✕</button>
+      </div>
+      <button class="nav-search-close-mobile" id="search-close-mobile" aria-label="Cancel search" type="button">Cancel</button>
+      <div class="nav-search-suggestions" id="nav-search-suggestions" aria-hidden="true"></div>
+    </div>
+    <div class="mobile-search-backdrop" id="mobile-search-backdrop" aria-hidden="true"></div>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="../index.html#catalogue">Catalogue</a></li>
+    <li><a href="../index.html#about">About Us</a></li>
+  </ul>
+
+  <!-- Top Navbar Cart & Wishlist Icons Cluster -->
+  <div class="nav-icon-cluster">
+    <a class="nav-icon-btn" href="wishlist.html" aria-label="Wishlist" title="Wishlist">
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+        <polygon stroke-linecap="round" stroke-linejoin="round" points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+      </svg>
+      <span class="nav-icon-badge wishlist-badge" id="wishlist-nav-badge" style="display:none">0</span>
+    </a>
+    <a class="nav-icon-btn" href="cart.html" aria-label="Shopping Cart" title="Shopping Cart" style="color:#C89850">
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+      </svg>
+      <span class="nav-icon-badge cart-badge" id="cart-nav-badge" style="display:none">0</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ═══ PINNED CATEGORIES NAVIGATION BAR ═════════════════ -->
+<nav class="category-nav-bar" id="category-nav-bar" aria-label="Product Categories">
+  <div class="category-nav-scroll" id="category-nav-scroll">
+    <a href="../index.html" class="cat-tab" data-category="HOME">HOME</a>
+    <a href="../categories/sofas.html" class="cat-tab" data-category="SOFAS">SOFAS</a>
+    <a href="../categories/beds.html" class="cat-tab" data-category="BEDS">BEDS</a>
+    <a href="../categories/dining.html" class="cat-tab" data-category="DINING">DINING</a>
+    <a href="../categories/office.html" class="cat-tab" data-category="OFFICE">OFFICE</a>
+    <a href="../categories/wardrobes.html" class="cat-tab" data-category="WARDROBES">WARDROBES</a>
+    <a href="../categories/bar.html" class="cat-tab" data-category="BAR">BAR</a>
+    <a href="../categories/tables.html" class="cat-tab" data-category="TABLES">TABLES</a>
+    <a href="../categories/rugs.html" class="cat-tab" data-category="RUGS">RUGS</a>
+    <a href="../categories/decor.html" class="cat-tab" data-category="DECOR">DECOR</a>
+    <a href="../categories/others.html" class="cat-tab" data-category="OTHERS">OTHERS</a>
+  </div>
+</nav>
+
+<!-- ═══ CART HEADER BANNER ═════════════════════════ -->
+<section class="category-header-banner">
+  <div class="cat-header-eyebrow">Your Selection • Melojey Modern Furniture</div>
+  <h1>Shopping <span class="gold-accent">Cart</span></h1>
+  <p>Review your luxury pieces, adjust quantities, and order directly from our showrooms via WhatsApp.</p>
+  <div class="cat-header-meta" id="cart-header-count">0 items</div>
+</section>
+
+<!-- ═══ CART MAIN CONTAINER ════════════════════════ -->
+<main class="cart-page-wrap">
+  <div id="cart-content-wrap">
+    <!-- Rendered dynamically by script below -->
+  </div>
+</main>
+
+<!-- ═══ FLOATING WHATSAPP WIDGET ═══════════════ -->
+<div class="wa-float-wrapper">
+  <div class="wa-float-menu" id="wa-float-menu" aria-hidden="true">
+    <div class="wa-float-menu-header">
+      <span class="wa-float-menu-title">WhatsApp Orders &amp; Enquiries</span>
+      <span class="wa-float-menu-sub">Choose your showroom line:</span>
+    </div>
+    <a class="wa-float-menu-item" id="wa-float-line-1" target="_blank" rel="noopener">
+      <div class="wa-menu-icon">
+        <svg width="20" height="20" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="#C89850" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+          <path fill="#090E0F" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
+        </svg>
+      </div>
+      <div class="wa-menu-text">
+        <span class="wa-menu-name">Line 1: 0803 321 8845</span>
+        <span class="wa-menu-desc">+234 803 321 8845 • Factory Rd</span>
+      </div>
+    </a>
+    <a class="wa-float-menu-item" id="wa-float-line-2" target="_blank" rel="noopener">
+      <div class="wa-menu-icon">
+        <svg width="20" height="20" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="#C89850" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+          <path fill="#090E0F" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
+        </svg>
+      </div>
+      <div class="wa-menu-text">
+        <span class="wa-menu-name">Line 2: 0803 776 8889</span>
+        <span class="wa-menu-desc">+234 803 776 8889 • St Michael's</span>
+      </div>
+    </a>
+  </div>
+  <button class="wa-float" id="wa-float-btn" aria-label="Open WhatsApp Chat Options" type="button">
+    <svg width="34" height="34" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="waGoldGradBtn" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#F2D18B"/>
+          <stop offset="45%" stop-color="#C89850"/>
+          <stop offset="100%" stop-color="#9A6B24"/>
+        </linearGradient>
+      </defs>
+      <path fill="#070A0B" d="m12.966 161.238 10.439-38.114a73.42 73.42 0 0 1-9.821-36.772c.017-40.556 33.021-73.55 73.578-73.55 19.681.01 38.154 7.669 52.047 21.572s21.537 32.383 21.53 52.037c-.018 40.553-33.027 73.553-73.578 73.553h-.032c-12.313-.005-24.412-3.094-35.159-8.954z"/>
+      <path fill="url(#waGoldGradBtn)" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+      <path fill="#070A0B" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
+    </svg>
+  </button>
+</div>
+
+<!-- ═══ FOOTER ═══════════════════════════════ -->
+<footer id="contact">
+  <div class="footer-row">
+    <div class="footer-brand">
+      <div class="logo-badge">
+        <img src="../assets/images/logo.png" alt="Melojey Modern Furniture">
+      </div>
+      <div class="footer-brand-group">
+        <div class="footer-brand-name">MELOJEY</div>
+        <div class="footer-brand-sub">Modern Furniture</div>
+      </div>
+    </div>
+
+    <div class="footer-contact">
+      <a href="tel:+2348033218845">0803 321 8845</a>
+      <a href="tel:+2348037768889">0803 776 8889</a>
+      <a href="tel:+2348150622838">0815 062 2838</a>
+      <a href="mailto:melojey@yahoo.com">melojey@yahoo.com</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>Plot 1 Factory Road (beside UBA, near Railway Road) &amp; 48 St Michael's Road, Aba</span>
+    <span>© 2026 Melojey Modern Furniture</span>
+  </div>
+</footer>
+
+<script src="../data/products.js"></script>
+<script src="../assets/js/cart.js"></script>
+<script src="../assets/js/wishlist.js"></script>
+<script src="../assets/js/showcase.js"></script>
+
+<script>
+  const WA_LINE_1 = "2348033218845";
+  const WA_LINE_2 = "2348037768889";
+  const fmt = n => `₦${Number(n).toLocaleString("en-NG")}`;
+
+  function renderCartPage() {
+    const wrap = document.getElementById("cart-content-wrap");
+    const countEl = document.getElementById("cart-header-count");
+    const items = MelojeyCart.getAll();
+    const totalQty = MelojeyCart.totalQty();
+
+    if (countEl) countEl.textContent = `${totalQty} item${totalQty !== 1 ? "s" : ""}`;
+
+    if (!items || items.length === 0) {
+      wrap.innerHTML = `
+        <div class="cart-empty-state-box">
+          <div class="cart-empty-icon-wrap">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#C89850" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 01-8 0"></path>
+            </svg>
+          </div>
+          <h2 class="cart-empty-title">Your Cart is Empty</h2>
+          <p class="cart-empty-desc">
+            You have not added any pieces to your cart yet. Explore our bespoke collections and select your favorites.
+          </p>
+          <a href="../categories/sofas.html" class="hero-cta" style="display: inline-block;">Browse Collection</a>
+        </div>
+      `;
+      return;
+    }
+
+    const subtotal = items.reduce((s, i) => s + (i.price * (i.qty || 1)), 0);
+    const waLink1 = MelojeyCart.buildWaLink(WA_LINE_1);
+    const waLink2 = MelojeyCart.buildWaLink(WA_LINE_2);
+
+    wrap.innerHTML = `
+      <div class="cart-layout">
+        <!-- Left: Items List -->
+        <div class="cart-items-column">
+          <div class="cart-items-header">
+            <span class="cart-items-header-title">Selected Products (${items.length})</span>
+            <button id="btn-clear-cart" class="btn-clear-cart" type="button">Clear Cart</button>
+          </div>
+
+          <div class="cart-items-list">
+            ${items.map(item => `
+              <div class="cart-item-card" data-id="${item.id}">
+                <div class="cart-item-thumb">
+                  <img src="${item.image.startsWith('../') ? item.image : (item.image.startsWith('http') ? item.image : '../' + item.image)}" alt="${item.name}" onerror="this.src='../assets/images/logo.png';" />
+                </div>
+                <div class="cart-item-main">
+                  <div class="cart-item-category">${item.category || "Furniture"}</div>
+                  <div class="cart-item-title" title="${item.name}">${item.name}</div>
+                  <div class="cart-item-unit-price">${fmt(item.price)} each</div>
+                </div>
+
+                <!-- Remove Button (Top-Right on Mobile) -->
+                <button class="btn-remove-item" data-id="${item.id}" type="button" aria-label="Remove item" title="Remove item">✕</button>
+
+                <!-- Controls Wrap: Stepper + Total (Bottom Row on Mobile) -->
+                <div class="cart-item-controls-wrap">
+                  <div class="qty-stepper" data-id="${item.id}" style="height: 34px;">
+                    <button class="qty-btn qty-minus" data-id="${item.id}" aria-label="Decrease quantity" type="button">−</button>
+                    <span class="qty-num">${item.qty || 1}</span>
+                    <button class="qty-btn qty-plus" data-id="${item.id}" aria-label="Increase quantity" type="button">+</button>
+                  </div>
+
+                  <div class="cart-item-total">
+                    ${fmt(item.price * (item.qty || 1))}
+                  </div>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+
+          <div>
+            <a href="../categories/sofas.html" class="cart-continue-link">
+              ← Continue Shopping
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Summary Box -->
+        <div class="cart-summary-box">
+          <div style="font-family: 'Cinzel', serif; font-size: 1.15rem; font-weight: 700; color: #1A1209; margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid #E8E2D8;">
+            Order Summary
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: #6A5A4A; margin-bottom: 0.75rem;">
+            <span>Total Items:</span>
+            <span style="font-weight: 700; color: #1A1209;">${totalQty}</span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: #6A5A4A; margin-bottom: 0.75rem;">
+            <span>Showroom Pickup:</span>
+            <span style="font-weight: 700; color: #27AE60;">Free (Aba Showrooms)</span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: #6A5A4A; margin-bottom: 1.25rem; padding-bottom: 0.8rem; border-bottom: 1px solid #EFE9E0;">
+            <span>Nationwide Delivery:</span>
+            <span style="font-size: 0.78rem; color: #888;">Arranged on confirmation</span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem;">
+            <span style="font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 800; color: #1A1209;">Estimated Total:</span>
+            <span style="font-family: 'Montserrat', sans-serif; font-size: 1.35rem; font-weight: 800; color: #966A37;">${fmt(subtotal)}</span>
+          </div>
+
+          <div style="font-family: 'Montserrat', sans-serif; font-size: 0.76rem; color: #7A6A5A; margin-bottom: 1rem; text-align: center; line-height: 1.5;">
+            Select your showroom line below to send this complete order via WhatsApp with product photos included:
+          </div>
+
+          <!-- WhatsApp Order CTAs -->
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <a href="${waLink1}" target="_blank" rel="noopener" class="hero-cta" style="display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.75rem 1rem; font-size: 0.82rem; text-decoration: none; border-radius: 8px;">
+              <svg width="20" height="20" viewBox="0 0 175.216 175.552" fill="#090E0F">
+                <path d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+              </svg>
+              <span>Order via Line 1 (Factory Rd)</span>
+            </a>
+
+            <a href="${waLink2}" target="_blank" rel="noopener" class="hero-cta" style="display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.75rem 1rem; font-size: 0.82rem; text-decoration: none; border-radius: 8px; background: #2A2118; color: #FFF; border: 1px solid #C89850;">
+              <svg width="20" height="20" viewBox="0 0 175.216 175.552" fill="#C89850">
+                <path d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+              </svg>
+              <span>Order via Line 2 (St Michael's)</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Attach Stepper & Remove Click Listeners
+    wrap.querySelectorAll(".qty-plus").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-id");
+        MelojeyCart.setQty(id, MelojeyCart.getQty(id) + 1);
+        renderCartPage();
+      });
+    });
+
+    wrap.querySelectorAll(".qty-minus").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-id");
+        MelojeyCart.setQty(id, MelojeyCart.getQty(id) - 1);
+        renderCartPage();
+      });
+    });
+
+    wrap.querySelectorAll(".btn-remove-item").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-id");
+        MelojeyCart.remove(id);
+        renderCartPage();
+      });
+    });
+
+    const clearBtn = wrap.querySelector("#btn-clear-cart");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        if (confirm("Are you sure you want to clear your cart?")) {
+          MelojeyCart.clear();
+          renderCartPage();
+        }
+      });
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    renderCartPage();
+  });
+</script>
+</body>
+</html>

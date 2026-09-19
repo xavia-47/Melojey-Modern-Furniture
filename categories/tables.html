@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/css/style.css" />
   <link rel="stylesheet" href="../assets/css/showcase.css" />
+  <link rel="stylesheet" href="../assets/css/shop.css" />
 </head>
 <body data-page-category="TABLES">
 
@@ -38,7 +39,7 @@
         <svg class="nav-search-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
         </svg>
-        <input type="text" id="search-input" placeholder="Search sofas, beds, dining, rugs…" autocomplete="off" />
+        <input type="search" id="search-input" placeholder="Search sofas, beds, dining, rugs…" autocomplete="off" enterkeyhint="search" autocapitalize="off" spellcheck="false" />
         <button class="nav-search-clear" id="search-clear" aria-label="Clear search" type="button">✕</button>
       </div>
       <button class="nav-search-close-mobile" id="search-close-mobile" aria-label="Cancel search" type="button">Cancel</button>
@@ -47,11 +48,27 @@
     <div class="mobile-search-backdrop" id="mobile-search-backdrop" aria-hidden="true"></div>
   </div>
 
-  <ul class="nav-links">
+      <ul class="nav-links">
     <li><a href="../index.html#catalogue">Catalogue</a></li>
     <li><a href="../index.html#about">About Us</a></li>
-    <li><a href="#contact">Contact</a></li>
   </ul>
+
+  <!-- Top Navbar Cart & Wishlist Icons Cluster -->
+  <div class="nav-icon-cluster">
+    <a class="nav-icon-btn" href="../pages/wishlist.html" aria-label="Wishlist" title="Wishlist">
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+        <polygon stroke-linecap="round" stroke-linejoin="round" points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+      </svg>
+      <span class="nav-icon-badge wishlist-badge" id="wishlist-nav-badge" style="display:none">0</span>
+    </a>
+    <a class="nav-icon-btn" href="../pages/cart.html" aria-label="Shopping Cart" title="Shopping Cart">
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+      </svg>
+      <span class="nav-icon-badge cart-badge" id="cart-nav-badge" style="display:none">0</span>
+    </a>
+  </div>
+
 </nav>
 
 <!-- ═══ PINNED CATEGORIES NAVIGATION BAR (Sticky at top) ═════════════════ -->
@@ -80,8 +97,52 @@
 </section>
 
 <!-- ═══ PRODUCTS GRID ═════════════════════════ -->
+<!-- ═══ PRODUCTS SHOP SECTION ═════════════════ -->
 <main class="category-page-container">
-  <div class="product-grid" id="category-product-grid"></div>
+  <!-- Shop Toolbar (Count, View Mode, Sort Dropdown & Mobile Filter Button) -->
+  <div class="shop-toolbar">
+    <div class="shop-toolbar-count" id="toolbar-count">Loading items…</div>
+    <div class="shop-toolbar-right">
+      <button class="mobile-filter-btn" id="mobile-filter-btn" type="button" aria-label="Open Filters">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+        </svg>
+        <span>Filters</span>
+      </button>
+
+      <div class="view-toggle">
+        <span class="view-toggle-label">View:</span>
+        <button class="view-btn active" id="view-grid" title="Grid View" type="button" aria-label="Grid View">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/>
+          </svg>
+        </button>
+        <button class="view-btn" id="view-list" title="List View" type="button" aria-label="List View">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="sort-wrap">
+        <label for="sort-select" class="sort-label">Sort:</label>
+        <select id="sort-select" class="sort-select" aria-label="Sort products">
+          <option value="featured">Featured Collection</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name-az">Alphabetical: A to Z</option>
+          <option value="newest">New Arrivals First</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shop Main Layout: Grouped Sidebar + Products Grid -->
+  <div class="shop-layout">
+    <aside class="shop-sidebar" id="shop-sidebar" aria-label="Filters"></aside>
+    <div class="product-grid" id="category-product-grid"></div>
+  </div>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
 </main>
 
 <!-- ═══ FLOATING WHATSAPP WIDGET ═══════════════ -->
@@ -132,45 +193,35 @@
   </button>
 </div>
 
-<!-- ═══ PRODUCT MODAL ════════════════════════ -->
+<!-- ═══ PRODUCT DETAIL MODAL ═════════════════════ -->
 <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
   <div class="modal">
-    <img class="modal-img" id="modal-img" src="" alt="" width="480" height="270" />
+    <button class="modal-close-btn" id="modal-close" aria-label="Close dialog" type="button">✕</button>
+    <div class="modal-img-col">
+      <img class="modal-img" id="modal-img" src="" alt="" />
+      <span class="modal-discount-tag" id="modal-discount-tag"></span>
+    </div>
     <div class="modal-body">
-      <div class="modal-cat" id="modal-cat"></div>
-      <div class="modal-name" id="modal-name"></div>
-      <div class="modal-price-row">
-        <span class="modal-price" id="modal-price"></span>
-        <span class="modal-price-original" id="modal-price-original"></span>
-        <span class="modal-discount-tag" id="modal-discount-tag"></span>
-      </div>
-      <div class="modal-desc" id="modal-desc"></div>
-
-      <div class="modal-actions">
-        <div class="modal-order-label">Select Showroom Line to Place Order:</div>
-        <div class="modal-order-options">
-          <a class="btn-order-line btn-order-line-1" id="wa-order-1" target="_blank" rel="noopener">
-            <svg width="22" height="22" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path fill="#C89850" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
-              <path fill="#090E0F" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
-            </svg>
-            <div class="btn-order-text">
-              <span class="btn-order-title">Order via Line 1 (+234 803 321 8845)</span>
-              <span class="btn-order-subtitle">Factory Road Showroom</span>
-            </div>
-          </a>
-          <a class="btn-order-line btn-order-line-2" id="wa-order-2" target="_blank" rel="noopener">
-            <svg width="22" height="22" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path fill="#C89850" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
-              <path fill="#090E0F" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
-            </svg>
-            <div class="btn-order-text">
-              <span class="btn-order-title">Order via Line 2 (+234 803 776 8889)</span>
-              <span class="btn-order-subtitle">St Michael's Road Showroom</span>
-            </div>
-          </a>
+      <div>
+        <div class="modal-cat" id="modal-cat"></div>
+        <h2 class="modal-name" id="modal-name"></h2>
+        <div class="modal-price-row">
+          <span class="modal-price" id="modal-price"></span>
+          <span class="modal-price-original" id="modal-price-original"></span>
         </div>
-        <button class="btn-close" id="modal-close" type="button">Close</button>
+        <div class="modal-desc" id="modal-desc"></div>
+      </div>
+      <div class="modal-actions">
+        <div class="modal-cart-btn-wrap" id="modal-cart-action">
+          <button class="btn-add-cart modal-add-cart-btn" id="modal-add-to-cart-btn" type="button">Add to Cart</button>
+        </div>
+        <div class="modal-order-options">
+          <span class="modal-order-subtext">Direct showroom enquiry:</span>
+          <div class="modal-wa-lines">
+            <a class="modal-wa-chip" id="wa-order-1" target="_blank" rel="noopener">Factory Rd (Line 1)</a>
+            <a class="modal-wa-chip" id="wa-order-2" target="_blank" rel="noopener">St Michael's (Line 2)</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -204,6 +255,8 @@
 </footer>
 
 <script src="../data/products.js"></script>
+<script src="../assets/js/cart.js"></script>
+<script src="../assets/js/wishlist.js"></script>
 <script src="../assets/js/category.js"></script>
 </body>
 </html>

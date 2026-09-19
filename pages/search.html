@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Results — Melojey Modern Furniture</title>
+  <link rel="shortcut icon" type="image/png" href="../assets/images/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/showcase.css" />
+  <link rel="stylesheet" href="../assets/css/shop.css" />
+</head>
+<body data-page="SEARCH">
+
+<!-- ═══ TOP NAVBAR ════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="../index.html">
+    <div class="logo-badge">
+      <img src="../assets/images/logo.png" alt="Melojey Modern Furniture">
+    </div>
+    <div class="nav-brand-group">
+      <div class="nav-brand">MELOJEY</div>
+      <div class="nav-sub">Modern Furniture</div>
+    </div>
+  </a>
+
+  <!-- NAVBAR SEARCH BAR with Mobile Expandable Icon & Live Suggestions -->
+  <div class="nav-search-container" id="nav-search-container">
+    <button class="nav-search-toggle-btn" id="nav-search-toggle" aria-label="Open Search" type="button">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+      </svg>
+    </button>
+
+    <div class="nav-search-wrap" id="nav-search-wrap">
+      <div class="nav-search-input-box">
+        <svg class="nav-search-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input type="search" id="search-input" placeholder="Search sofas, beds, dining, rugs…" autocomplete="off" enterkeyhint="search" autocapitalize="off" spellcheck="false" />
+        <button class="nav-search-clear" id="search-clear" aria-label="Clear search" type="button">✕</button>
+      </div>
+      <button class="nav-search-close-mobile" id="search-close-mobile" aria-label="Cancel search" type="button">Cancel</button>
+      <div class="nav-search-suggestions" id="nav-search-suggestions" aria-hidden="true"></div>
+    </div>
+    <div class="mobile-search-backdrop" id="mobile-search-backdrop" aria-hidden="true"></div>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="../index.html#catalogue">Catalogue</a></li>
+    <li><a href="../index.html#about">About Us</a></li>
+  </ul>
+
+  <!-- Top Navbar Cart & Wishlist Icons Cluster -->
+  <div class="nav-icon-cluster">
+    <a class="nav-icon-btn" href="wishlist.html" aria-label="Wishlist" title="Wishlist">
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+        <polygon stroke-linecap="round" stroke-linejoin="round" points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+      </svg>
+      <span class="nav-icon-badge wishlist-badge" id="wishlist-nav-badge" style="display:none">0</span>
+    </a>
+    <a class="nav-icon-btn" href="cart.html" aria-label="Shopping Cart" title="Shopping Cart">
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+      </svg>
+      <span class="nav-icon-badge cart-badge" id="cart-nav-badge" style="display:none">0</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ═══ PINNED CATEGORIES NAVIGATION BAR ═════════════════ -->
+<nav class="category-nav-bar" id="category-nav-bar" aria-label="Product Categories">
+  <div class="category-nav-scroll" id="category-nav-scroll">
+    <a href="../index.html" class="cat-tab" data-category="HOME">HOME</a>
+    <a href="../categories/sofas.html" class="cat-tab" data-category="SOFAS">SOFAS</a>
+    <a href="../categories/beds.html" class="cat-tab" data-category="BEDS">BEDS</a>
+    <a href="../categories/dining.html" class="cat-tab" data-category="DINING">DINING</a>
+    <a href="../categories/office.html" class="cat-tab" data-category="OFFICE">OFFICE</a>
+    <a href="../categories/wardrobes.html" class="cat-tab" data-category="WARDROBES">WARDROBES</a>
+    <a href="../categories/bar.html" class="cat-tab" data-category="BAR">BAR</a>
+    <a href="../categories/tables.html" class="cat-tab" data-category="TABLES">TABLES</a>
+    <a href="../categories/rugs.html" class="cat-tab" data-category="RUGS">RUGS</a>
+    <a href="../categories/decor.html" class="cat-tab" data-category="DECOR">DECOR</a>
+    <a href="../categories/others.html" class="cat-tab" data-category="OTHERS">OTHERS</a>
+  </div>
+</nav>
+
+<!-- ═══ SEARCH HEADER BANNER ═══════════════════════ -->
+<section class="category-header-banner">
+  <div class="cat-header-eyebrow">Search Catalogue • Melojey Modern Furniture</div>
+  <h1>Results for &ldquo;<span class="gold-accent" id="search-query-display"></span>&rdquo;</h1>
+  <p>Showing matching handcrafted furniture and home decor across all showroom categories.</p>
+  <div class="cat-header-meta" id="search-header-count">Searching…</div>
+</section>
+
+<!-- ═══ SEARCH RESULTS CONTAINER ═══════════════════ -->
+<main class="category-page-container">
+  <!-- Shop Toolbar (Count, View Mode, Sort Dropdown) -->
+  <div class="shop-toolbar">
+    <div class="shop-toolbar-left" style="display: flex; align-items: center; gap: 0.85rem;">
+      <button class="mobile-filter-btn" id="mobile-filter-btn" type="button" aria-label="Open Filters">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+        </svg>
+        Filters
+      </button>
+      <div class="shop-toolbar-count" id="toolbar-count">Loading results…</div>
+    </div>
+    <div class="shop-toolbar-right">
+      <div class="view-toggle">
+        <span class="view-toggle-label">View:</span>
+        <button class="view-btn active" id="view-grid" title="Grid View" type="button" aria-label="Grid View">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/>
+          </svg>
+        </button>
+        <button class="view-btn" id="view-list" title="List View" type="button" aria-label="List View">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="sort-wrap">
+        <label for="sort-select" class="sort-label">Sort:</label>
+        <select id="sort-select" class="sort-select" aria-label="Sort products">
+          <option value="featured">Featured Relevance</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name-az">Alphabetical: A to Z</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shop Layout: Sidebar + Results Grid (Identical layout to Category pages) -->
+  <div class="shop-layout">
+    <aside class="shop-sidebar" id="shop-sidebar"></aside>
+    <div class="product-grid" id="search-product-grid"></div>
+  </div>
+</main>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<!-- ═══ PRODUCT DETAIL MODAL ═════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal">
+    <button class="modal-close-btn" id="modal-close" aria-label="Close dialog" type="button">✕</button>
+    <div class="modal-img-col">
+      <img class="modal-img" id="modal-img" src="" alt="" />
+      <span class="modal-discount-tag" id="modal-discount-tag"></span>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-cat" id="modal-cat"></div>
+        <h2 class="modal-name" id="modal-name"></h2>
+        <div class="modal-price-row">
+          <span class="modal-price" id="modal-price"></span>
+          <span class="modal-price-original" id="modal-price-original"></span>
+        </div>
+        <div class="modal-desc" id="modal-desc"></div>
+      </div>
+      <div class="modal-actions">
+        <div class="modal-cart-btn-wrap" id="modal-cart-action">
+          <button class="btn-add-cart modal-add-cart-btn" id="modal-add-to-cart-btn" type="button">Add to Cart</button>
+        </div>
+        <div class="modal-order-options">
+          <span class="modal-order-subtext">Direct showroom enquiry:</span>
+          <div class="modal-wa-lines">
+            <a class="modal-wa-chip" id="wa-order-1" target="_blank" rel="noopener">Factory Rd (Line 1)</a>
+            <a class="modal-wa-chip" id="wa-order-2" target="_blank" rel="noopener">St Michael's (Line 2)</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FLOATING WHATSAPP WIDGET ═══════════════ -->
+<div class="wa-float-wrapper">
+  <div class="wa-float-menu" id="wa-float-menu" aria-hidden="true">
+    <div class="wa-float-menu-header">
+      <span class="wa-float-menu-title">WhatsApp Orders &amp; Enquiries</span>
+      <span class="wa-float-menu-sub">Choose your showroom line:</span>
+    </div>
+    <a class="wa-float-menu-item" id="wa-float-line-1" target="_blank" rel="noopener">
+      <div class="wa-menu-icon">
+        <svg width="20" height="20" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="#C89850" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+          <path fill="#090E0F" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
+        </svg>
+      </div>
+      <div class="wa-menu-text">
+        <span class="wa-menu-name">Line 1: 0803 321 8845</span>
+        <span class="wa-menu-desc">+234 803 321 8845 • Factory Rd</span>
+      </div>
+    </a>
+    <a class="wa-float-menu-item" id="wa-float-line-2" target="_blank" rel="noopener">
+      <div class="wa-menu-icon">
+        <svg width="20" height="20" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="#C89850" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+          <path fill="#090E0F" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
+        </svg>
+      </div>
+      <div class="wa-menu-text">
+        <span class="wa-menu-name">Line 2: 0803 776 8889</span>
+        <span class="wa-menu-desc">+234 803 776 8889 • St Michael's</span>
+      </div>
+    </a>
+  </div>
+  <button class="wa-float" id="wa-float-btn" aria-label="Open WhatsApp Chat Options" type="button">
+    <svg width="34" height="34" viewBox="0 0 175.216 175.552" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="waGoldGradBtn" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#F2D18B"/>
+          <stop offset="45%" stop-color="#C89850"/>
+          <stop offset="100%" stop-color="#9A6B24"/>
+        </linearGradient>
+      </defs>
+      <path fill="#070A0B" d="m12.966 161.238 10.439-38.114a73.42 73.42 0 0 1-9.821-36.772c.017-40.556 33.021-73.55 73.578-73.55 19.681.01 38.154 7.669 52.047 21.572s21.537 32.383 21.53 52.037c-.018 40.553-33.027 73.553-73.578 73.553h-.032c-12.313-.005-24.412-3.094-35.159-8.954z"/>
+      <path fill="url(#waGoldGradBtn)" d="M87.184 25.227c-33.733 0-61.166 27.423-61.178 61.13a60.98 60.98 0 0 0 9.349 32.535l1.455 2.313-6.179 22.558 23.146-6.069 2.235 1.324c9.387 5.571 20.15 8.517 31.126 8.523h.023c33.707 0 61.14-27.426 61.153-61.135a60.75 60.75 0 0 0-17.895-43.251 60.75 60.75 0 0 0-43.235-17.928z"/>
+      <path fill="#070A0B" fill-rule="evenodd" d="M68.772 55.603c-1.378-3.061-2.828-3.123-4.137-3.176l-3.524-.043c-1.226 0-3.218.46-4.902 2.3s-6.435 6.287-6.435 15.332 6.588 17.785 7.506 19.013 12.718 20.381 31.405 27.75c15.529 6.124 18.689 4.906 22.061 4.6s10.877-4.447 12.408-8.74 1.532-7.971 1.073-8.74-1.685-1.226-3.525-2.146-10.877-5.367-12.562-5.981-2.91-.919-4.137.921-4.746 5.979-5.819 7.206-2.144 1.381-3.984.462-7.76-2.861-14.784-9.124c-5.465-4.873-9.154-10.891-10.228-12.73s-.114-2.835.808-3.751c.825-.824 1.838-2.147 2.759-3.22s1.224-1.84 1.836-3.065.307-2.301-.153-3.22-4.032-10.011-5.666-13.647"/>
+    </svg>
+  </button>
+</div>
+
+<!-- ═══ FOOTER ═══════════════════════════════ -->
+<footer id="contact">
+  <div class="footer-row">
+    <div class="footer-brand">
+      <div class="logo-badge">
+        <img src="../assets/images/logo.png" alt="Melojey Modern Furniture">
+      </div>
+      <div class="footer-brand-group">
+        <div class="footer-brand-name">MELOJEY</div>
+        <div class="footer-brand-sub">Modern Furniture</div>
+      </div>
+    </div>
+
+    <div class="footer-contact">
+      <a href="tel:+2348033218845">0803 321 8845</a>
+      <a href="tel:+2348037768889">0803 776 8889</a>
+      <a href="tel:+2348150622838">0815 062 2838</a>
+      <a href="mailto:melojey@yahoo.com">melojey@yahoo.com</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>Plot 1 Factory Road (beside UBA, near Railway Road) &amp; 48 St Michael's Road, Aba</span>
+    <span>© 2026 Melojey Modern Furniture</span>
+  </div>
+</footer>
+
+<script src="../data/products.js"></script>
+<script src="../assets/js/cart.js"></script>
+<script src="../assets/js/wishlist.js"></script>
+<script src="../assets/js/showcase.js"></script>
+
+<script>
+  const fmt = n => `₦${Number(n).toLocaleString("en-NG")}`;
+
+  function getAllProductsList() {
+    if (window.MELOJEY_DATA && window.MELOJEY_DATA.PRODUCTS) {
+      return Object.values(window.MELOJEY_DATA.PRODUCTS).flat();
+    }
+    return [];
+  }
+
+  const ALL_DEPARTMENTS = [
+    { key: "SOFAS", name: "Sofas & Couches", url: "../categories/sofas.html" },
+    { key: "BEDS", name: "Beds & Mattresses", url: "../categories/beds.html" },
+    { key: "DINING", name: "Dining Sets", url: "../categories/dining.html" },
+    { key: "OFFICE", name: "Office Furniture", url: "../categories/office.html" },
+    { key: "WARDROBES", name: "Wardrobes", url: "../categories/wardrobes.html" },
+    { key: "BAR", name: "Bar Furniture", url: "../categories/bar.html" },
+    { key: "TABLES", name: "Tables & Desks", url: "../categories/tables.html" },
+    { key: "RUGS", name: "Rugs & Carpets", url: "../categories/rugs.html" },
+    { key: "DECOR", name: "Home Decor", url: "../categories/decor.html" },
+    { key: "OTHERS", name: "Other Luxury Pieces", url: "../categories/others.html" }
+  ];
+
+  let activeQuickFilter = "ALL";
+  let activeCategoryFilter = "ALL";
+  let activePriceFilter = "ALL";
+  let activeSliderPrice = null;
+  let activeSort = "featured";
+
+  function executeSearchPage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = (urlParams.get("q") || "").trim();
+
+    const displayEl = document.getElementById("search-query-display");
+    const countEl = document.getElementById("search-header-count");
+    const toolbarCount = document.getElementById("toolbar-count");
+    const grid = document.getElementById("search-product-grid");
+    const inputEl = document.getElementById("search-input");
+    const sortSelect = document.getElementById("sort-select");
+    const sidebarEl = document.getElementById("shop-sidebar");
+    const mobileFilterBtn = document.getElementById("mobile-filter-btn");
+    const sidebarOverlay = document.getElementById("sidebar-overlay");
+
+    if (displayEl) displayEl.textContent = query || "All Collections";
+    if (inputEl && query) inputEl.value = query;
+
+    const allProducts = getAllProductsList();
+    let matches = [];
+
+    if (!query) {
+      matches = [...allProducts];
+    } else {
+      const q = query.toLowerCase();
+      matches = allProducts.filter(p => {
+        const nameMatch = (p.name || "").toLowerCase().includes(q);
+        const catMatch = (p.category || "").toLowerCase().includes(q);
+        const descMatch = (p.description || "").toLowerCase().includes(q);
+        const subMatch = (p.sub || "").toLowerCase().includes(q);
+        return nameMatch || catMatch || descMatch || subMatch;
+      });
+    }
+
+    function formatTwoToneTitle(name) {
+      if (!name) return "";
+      const parts = name.trim().split(" ");
+      if (parts.length === 1) {
+        return `<span class="recent-highlight">${escapeHtml(parts[0])}</span>`;
+      }
+      const firstWord = escapeHtml(parts[0]);
+      const rest = escapeHtml(parts.slice(1).join(" "));
+      return `<span class="recent-highlight">${firstWord}</span> ${rest}`;
+    }
+
+    let minPrice = null;
+    let maxPrice = null;
+
+    function sortResults(arr, sortVal) {
+      const copy = [...arr];
+      if (sortVal === "price-asc") return copy.sort((a,b) => a.price - b.price);
+      if (sortVal === "price-desc") return copy.sort((a,b) => b.price - a.price);
+      if (sortVal === "name-az") return copy.sort((a,b) => a.name.localeCompare(b.name));
+      return copy;
+    }
+
+    function filterMatches() {
+      let list = [...matches];
+      if (activeQuickFilter === "NEW") {
+        list = list.filter(p => p.isNew);
+      } else if (activeQuickFilter === "DEALS") {
+        list = list.filter(p => (p.discountPct || 0) >= 15);
+      }
+
+      if (activeCategoryFilter !== "ALL") {
+        list = list.filter(p => (p.category || "").toLowerCase() === activeCategoryFilter.toLowerCase());
+      }
+
+      if (minPrice !== null && !isNaN(minPrice)) {
+        list = list.filter(p => p.price >= minPrice);
+      }
+      if (maxPrice !== null && !isNaN(maxPrice)) {
+        list = list.filter(p => p.price <= maxPrice);
+      }
+
+      return sortResults(list, activeSort);
+    }
+
+    function renderCards(list) {
+      const total = list.length;
+      if (countEl) countEl.textContent = `${total} matching piece${total !== 1 ? "s" : ""}`;
+      if (toolbarCount) toolbarCount.textContent = `${total} item${total !== 1 ? "s" : ""}`;
+
+      if (total === 0) {
+        grid.innerHTML = `
+          <div class="state-box" style="grid-column: 1 / -1; text-align: center; padding: 4rem 1.5rem; background: #fff; border: 1px solid #E8E2D8; border-radius: 14px;">
+            <div style="width: 72px; height: 72px; margin: 0 auto 1.25rem; border-radius: 50%; background: linear-gradient(135deg, #FFFDF8 0%, #F5ECDD 100%); border: 1.5px solid #E2D3BE; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C89850" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+              </svg>
+            </div>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 1.4rem; color: #1A1209; margin-bottom: 0.5rem;">No Matching Pieces Found</h2>
+            <p style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; color: #7A6A5A; max-width: 440px; margin: 0 auto 1.5rem; line-height: 1.6;">
+              No pieces match your current active filters. Try resetting your price or category filters.
+            </p>
+            <button id="btn-reset-filters" class="hero-cta" style="display: inline-block; cursor: pointer; border: none;">Reset Filters</button>
+          </div>
+        `;
+        const resetBtn = grid.querySelector("#btn-reset-filters");
+        if (resetBtn) {
+          resetBtn.onclick = () => {
+            activeQuickFilter = "ALL";
+            activeCategoryFilter = "ALL";
+            activePriceFilter = "ALL";
+            minPrice = null;
+            maxPrice = null;
+            buildSidebar();
+            renderCards(filterMatches());
+          };
+        }
+        return;
+      }
+
+      grid.innerHTML = list.map(p => {
+        const discountPct = p.discountPct || 15;
+        const orig = p.originalPrice || Math.round(p.price * 1.15);
+        const imgSrc = p.image.startsWith('../') ? p.image : (p.image.startsWith('http') ? p.image : '../' + p.image);
+        return `
+          <div class="product-card" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(p.name)}">
+            <div class="card-img-wrap">
+              <img class="card-img" src="${imgSrc}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='../assets/images/logo.png';" />
+              <span class="card-discount-badge">-${discountPct}%</span>
+              <button class="card-wishlist-btn" data-id="${p.id}" type="button" aria-label="Add to wishlist">☆</button>
+            </div>
+            <div class="card-body">
+              <div class="card-cat">${escapeHtml(p.category || "Furniture")}</div>
+              <div class="card-name" title="${escapeHtml(p.name)}">${formatTwoToneTitle(p.name)}</div>
+              <div class="card-desc">${escapeHtml(p.description || "")}</div>
+              <div class="card-footer">
+                <div class="card-price-group">
+                  <span class="card-price">${fmt(p.price)}</span>
+                  <span class="card-price-original">${fmt(orig)}</span>
+                </div>
+                <button class="btn-add-cart" data-id="${p.id}" type="button">Add to Cart</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // Attach interactions
+      grid.querySelectorAll(".product-card").forEach(card => {
+        const id = card.dataset.id;
+        const product = allProducts.find(p => p.id === id);
+        if (!product) return;
+
+        card.addEventListener("click", e => {
+          if (
+            e.target.closest(".card-wishlist-btn") ||
+            e.target.closest(".btn-add-cart") ||
+            e.target.closest(".qty-stepper")
+          ) return;
+          openSearchModal(product);
+        });
+
+        if (window.MelojeyWishlist) {
+          window.MelojeyWishlist.initStar(card, product);
+        }
+        if (window.MelojeyCart) {
+          window.MelojeyCart.initStepper(card, product);
+        }
+      });
+    }
+
+    function buildSidebar() {
+      if (!sidebarEl) return;
+
+      const newCount = matches.filter(p => p.isNew).length;
+      const dealsCount = matches.filter(p => (p.discountPct || 0) >= 15).length;
+
+      // Extract unique categories in matches
+      const catCounts = {};
+      matches.forEach(p => {
+        const c = p.category || "Others";
+        catCounts[c] = (catCounts[c] || 0) + 1;
+      });
+      const categoriesFound = Object.entries(catCounts);
+
+      // Price slider upper bound
+      const maxFoundPrice = matches.length > 0 ? Math.max(...matches.map(p => p.price)) : 600000;
+      const sliderCeil = Math.max(Math.ceil(maxFoundPrice / 50000) * 50000, 300000);
+      const minLimit = 10000;
+
+      // Bucket counts
+      const under150Count = matches.filter(p => p.price < 150000).length;
+      const midCount = matches.filter(p => p.price >= 150000 && p.price <= 350000).length;
+      const highCount = matches.filter(p => p.price > 350000).length;
+
+      sidebarEl.innerHTML = `
+        <div class="sidebar-title">Filters &amp; Categories</div>
+
+        <!-- GROUP 1: QUICK FILTERS -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Quick Filters</div>
+          <div class="sidebar-item ${activeQuickFilter === "ALL" ? "active" : ""}" data-quick="ALL">
+            <span class="sidebar-item-name">All Search Results</span>
+            <span class="sidebar-item-count">${matches.length}</span>
+          </div>
+          ${newCount > 0 ? `
+          <div class="sidebar-item ${activeQuickFilter === "NEW" ? "active" : ""}" data-quick="NEW">
+            <span class="sidebar-item-name">✨ New Arrivals</span>
+            <span class="sidebar-item-count">${newCount}</span>
+          </div>
+          ` : ""}
+          <div class="sidebar-item ${activeQuickFilter === "DEALS" ? "active" : ""}" data-quick="DEALS">
+            <span class="sidebar-item-name">🔥 Hot Deals (15%+ Off)</span>
+            <span class="sidebar-item-count">${dealsCount}</span>
+          </div>
+        </div>
+
+        <!-- GROUP 2: CATEGORIES FOUND -->
+        ${categoriesFound.length > 1 ? `
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Departments Found</div>
+          <div class="sidebar-item ${activeCategoryFilter === "ALL" ? "active" : ""}" data-cat-filter="ALL">
+            <span class="sidebar-item-name">All Departments</span>
+            <span class="sidebar-item-count">${matches.length}</span>
+          </div>
+          ${categoriesFound.map(([catName, count]) => `
+          <div class="sidebar-item ${activeCategoryFilter.toLowerCase() === catName.toLowerCase() ? "active" : ""}" data-cat-filter="${catName}">
+            <span class="sidebar-item-name">${catName}</span>
+            <span class="sidebar-item-count">${count}</span>
+          </div>
+          `).join("")}
+        </div>
+        ` : ""}
+
+        <!-- GROUP 3: DUAL MIN/MAX PRICE RANGE CONTROLS -->
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Price Filter</div>
+          
+          <div class="price-slider-box">
+            <div class="price-slider-header">
+              <span class="price-slider-title">Filter by Budget:</span>
+              <span class="price-slider-val" id="search-price-slider-val">
+                ${minPrice !== null || maxPrice !== null ? `${fmt(minPrice || minLimit)} – ${fmt(maxPrice || sliderCeil)}` : "All Prices"}
+              </span>
+            </div>
+
+            <div class="price-input-row">
+              <div class="price-input-field">
+                <span class="price-input-prefix">₦</span>
+                <input type="number" class="price-num-input" id="search-min-input" min="${minLimit}" max="${sliderCeil}" step="5000" value="${minPrice !== null ? minPrice : ""}" placeholder="Min" />
+              </div>
+              <span class="price-input-sep">—</span>
+              <div class="price-input-field">
+                <span class="price-input-prefix">₦</span>
+                <input type="number" class="price-num-input" id="search-max-input" min="${minLimit}" max="${sliderCeil}" step="5000" value="${maxPrice !== null ? maxPrice : ""}" placeholder="Max" />
+              </div>
+            </div>
+
+            <div class="dual-range-wrap">
+              <div class="dual-range-track"></div>
+              <div class="dual-range-highlight" id="search-dual-highlight"></div>
+              <input type="range" class="dual-range-slider" id="search-min-slider" min="${minLimit}" max="${sliderCeil}" step="5000" value="${minPrice || minLimit}">
+              <input type="range" class="dual-range-slider" id="search-max-slider" min="${minLimit}" max="${sliderCeil}" step="5000" value="${maxPrice || sliderCeil}">
+            </div>
+
+            <div class="price-slider-ticks">
+              <span>${fmt(minLimit)}</span>
+              <span id="search-tick-summary">${minPrice !== null || maxPrice !== null ? `${fmt(minPrice || minLimit)} – ${fmt(maxPrice || sliderCeil)}` : "All Prices"}</span>
+              <span>${fmt(sliderCeil)}+</span>
+            </div>
+          </div>
+
+          <div class="sidebar-item ${activePriceFilter === "ALL" ? "active" : ""}" data-price="ALL">
+            <span class="sidebar-item-name">All Prices</span>
+            <span class="sidebar-item-count">${matches.length}</span>
+          </div>
+          <div class="sidebar-item ${activePriceFilter === "under-150k" ? "active" : ""}" data-price="under-150k">
+            <span class="sidebar-item-name">Under ₦150,000</span>
+            <span class="sidebar-item-count">${under150Count}</span>
+          </div>
+          <div class="sidebar-item ${activePriceFilter === "150k-350k" ? "active" : ""}" data-price="150k-350k">
+            <span class="sidebar-item-name">₦150,000 – ₦350,000</span>
+            <span class="sidebar-item-count">${midCount}</span>
+          </div>
+          <div class="sidebar-item ${activePriceFilter === "above-350k" ? "active" : ""}" data-price="above-350k">
+            <span class="sidebar-item-name">Above ₦350,000</span>
+            <span class="sidebar-item-count">${highCount}</span>
+          </div>
+        </div>
+
+        <!-- GROUP 4: ALL DEPARTMENTS -->
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Showroom Departments</div>
+          <div class="sidebar-dept-list">
+            ${ALL_DEPARTMENTS.map(d => `
+              <a href="${d.url}" class="sidebar-dept-link">
+                ${d.name}
+              </a>
+            `).join("")}
+          </div>
+        </div>
+      `;
+
+      // Dual price controls sync
+      const minSlider = sidebarEl.querySelector("#search-min-slider");
+      const maxSlider = sidebarEl.querySelector("#search-max-slider");
+      const minInput = sidebarEl.querySelector("#search-min-input");
+      const maxInput = sidebarEl.querySelector("#search-max-input");
+      const highlight = sidebarEl.querySelector("#search-dual-highlight");
+      const headerVal = sidebarEl.querySelector("#search-price-slider-val");
+      const summaryVal = sidebarEl.querySelector("#search-tick-summary");
+
+      function updateDualHighlight() {
+        if (!minSlider || !maxSlider || !highlight) return;
+        const minVal = Number(minSlider.value);
+        const maxVal = Number(maxSlider.value);
+        const minBound = Number(minSlider.min) || minLimit;
+        const maxBound = Number(minSlider.max) || sliderCeil;
+        const pctMin = Math.max(0, Math.min(100, ((minVal - minBound) / (maxBound - minBound)) * 100));
+        const pctMax = Math.max(0, Math.min(100, ((maxVal - minBound) / (maxBound - minBound)) * 100));
+        highlight.style.left = pctMin + "%";
+        highlight.style.width = (pctMax - pctMin) + "%";
+
+        const label = (minVal > minBound || maxVal < maxBound) ? `${fmt(minVal)} – ${fmt(maxVal)}` : "All Prices";
+        if (headerVal) headerVal.textContent = label;
+        if (summaryVal) summaryVal.textContent = label;
+      }
+
+      function applyDualPrice(fromMin, fromMax) {
+        minPrice = fromMin > minLimit ? fromMin : null;
+        maxPrice = fromMax < sliderCeil ? fromMax : null;
+        activePriceFilter = (minPrice === null && maxPrice === null) ? "ALL" : "custom";
+        renderCards(filterMatches());
+        sidebarEl.querySelectorAll("[data-price]").forEach(el => {
+          el.classList.toggle("active", el.getAttribute("data-price") === activePriceFilter);
+        });
+      }
+
+      if (minSlider && maxSlider) {
+        updateDualHighlight();
+
+        minSlider.addEventListener("input", () => {
+          let val1 = Number(minSlider.value);
+          let val2 = Number(maxSlider.value);
+          if (val1 > val2 - 10000) {
+            val1 = val2 - 10000;
+            minSlider.value = val1;
+          }
+          if (minInput) minInput.value = val1 > minLimit ? val1 : "";
+          updateDualHighlight();
+          applyDualPrice(val1, val2);
+        });
+
+        maxSlider.addEventListener("input", () => {
+          let val1 = Number(minSlider.value);
+          let val2 = Number(maxSlider.value);
+          if (val2 < val1 + 10000) {
+            val2 = val1 + 10000;
+            maxSlider.value = val2;
+          }
+          if (maxInput) maxInput.value = val2 < sliderCeil ? val2 : "";
+          updateDualHighlight();
+          applyDualPrice(val1, val2);
+        });
+      }
+
+      if (minInput) {
+        minInput.addEventListener("input", () => {
+          const val = minInput.value ? Number(minInput.value) : minLimit;
+          if (minSlider) {
+            minSlider.value = Math.min(val, Number(maxSlider.value) - 5000);
+          }
+          updateDualHighlight();
+          applyDualPrice(Number(minSlider.value), Number(maxSlider.value));
+        });
+      }
+
+      if (maxInput) {
+        maxInput.addEventListener("input", () => {
+          const val = maxInput.value ? Number(maxInput.value) : sliderCeil;
+          if (maxSlider) {
+            maxSlider.value = Math.max(val, Number(minSlider.value) + 5000);
+          }
+          updateDualHighlight();
+          applyDualPrice(Number(minSlider.value), Number(maxSlider.value));
+        });
+      }
+
+      // Quick filter click
+      sidebarEl.querySelectorAll("[data-quick]").forEach(el => {
+        el.addEventListener("click", () => {
+          activeQuickFilter = el.getAttribute("data-quick");
+          renderCards(filterMatches());
+          buildSidebar();
+          closeMobileSidebar();
+        });
+      });
+
+      // Category filter click
+      sidebarEl.querySelectorAll("[data-cat-filter]").forEach(el => {
+        el.addEventListener("click", () => {
+          activeCategoryFilter = el.getAttribute("data-cat-filter");
+          renderCards(filterMatches());
+          buildSidebar();
+          closeMobileSidebar();
+        });
+      });
+
+      // Price preset click
+      sidebarEl.querySelectorAll("[data-price]").forEach(el => {
+        el.addEventListener("click", () => {
+          const priceKey = el.getAttribute("data-price");
+          activePriceFilter = priceKey;
+          if (priceKey === "ALL") {
+            minPrice = null;
+            maxPrice = null;
+            if (minSlider) minSlider.value = minLimit;
+            if (maxSlider) maxSlider.value = sliderCeil;
+            if (minInput) minInput.value = "";
+            if (maxInput) maxInput.value = "";
+          } else if (priceKey === "under-150k") {
+            minPrice = null;
+            maxPrice = 150000;
+            if (minSlider) minSlider.value = minLimit;
+            if (maxSlider) maxSlider.value = 150000;
+            if (minInput) minInput.value = "";
+            if (maxInput) maxInput.value = "150000";
+          } else if (priceKey === "150k-350k") {
+            minPrice = 150000;
+            maxPrice = 350000;
+            if (minSlider) minSlider.value = 150000;
+            if (maxSlider) maxSlider.value = 350000;
+            if (minInput) minInput.value = "150000";
+            if (maxInput) maxInput.value = "350000";
+          } else if (priceKey === "above-350k") {
+            minPrice = 350000;
+            maxPrice = null;
+            if (minSlider) minSlider.value = 350000;
+            if (maxSlider) maxSlider.value = sliderCeil;
+            if (minInput) minInput.value = "350000";
+            if (maxInput) maxInput.value = "";
+          }
+          updateDualHighlight();
+          renderCards(filterMatches());
+          sidebarEl.querySelectorAll("[data-price]").forEach(p => {
+            p.classList.toggle("active", p.getAttribute("data-price") === activePriceFilter);
+          });
+          closeMobileSidebar();
+        });
+      });
+    }
+
+    function closeMobileSidebar() {
+      sidebarEl?.classList.remove("mobile-open");
+      sidebarOverlay?.classList.remove("open");
+    }
+
+    if (mobileFilterBtn && sidebarEl) {
+      mobileFilterBtn.addEventListener("click", () => {
+        sidebarEl.classList.add("mobile-open");
+        sidebarOverlay?.classList.add("open");
+      });
+    }
+
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener("click", closeMobileSidebar);
+    }
+
+    if (sortSelect) {
+      sortSelect.addEventListener("change", () => {
+        activeSort = sortSelect.value;
+        renderCards(filterMatches());
+      });
+    }
+
+    // Top Search Input Enter / Mobile Search handling
+    if (inputEl) {
+      const handleSearchSubmit = () => {
+        const q = inputEl.value.trim();
+        if (q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
+      };
+      inputEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.keyCode === 13) {
+          e.preventDefault();
+          handleSearchSubmit();
+        }
+      });
+      inputEl.addEventListener("keyup", (e) => {
+        if (e.key === "Enter" || e.keyCode === 13) {
+          e.preventDefault();
+          handleSearchSubmit();
+        }
+      });
+      inputEl.addEventListener("search", () => {
+        handleSearchSubmit();
+      });
+    }
+
+    buildSidebar();
+    renderCards(filterMatches());
+
+    // View mode toggles
+    const gridViewBtn = document.getElementById("view-grid");
+    const listViewBtn = document.getElementById("view-list");
+    if (gridViewBtn && listViewBtn) {
+      gridViewBtn.onclick = () => {
+        grid.classList.remove("list-view");
+        gridViewBtn.classList.add("active");
+        listViewBtn.classList.remove("active");
+      };
+      listViewBtn.onclick = () => {
+        grid.classList.add("list-view");
+        listViewBtn.classList.add("active");
+        gridViewBtn.classList.remove("active");
+      };
+    }
+  }
+
+  function openSearchModal(product) {
+    const overlay = document.getElementById("modal-overlay");
+    const imgEl = document.getElementById("modal-img");
+    const catEl = document.getElementById("modal-cat");
+    const nameEl = document.getElementById("modal-name");
+    const priceEl = document.getElementById("modal-price");
+    const origPriceEl = document.getElementById("modal-price-original");
+    const discountEl = document.getElementById("modal-discount-tag");
+    const descEl = document.getElementById("modal-desc");
+    const wa1 = document.getElementById("wa-order-1");
+    const wa2 = document.getElementById("wa-order-2");
+    const closeBtn = document.getElementById("modal-close");
+    const cartWrap = document.getElementById("modal-cart-action");
+
+    if (!overlay) return;
+
+    imgEl.src = product.image.startsWith('../') ? product.image : (product.image.startsWith('http') ? product.image : '../' + product.image);
+    catEl.textContent = product.category || "Furniture";
+    nameEl.textContent = product.name;
+    priceEl.textContent = fmt(product.price);
+    const orig = product.originalPrice || Math.round(product.price * 1.15);
+    origPriceEl.textContent = fmt(orig);
+    discountEl.textContent = `-${product.discountPct || 15}% OFF`;
+    descEl.textContent = product.description || "Crafted with master woodworking and premium materials for luxury Nigerian spaces.";
+
+    const cleanImg = product.image ? (product.image.startsWith("http") ? product.image : (window.location.origin && !window.location.origin.startsWith("file") ? `${window.location.origin}/${product.image.replace(/^(\.\.\/)+/, "").replace(/^\//, "")}` : product.image)) : "";
+    const msg =
+      `Hello! I'd like to order from Melojey Modern Furniture:\n\n` +
+      `*${product.name}*\n` +
+      `• Category: ${product.category || "Furniture"}\n` +
+      `• Price: ${fmt(product.price)} (Save ${product.discountPct || 15}% off ${fmt(orig)})\n` +
+      `• Item Code: ${product.id}\n` +
+      `• 📷 Photo: ${cleanImg}\n\n` +
+      `Is this available in your showroom?`;
+
+    if (wa1) wa1.href = `https://wa.me/2348033218845?text=${encodeURIComponent(msg)}`;
+    if (wa2) wa2.href = `https://wa.me/2348037768889?text=${encodeURIComponent(msg)}`;
+
+    if (cartWrap) {
+      cartWrap.innerHTML = `<button class="btn-add-cart modal-add-cart-btn" data-id="${product.id}" type="button">Add to Cart</button>`;
+      if (window.MelojeyCart) {
+        window.MelojeyCart.initStepper(cartWrap, product);
+      }
+    }
+
+    overlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+
+    const closeModal = () => {
+      overlay.classList.remove("open");
+      document.body.style.overflow = "";
+    };
+
+    if (closeBtn) closeBtn.onclick = closeModal;
+    overlay.onclick = e => { if (e.target === overlay) closeModal(); };
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+  }
+
+  document.addEventListener("DOMContentLoaded", executeSearchPage);
+</script>
+</body>
+</html>

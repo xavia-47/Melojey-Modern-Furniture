@@ -195,13 +195,27 @@
   function waLink(number, product) {
     const discountPct = getDiscountPct(product);
     const originalPrice = product.originalPrice || getOriginalPrice(product.price, discountPct);
+    const cleanImg = product.image ? (product.image.startsWith("http") ? product.image : (window.location.origin && !window.location.origin.startsWith("file") ? `${window.location.origin}/${product.image.replace(/^(\.\.\/)+/, "").replace(/^\//, "")}` : product.image)) : "";
     const msg =
-      `Hello! I'd like to order from Melojey:\n\n` +
+      `Hello! I'd like to order from Melojey Modern Furniture:\n\n` +
       `*${product.name}*\n` +
-      `Discounted Price: ${fmt(product.price)} (Save ${discountPct}% off ${fmt(originalPrice)})\n` +
-      `Ref: ${product.id}\n\n` +
+      `• Category: ${product.category || "Furniture"}\n` +
+      `• Discounted Price: ${fmt(product.price)} (Save ${discountPct}% off ${fmt(originalPrice)})\n` +
+      `• Item Code: ${product.id}\n` +
+      `• 📷 Photo: ${cleanImg}\n\n` +
       `Is this available in your showroom?`;
     return `https://wa.me/${number}?text=${encodeURIComponent(msg)}`;
+  }
+
+  function formatTwoToneTitle(name) {
+    if (!name) return "";
+    const parts = name.trim().split(" ");
+    if (parts.length === 1) {
+      return `<span class="recent-highlight">${parts[0]}</span>`;
+    }
+    const firstWord = parts[0];
+    const rest = parts.slice(1).join(" ");
+    return `<span class="recent-highlight">${firstWord}</span> ${rest}`;
   }
 
   function renderProducts(products) {
@@ -222,6 +236,7 @@
 
       return `
       <div class="product-card" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${p.name}">
+        <button class="card-wishlist-btn" aria-label="Add to wishlist" title="Add to wishlist" type="button">☆</button>
         <div class="card-img-wrap">
           <img class="card-img"
                src="${p.image || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop'}"
@@ -231,26 +246,42 @@
         </div>
         <div class="card-body">
           <div class="card-cat">${p.category}</div>
-          <div class="card-name">${p.name}</div>
+          <div class="card-name">${formatTwoToneTitle(p.name)}</div>
           <div class="card-desc">${p.description}</div>
           <div class="card-footer">
             <div class="card-price-group">
               <span class="card-price">${fmt(p.price)}</span>
               <span class="card-price-original">${fmt(originalPrice)}</span>
             </div>
-            <button class="btn-order" data-id="${p.id}">Order</button>
+            <button class="btn-add-cart" data-id="${p.id}" type="button">Add to Cart</button>
           </div>
         </div>
       </div>
     `;}).join("");
 
     grid.querySelectorAll(".product-card").forEach(card => {
-      card.addEventListener("click",   e => { if (!e.target.closest(".btn-order")) openModal(card.dataset.id); });
-      card.addEventListener("keydown", e => { if (e.key === "Enter") openModal(card.dataset.id); });
-    });
+      const p = allProducts.find(x => x.id === card.dataset.id);
+      if (!p) return;
 
-    grid.querySelectorAll(".btn-order").forEach(btn => {
-      btn.addEventListener("click", e => { e.stopPropagation(); openModal(btn.dataset.id); });
+      card.addEventListener("click", e => {
+        if (
+          e.target.closest(".card-wishlist-btn") ||
+          e.target.closest(".btn-add-cart") ||
+          e.target.closest(".qty-stepper")
+        ) return;
+        openModal(card.dataset.id);
+      });
+
+      card.addEventListener("keydown", e => {
+        if (e.key === "Enter") openModal(card.dataset.id);
+      });
+
+      if (window.MelojeyWishlist) {
+        window.MelojeyWishlist.initStar(card, p);
+      }
+      if (window.MelojeyCart) {
+        window.MelojeyCart.initStepper(card, p);
+      }
     });
   }
 
@@ -266,11 +297,19 @@
     const discountPct = getDiscountPct(p);
     const originalPrice = p.originalPrice || getOriginalPrice(p.price, discountPct);
 
-    document.getElementById("modal-img").src    = p.image || "";
-    document.getElementById("modal-img").alt    = p.name;
-    document.getElementById("modal-cat").textContent   = p.category;
-    document.getElementById("modal-name").textContent  = p.name;
-    document.getElementById("modal-price").textContent = fmt(p.price);
+    const imgEl = document.getElementById("modal-img");
+    if (imgEl) {
+      imgEl.src = p.image || "";
+      imgEl.alt = p.name;
+    }
+    const catEl = document.getElementById("modal-cat");
+    if (catEl) catEl.textContent = p.category;
+
+    const nameEl = document.getElementById("modal-name");
+    if (nameEl) nameEl.textContent = p.name;
+
+    const priceEl = document.getElementById("modal-price");
+    if (priceEl) priceEl.textContent = fmt(p.price);
 
     const modalOrigEl = document.getElementById("modal-price-original");
     if (modalOrigEl) modalOrigEl.textContent = fmt(originalPrice);
@@ -278,24 +317,43 @@
     const modalDiscountEl = document.getElementById("modal-discount-tag");
     if (modalDiscountEl) modalDiscountEl.textContent = `-${discountPct}% OFF`;
 
-    document.getElementById("modal-desc").textContent  = p.description;
+    const descEl = document.getElementById("modal-desc");
+    if (descEl) descEl.textContent = p.description;
+
     const orderLine1 = document.getElementById("wa-order-1");
     const orderLine2 = document.getElementById("wa-order-2");
     if (orderLine1) orderLine1.href = waLink(WA_LINE_1, p);
     if (orderLine2) orderLine2.href = waLink(WA_LINE_2, p);
 
+    const modalCartWrap = document.getElementById("modal-cart-action");
+    if (modalCartWrap) {
+      modalCartWrap.innerHTML = `<button class="btn-add-cart modal-add-cart-btn" data-id="${p.id}" type="button">Add to Cart</button>`;
+      if (window.MelojeyCart) {
+        window.MelojeyCart.initStepper(modalCartWrap, p);
+      }
+    }
+
     if (floatMenu) floatMenu.classList.remove("open");
-    document.getElementById("modal-overlay").classList.add("open");
+    const overlay = document.getElementById("modal-overlay");
+    if (overlay) overlay.classList.add("open");
     document.body.style.overflow = "hidden";
   }
 
   function closeModal() {
-    document.getElementById("modal-overlay").classList.remove("open");
+    const overlay = document.getElementById("modal-overlay");
+    if (overlay) overlay.classList.remove("open");
     document.body.style.overflow = "";
   }
 
-  document.getElementById("modal-close").addEventListener("click", closeModal);
-  document.getElementById("modal-overlay").addEventListener("click", e => { if (e.target === e.currentTarget) closeModal(); });
+  const modalCloseBtn = document.getElementById("modal-close");
+  if (modalCloseBtn) modalCloseBtn.addEventListener("click", closeModal);
+
+  const modalOverlayEl = document.getElementById("modal-overlay");
+  if (modalOverlayEl) {
+    modalOverlayEl.addEventListener("click", e => {
+      if (e.target === modalOverlayEl) closeModal();
+    });
+  }
   document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
 
   // Expose key helpers to window for showcase.js

@@ -111,7 +111,7 @@
 #search-input:focus {
   background: rgba(0, 0, 0, 0.75);
   border-color: var(--gold);
-  box-shadow: 0 0 14px rgba(200, 152, 80, 0.35);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 #search-input:focus ~ .nav-search-icon,
@@ -209,7 +209,7 @@
   background: linear-gradient(180deg, #101719 0%, #090E0F 100%);
   border: 1px solid rgba(200, 152, 80, 0.4);
   border-radius: 12px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 16px rgba(200, 152, 80, 0.15);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
   max-height: 400px;
   overflow-y: auto;
   z-index: 300;
@@ -425,7 +425,7 @@
   color: #090E0F;
   border-color: transparent;
   font-weight: 800;
-  box-shadow: 0 2px 10px rgba(200, 152, 80, 0.35);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* ═══════════════════════════════════════════
@@ -464,7 +464,7 @@
 .showcase-card:hover {
   transform: translateY(-4px);
   border-color: var(--gold);
-  box-shadow: 0 14px 30px rgba(200, 152, 80, 0.16), 0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
 }
 
 /* Card Header Title */
@@ -485,6 +485,7 @@
   color: #966A37;
   background: linear-gradient(135deg, #B38035 0%, #966A37 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -681,37 +682,45 @@
   letter-spacing: 0.04em;
 }
 
-/* Recent Cards Grid (Exactly 5 items in a balanced row) */
+/* Recent Cards Grid (Balanced row matching product cards) */
 .recent-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 1.15rem;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 1.25rem;
 }
 
-/* Single Recent Product Card (Clean White Surface) */
+@media (min-width: 1100px) {
+  .recent-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+/* Single Recent Product Card (Harmonized with normal cards) */
 .recent-card {
   background: #FFFFFF;
   border: 1px solid #E8E4DC;
   border-radius: 14px;
-  padding: 0.85rem;
+  padding: 0.9rem;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
   position: relative;
+  min-height: 360px;
 }
 
 .recent-card:hover {
   transform: translateY(-4px);
   border-color: #C89850;
-  box-shadow: 0 14px 30px rgba(200, 152, 80, 0.14), 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
 }
 
 /* Recent Card Image Container */
+.recent-card .card-img-wrap,
 .recent-img-wrap {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -720,6 +729,7 @@
   margin-bottom: 0.75rem;
 }
 
+.recent-card .card-img,
 .recent-img-wrap img {
   width: 100%;
   height: 100%;
@@ -728,17 +738,18 @@
   transition: transform 0.35s ease;
 }
 
+.recent-card:hover .card-img,
 .recent-card:hover .recent-img-wrap img {
   transform: scale(1.06);
 }
 
-/* Discount Badge — soft translucent warm pill */
+/* Discount Badge — soft translucent warm pill (kept as requested by user) */
 .recent-discount-badge {
   position: absolute;
   top: 8px;
   right: 8px;
-  background: rgba(150, 106, 55, 0.12);
-  border: 1px solid rgba(150, 106, 55, 0.32);
+  background: rgba(150, 106, 55, 0.14);
+  border: 1px solid rgba(150, 106, 55, 0.38);
   color: #966A37;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.68rem;
@@ -750,26 +761,47 @@
   z-index: 2;
 }
 
-/* Card Info */
+/* Wishlist star button on recently viewed card positioned at top-left */
+.recent-card .card-wishlist-btn {
+  top: 8px;
+  left: 8px;
+  right: auto;
+}
+
+/* Card Info / Body */
+.recent-card .card-body,
 .recent-info {
   display: flex;
   flex-direction: column;
   flex: 1;
+  padding: 0.1rem 0 0;
+}
+
+.recent-card .card-cat {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: #966A37;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 0.25rem;
 }
 
 /* Product Name */
+.recent-card .card-name,
 .recent-name {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.84rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: #090E0F;
   line-height: 1.35;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 2.25rem;
-  margin-bottom: 0.4rem;
+  min-height: 2.3rem;
+  margin-bottom: 0.6rem;
 }
 
 .recent-highlight {
@@ -777,17 +809,27 @@
   font-weight: 700;
 }
 
+/* Card Footer with Price Group & Add-to-Cart Stepper */
+.recent-card .card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid #F0ECE6;
+  flex-wrap: wrap;
+}
+
 .recent-price-group {
   display: flex;
   align-items: baseline;
-  gap: 0.55rem;
-  margin-top: auto;
-  padding-top: 0.3rem;
+  gap: 0.45rem;
 }
 
 .recent-price {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.96rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: #966A37;
   letter-spacing: 0.01em;
@@ -795,7 +837,7 @@
 
 .recent-original-price {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   color: #B0A898;
   text-decoration: line-through;
   font-weight: 500;
@@ -910,13 +952,13 @@
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(200, 152, 80, 0.45);
     border-radius: 999px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 12px rgba(200, 152, 80, 0.12);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   .nav-search-wrap.open #search-input:focus {
     background: rgba(12, 18, 22, 0.95);
     border-color: var(--gold);
-    box-shadow: 0 0 16px rgba(200, 152, 80, 0.38);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.25);
   }
 
   .nav-search-wrap.open .nav-search-icon {
@@ -946,7 +988,7 @@
     max-height: calc(85vh - 76px);
     border-radius: 0 0 16px 16px;
     border-top: none;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(200, 152, 80, 0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
   }
 
   .category-nav-bar {

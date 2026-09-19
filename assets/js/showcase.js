@@ -181,49 +181,8 @@ const SHOWCASE_CARDS_DATA = [
   }
 ];
 
-/* ── 3. FEATURED PRODUCTS FOR "RECENTLY VIEWED" ── */
-const DEFAULT_RECENT_PRODUCTS = [
-  {
-    id: "P001",
-    name: "Oslo 3-Seater Velvet Sofa",
-    price: 285000,
-    originalPrice: 335000,
-    discountPct: 15,
-    image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&h=500&fit=crop"
-  },
-  {
-    id: "P002",
-    name: "Royal King Bed Frame & Headboard",
-    price: 195000,
-    originalPrice: 225000,
-    discountPct: 13,
-    image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=500&h=500&fit=crop"
-  },
-  {
-    id: "P003",
-    name: "Imperial Marble Top Dining Set",
-    price: 420000,
-    originalPrice: 490000,
-    discountPct: 14,
-    image: "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=500&h=500&fit=crop"
-  },
-  {
-    id: "P004",
-    name: "Executive Ergonomic Office Chair",
-    price: 95000,
-    originalPrice: 110000,
-    discountPct: 14,
-    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&h=500&fit=crop"
-  },
-  {
-    id: "P005",
-    name: "Handcrafted Turkish Geometric Rug",
-    price: 85000,
-    originalPrice: 99000,
-    discountPct: 14,
-    image: "https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=500&h=500&fit=crop"
-  }
-];
+/* No default fallback products — the section only appears after the user
+   has actually viewed something. New users see nothing. */
 
 /* Helper to safely retrieve current product list */
 function getProductsList() {
@@ -347,6 +306,7 @@ function formatTwoToneTitle(name) {
 ═══════════════════════════════════════════ */
 function renderRecentlyViewed() {
   const container = document.getElementById("recent-grid");
+  const panel = document.getElementById("recently-viewed-section");
   if (!container) return;
 
   let viewedItems = [];
@@ -357,43 +317,70 @@ function renderRecentlyViewed() {
     viewedItems = [];
   }
 
-  // The user can only see their last 5. If less than 5 viewed, supplement from defaults so exactly 5 cards display.
-  let itemsToDisplay = viewedItems.slice(0, 5);
-  if (itemsToDisplay.length < 5) {
-    const existingIds = new Set(itemsToDisplay.map(x => x.id));
-    for (const defItem of DEFAULT_RECENT_PRODUCTS) {
-      if (!existingIds.has(defItem.id)) {
-        itemsToDisplay.push(defItem);
-        existingIds.add(defItem.id);
-        if (itemsToDisplay.length === 5) break;
-      }
-    }
+  // Only show items the user has actually viewed — strictly no fallback defaults
+  const itemsToDisplay = viewedItems.slice(0, 5);
+
+  // Hide the entire section for new users with no history
+  if (panel) {
+    panel.style.display = itemsToDisplay.length === 0 ? "none" : "";
+  }
+  if (itemsToDisplay.length === 0) {
+    container.innerHTML = "";
+    return;
   }
 
   container.innerHTML = itemsToDisplay.map(item => `
-    <div class="recent-card" data-id="${item.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(item.name)}">
-      <div class="recent-img-wrap">
-        <img src="${item.image}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/logo.png';" />
+    <div class="recent-card product-card" data-id="${item.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(item.name)}">
+      <div class="card-img-wrap recent-img-wrap">
+        <img class="card-img" src="${item.image}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/logo.png';" />
         <span class="recent-discount-badge">-${item.discountPct || 15}%</span>
+        <button class="card-wishlist-btn" data-id="${item.id}" type="button" aria-label="Add to wishlist">☆</button>
       </div>
-      <div class="recent-info">
-        <div class="recent-name" title="${escapeHtml(item.name)}">${formatTwoToneTitle(item.name)}</div>
-        <div class="recent-price-group">
-          <span class="recent-price">${formatCurrency(item.price)}</span>
-          <span class="recent-original-price">${formatCurrency(item.originalPrice)}</span>
+      <div class="card-body recent-info">
+        <div class="card-cat">${escapeHtml(item.category || "Furniture")}</div>
+        <div class="card-name recent-name" title="${escapeHtml(item.name)}">${formatTwoToneTitle(item.name)}</div>
+        <div class="card-footer">
+          <div class="card-price-group recent-price-group">
+            <span class="card-price recent-price">${formatCurrency(item.price)}</span>
+            <span class="card-price-original recent-original-price">${formatCurrency(item.originalPrice)}</span>
+          </div>
+          <button class="btn-add-cart" data-id="${item.id}" type="button">Add to Cart</button>
         </div>
       </div>
     </div>
   `).join("");
 
-  // Clicking a recent card opens the order modal
+  // Attach card interactions: Wishlist star, Cart Stepper, Modal click
   container.querySelectorAll(".recent-card").forEach(card => {
-    card.addEventListener("click", () => {
-      const id = card.getAttribute("data-id");
+    const id = card.getAttribute("data-id");
+    const item = itemsToDisplay.find(x => x.id === id);
+    if (!item) return;
+
+    card.addEventListener("click", e => {
+      if (
+        e.target.closest(".card-wishlist-btn") ||
+        e.target.closest(".btn-add-cart") ||
+        e.target.closest(".qty-stepper")
+      ) return;
       if (typeof window.openModal === "function") {
         window.openModal(id);
       }
     });
+
+    card.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        if (typeof window.openModal === "function") {
+          window.openModal(id);
+        }
+      }
+    });
+
+    if (window.MelojeyWishlist) {
+      window.MelojeyWishlist.initStar(card, item);
+    }
+    if (window.MelojeyCart) {
+      window.MelojeyCart.initStepper(card, item);
+    }
   });
 }
 
@@ -413,6 +400,7 @@ function trackProductView(product) {
     recent.unshift({
       id: product.id,
       name: product.name,
+      category: product.category || "Furniture",
       price: product.price,
       originalPrice: originalPrice,
       discountPct: discountPct,
@@ -456,11 +444,16 @@ function initCategoriesNav() {
     tab.addEventListener("click", (e) => {
       const category = (tab.getAttribute("data-category") || "HOME").toUpperCase();
       if (category === "HOME") {
-        e.preventDefault();
         const catalogue = document.getElementById("catalogue");
-        if (catalogue) {
+        // Only prevent default if we are already on the homepage where #catalogue exists
+        const isHomePage = window.location.pathname.endsWith("index.html") || 
+                           window.location.pathname === "/" || 
+                           window.location.pathname.endsWith("/");
+        if (isHomePage && catalogue) {
+          e.preventDefault();
           catalogue.scrollIntoView({ behavior: "smooth", block: "start" });
         }
+        // Otherwise, allow standard link navigation to index.html!
       }
       // For all other categories, let the browser follow href to dedicated page
     });
@@ -660,26 +653,107 @@ function initSearchSuggestions() {
       });
     });
 
-    // Click on "View all results" opens the top match modal
+    function getSearchUrl(term) {
+      const path = window.location.pathname.toLowerCase();
+      if (path.includes("/categories/")) {
+        return `../pages/search.html?q=${encodeURIComponent(term)}`;
+      } else if (path.includes("/pages/")) {
+        return `search.html?q=${encodeURIComponent(term)}`;
+      }
+      return `pages/search.html?q=${encodeURIComponent(term)}`;
+    }
+
+    // Click on "View all results" navigates to search page
     const viewAllBtn = document.getElementById("suggestion-view-all");
-    if (viewAllBtn && topMatches.length > 0) {
+    if (viewAllBtn) {
       viewAllBtn.addEventListener("click", () => {
-        if (typeof window.openModal === "function") {
-          window.openModal(topMatches[0].id);
-        }
-        suggestionsBox.classList.remove("show");
-        closeMobileSearch();
+        window.location.href = getSearchUrl(query);
       });
     }
+  }
+
+  // Handle Enter key and mobile search action on search input
+  function performSearch() {
+    const q = searchInput.value.trim();
+    if (q) {
+      const path = window.location.pathname.toLowerCase();
+      let target = `pages/search.html?q=${encodeURIComponent(q)}`;
+      if (path.includes("/categories/")) target = `../pages/search.html?q=${encodeURIComponent(q)}`;
+      else if (path.includes("/pages/")) target = `search.html?q=${encodeURIComponent(q)}`;
+      window.location.href = target;
+    }
+  }
+
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.keyCode === 13) {
+      e.preventDefault();
+      performSearch();
+    }
+  });
+
+  searchInput.addEventListener("keyup", (e) => {
+    if (e.key === "Enter" || e.keyCode === 13) {
+      e.preventDefault();
+      performSearch();
+    }
+  });
+
+  searchInput.addEventListener("search", () => {
+    performSearch();
+  });
+}
+
+/* ═══════════════════════════════════════════
+   8. FLOATING WHATSAPP SHOWROOM SELECTOR
+═══════════════════════════════════════════ */
+function initFloatingWhatsApp() {
+  const floatBtn = document.getElementById("wa-float-btn");
+  const floatMenu = document.getElementById("wa-float-menu");
+  const floatLine1 = document.getElementById("wa-float-line-1");
+  const floatLine2 = document.getElementById("wa-float-line-2");
+
+  const WA_LINE_1 = "2348033218845";
+  const WA_LINE_2 = "2348037768889";
+  const defaultEnquiry = encodeURIComponent("Hello Melojey Modern Furniture! I am browsing your showroom collection and would like to make an enquiry.");
+
+  if (floatLine1) floatLine1.href = `https://wa.me/${WA_LINE_1}?text=${defaultEnquiry}`;
+  if (floatLine2) floatLine2.href = `https://wa.me/${WA_LINE_2}?text=${defaultEnquiry}`;
+
+  if (floatBtn && floatMenu && !floatBtn.dataset.waBound) {
+    floatBtn.dataset.waBound = "true";
+    floatBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      floatMenu.classList.toggle("open");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!floatMenu.contains(e.target) && e.target !== floatBtn && !floatBtn.contains(e.target)) {
+        floatMenu.classList.remove("open");
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") floatMenu.classList.remove("open");
+    });
   }
 }
 
 /* ═══════════════════════════════════════════
    DOM INITIALIZATION
 ═══════════════════════════════════════════ */
-document.addEventListener("DOMContentLoaded", () => {
+window.initFloatingWhatsApp = initFloatingWhatsApp;
+
+function initShowcaseApp() {
   renderShowcaseCards();
   renderRecentlyViewed();
   initCategoriesNav();
   initSearchSuggestions();
-});
+  initFloatingWhatsApp();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initShowcaseApp);
+} else {
+  initShowcaseApp();
+}
+
