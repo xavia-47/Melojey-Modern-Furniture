@@ -3,9 +3,9 @@
  * Cache-first strategy for static assets, network-first for HTML/data
  */
 
-const CACHE_NAME = 'melojey-v3';
-const STATIC_CACHE = 'melojey-static-v3';
-const DATA_CACHE = 'melojey-data-v3';
+const CACHE_NAME = 'melojey-v4';
+const STATIC_CACHE = 'melojey-static-v4';
+const DATA_CACHE = 'melojey-data-v4';
 
 const STATIC_ASSETS = [
   '/',
@@ -61,14 +61,20 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // HTML, JS, CSS, JSON — Network first, then cache fallback
-  if (
+  const pathname = url.pathname.toLowerCase();
+  const isCodeOrDoc = (
     request.headers.get('Accept')?.includes('text/html') ||
-    request.url.endsWith('.html') ||
-    request.url.endsWith('.js') ||
-    request.url.endsWith('.css') ||
-    request.url.endsWith('.json')
-  ) {
+    request.destination === 'script' ||
+    request.destination === 'style' ||
+    request.destination === 'document' ||
+    pathname.endsWith('.html') ||
+    pathname.endsWith('.js') ||
+    pathname.endsWith('.css') ||
+    pathname.endsWith('.json')
+  );
+
+  // HTML, JS, CSS, JSON — Network first, then cache fallback
+  if (isCodeOrDoc) {
     event.respondWith(
       fetch(request)
         .then(response => {

@@ -1186,3 +1186,64 @@
   .sort-label { display: none; }
   .view-toggle-label { display: none; }
 }
+
+/* Modal Stepper Styling in shop.css */
+.modal-cart-simple-stepper,
+.modal-cart-active-wrap {
+  width: 100% !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 8px !important;
+  background: #FDFBF8 !important;
+  border: 1.5px solid #C89850 !important;
+  border-radius: 10px !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+.modal-step-btn,
+.modal-qty-btn {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  background: #966A37 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+.modal-step-info,
+.modal-qty-stepper {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  color: #1A1209 !important;
+}
+
+.modal-step-num,
+.modal-qty-num {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 800 !important;
+  color: #966A37 !important;
+  font-size: 1.05rem !important;
+  min-width: 20px !important;
+  text-align: center !important;
+}
+
+.modal-cart-active-wrap .modal-cart-status,
+.modal-cart-active-wrap .modal-view-cart-link {
+  display: none !important;
+}

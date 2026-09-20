@@ -1300,13 +1300,14 @@
     }
 
     /* Simple, Sleek Modal Stepper (Same 44px footprint as Add to Cart button) */
-    .modal-cart-simple-stepper {
+    .modal-cart-simple-stepper,
+    .modal-cart-active-wrap {
       width: 100%;
       height: 44px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 6px;
+      padding: 0 8px;
       background: #FDFBF8;
       border: 1.5px solid #C89850;
       border-radius: 10px;
@@ -1320,7 +1321,8 @@
       to { transform: scale(1); opacity: 1; }
     }
 
-    .modal-step-btn {
+    .modal-step-btn,
+    .modal-qty-btn {
       width: 32px;
       height: 32px;
       border-radius: 8px;
@@ -1339,16 +1341,19 @@
       flex-shrink: 0;
     }
 
-    .modal-step-btn:hover {
+    .modal-step-btn:hover,
+    .modal-qty-btn:hover {
       background: #7A5328;
       transform: scale(1.06);
     }
 
-    .modal-step-btn:active {
+    .modal-step-btn:active,
+    .modal-qty-btn:active {
       transform: scale(0.92);
     }
 
-    .modal-step-info {
+    .modal-step-info,
+    .modal-qty-stepper {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -1359,11 +1364,20 @@
       user-select: none;
     }
 
-    .modal-step-num {
+    .modal-step-num,
+    .modal-qty-num {
       font-family: 'Montserrat', sans-serif;
       font-weight: 800;
       color: #966A37;
       font-size: 1.05rem;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    /* Hide legacy bulky sub-elements if present */
+    .modal-cart-active-wrap .modal-cart-status,
+    .modal-cart-active-wrap .modal-view-cart-link {
+      display: none !important;
     }
 
     /* Cart Toast Notification */
