@@ -79,10 +79,43 @@
       align-items: center;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
       transition: border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      position: relative;
     }
     .cart-item-card:hover {
       border-color: #C89850;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 6px 18px rgba(200, 152, 80, 0.12);
+    }
+    .cart-item-card:hover .cart-item-title {
+      color: #966A37;
+      transition: color 0.15s ease;
+    }
+    .cart-item-thumb {
+      position: relative;
+      cursor: pointer;
+    }
+    .cart-item-thumb::after {
+      content: '🔍';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.6);
+      background: rgba(15, 10, 5, 0.65);
+      color: #FFFFFF;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      opacity: 0;
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
+    .cart-item-card:hover .cart-item-thumb::after {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
     .cart-item-thumb {
       width: 100px;
@@ -715,10 +748,52 @@
   </div>
 </footer>
 
-<script src="../data/products.js"></script>
-<script src="../assets/js/cart.js"></script>
-<script src="../assets/js/wishlist.js"></script>
-<script src="../assets/js/showcase.js"></script>
+<!-- ═══ PRODUCT DETAIL MODAL ═════════════════════ -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal">
+    <button class="modal-close-btn" id="modal-close" aria-label="Close dialog" type="button">✕</button>
+    <div class="modal-img-col">
+      <button class="modal-gallery-arrow modal-prev-btn" id="modal-prev-btn" aria-label="Previous angle" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <img class="modal-img" id="modal-img" src="" alt="" />
+      <button class="modal-gallery-arrow modal-next-btn" id="modal-next-btn" aria-label="Next angle" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+      <span class="modal-gallery-counter" id="modal-gallery-counter">1 / 3</span>
+      <div class="modal-gallery-dots" id="modal-gallery-dots"></div>
+      <span class="modal-discount-tag" id="modal-discount-tag"></span>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-cat" id="modal-cat"></div>
+        <h2 class="modal-name" id="modal-name"></h2>
+        <div class="modal-price-row">
+          <span class="modal-price" id="modal-price"></span>
+          <span class="modal-price-original" id="modal-price-original"></span>
+        </div>
+        <div class="modal-desc" id="modal-desc"></div>
+      </div>
+      <div class="modal-actions">
+        <div class="modal-cart-btn-wrap" id="modal-cart-action">
+          <button class="btn-add-cart modal-add-cart-btn" id="modal-add-to-cart-btn" type="button">Add to Cart</button>
+        </div>
+        <div class="modal-order-options">
+          <span class="modal-order-subtext">Direct showroom enquiry:</span>
+          <div class="modal-wa-lines">
+            <a class="modal-wa-chip" id="wa-order-1" target="_blank" rel="noopener">Factory Rd (Line 1)</a>
+            <a class="modal-wa-chip" id="wa-order-2" target="_blank" rel="noopener">St Michael's (Line 2)</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../data/products.js?v=2.3"></script>
+<script src="../assets/js/cart.js?v=2.3"></script>
+<script src="../assets/js/wishlist.js?v=2.3"></script>
+<script src="../assets/js/showcase.js?v=2.3"></script>
 
 <script>
   const WA_LINE_1 = "2348033218845";
@@ -906,9 +981,27 @@
       </div>
     `;
 
+    // Attach Card Click to open product detail modal
+    wrap.querySelectorAll(".cart-item-card").forEach(card => {
+      card.addEventListener("click", e => {
+        if (e.target.closest(".btn-remove-item") || e.target.closest(".qty-stepper")) return;
+        const id = card.getAttribute("data-id");
+        const cartItem = MelojeyCart.getAll().find(i => i.id === id);
+        let catalogItem = null;
+        if (window.MELOJEY_DATA && Array.isArray(window.MELOJEY_DATA.ALL_PRODUCTS)) {
+          catalogItem = window.MELOJEY_DATA.ALL_PRODUCTS.find(p => p.id === id);
+        }
+        const product = catalogItem ? { ...catalogItem, ...cartItem } : cartItem;
+        if (product) {
+          openCartItemModal(product);
+        }
+      });
+    });
+
     // Attach Stepper & Remove Click Listeners
     wrap.querySelectorAll(".qty-plus").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
         const id = btn.getAttribute("data-id");
         MelojeyCart.setQty(id, MelojeyCart.getQty(id) + 1);
         renderCartPage();
@@ -916,7 +1009,8 @@
     });
 
     wrap.querySelectorAll(".qty-minus").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
         const id = btn.getAttribute("data-id");
         MelojeyCart.setQty(id, MelojeyCart.getQty(id) - 1);
         renderCartPage();
@@ -924,7 +1018,8 @@
     });
 
     wrap.querySelectorAll(".btn-remove-item").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
         const id = btn.getAttribute("data-id");
         MelojeyCart.remove(id);
         renderCartPage();
@@ -941,6 +1036,75 @@
       });
     }
   }
+
+  function openCartItemModal(product) {
+    const overlay = document.getElementById("modal-overlay");
+    const imgEl = document.getElementById("modal-img");
+    const catEl = document.getElementById("modal-cat");
+    const nameEl = document.getElementById("modal-name");
+    const priceEl = document.getElementById("modal-price");
+    const origPriceEl = document.getElementById("modal-price-original");
+    const discountEl = document.getElementById("modal-discount-tag");
+    const descEl = document.getElementById("modal-desc");
+    const wa1 = document.getElementById("wa-order-1");
+    const wa2 = document.getElementById("wa-order-2");
+    const cartWrap = document.getElementById("modal-cart-action");
+    const closeBtn = document.getElementById("modal-close");
+
+    if (!overlay) return;
+
+    const imgSrc = product.image.startsWith('../') ? product.image : (product.image.startsWith('http') ? product.image : '../' + product.image);
+    imgEl.src = imgSrc;
+    imgEl.alt = product.name;
+    catEl.textContent = product.category || "Furniture";
+    nameEl.textContent = product.name;
+    priceEl.textContent = fmt(product.price);
+    const orig = product.originalPrice || Math.round(product.price * 1.15);
+    origPriceEl.textContent = fmt(orig);
+    discountEl.textContent = `-${product.discountPct || 15}% OFF`;
+    descEl.textContent = product.description || "Crafted with master woodworking and premium materials for luxury Nigerian spaces.";
+
+    const cleanImg = product.image ? (product.image.startsWith("http") ? product.image : (window.location.origin && !window.location.origin.startsWith("file") ? `${window.location.origin}/${product.image.replace(/^(\.\.\/)+/, "").replace(/^\//, "")}` : product.image)) : "";
+    const msg =
+      `Hello! I'd like to order from Melojey Modern Furniture:\n\n` +
+      `*${product.name}*\n` +
+      `• Category: ${product.category || "Furniture"}\n` +
+      `• Price: ${fmt(product.price)} (Save ${product.discountPct || 15}% off ${fmt(orig)})\n` +
+      `• Item Code: ${product.id}\n` +
+      `• 📷 Photo: ${cleanImg}\n\n` +
+      `Is this available in your showroom?`;
+
+    if (wa1) wa1.href = `https://wa.me/${WA_LINE_1}?text=${encodeURIComponent(msg)}`;
+    if (wa2) wa2.href = `https://wa.me/${WA_LINE_2}?text=${encodeURIComponent(msg)}`;
+
+    if (window.MelojeyGallery && window.MelojeyGallery.setup) {
+      window.MelojeyGallery.setup(overlay, product);
+    }
+
+    if (cartWrap) {
+      if (window.MelojeyCart && window.MelojeyCart.setupModal) {
+        window.MelojeyCart.setupModal(cartWrap, product);
+      } else if (window.MelojeyCart && window.MelojeyCart.initStepper) {
+        cartWrap.innerHTML = `<button class="btn-add-cart modal-add-cart-btn" data-id="${product.id}" type="button">Add to Cart</button>`;
+        window.MelojeyCart.initStepper(cartWrap, product);
+      }
+    }
+
+    overlay.classList.add("open");
+    document.body.style.overflow = "hidden";
+
+    const closeCartModal = () => {
+      overlay.classList.remove("open");
+      document.body.style.overflow = "";
+      renderCartPage();
+    };
+
+    if (closeBtn) closeBtn.onclick = closeCartModal;
+    overlay.onclick = e => { if (e.target === overlay) closeCartModal(); };
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeCartModal(); }, { once: true });
+  }
+
+  window.renderCartPage = renderCartPage;
 
   document.addEventListener("DOMContentLoaded", () => {
     renderCartPage();

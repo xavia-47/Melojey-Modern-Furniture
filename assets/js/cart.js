@@ -325,8 +325,12 @@ function getProductAngles(product) {
 
   // Ensure product's main image is at index 0
   if (product.image) {
-    const cleanMain = product.image;
-    list = [cleanMain, ...list.filter(url => url !== cleanMain)];
+    let cleanMain = product.image;
+    const isSubfolder = window.location.pathname.includes("/pages/") || window.location.pathname.includes("/categories/");
+    if (isSubfolder && !cleanMain.startsWith("http") && !cleanMain.startsWith("../") && !cleanMain.startsWith("/")) {
+      cleanMain = "../" + cleanMain;
+    }
+    list = [cleanMain, ...list.filter(url => url !== cleanMain && url !== product.image)];
   }
 
   return list.slice(0, 3);
@@ -530,21 +534,17 @@ function setupModalCart(wrapEl, product) {
       }
     } else {
       wrapEl.innerHTML = `
-        <div class="modal-cart-active-wrap" data-id="${product.id}">
-          <div class="modal-qty-stepper">
-            <button class="modal-qty-btn modal-qty-minus" aria-label="Decrease quantity" type="button">−</button>
-            <span class="modal-qty-num">${qty}</span>
-            <button class="modal-qty-btn modal-qty-plus" aria-label="Increase quantity" type="button">+</button>
-          </div>
-          <div class="modal-cart-status">
-            <span class="modal-cart-status-badge">✓ Added to Cart</span>
-          </div>
-          <a href="${cartUrl}" class="modal-view-cart-link">View Cart &rarr;</a>
+        <div class="modal-cart-simple-stepper" data-id="${product.id}">
+          <button class="modal-step-btn modal-step-minus" aria-label="Decrease quantity" type="button">−</button>
+          <span class="modal-step-info">
+            <span class="modal-step-num">${qty}</span> in Cart
+          </span>
+          <button class="modal-step-btn modal-step-plus" aria-label="Increase quantity" type="button">+</button>
         </div>
       `;
 
-      const minusBtn = wrapEl.querySelector(".modal-qty-minus");
-      const plusBtn = wrapEl.querySelector(".modal-qty-plus");
+      const minusBtn = wrapEl.querySelector(".modal-step-minus");
+      const plusBtn = wrapEl.querySelector(".modal-step-plus");
 
       if (plusBtn) {
         plusBtn.onclick = e => {
@@ -610,11 +610,16 @@ function syncOtherSteppers(productId, qty, product, sourceNode) {
   const modalCartWrap = document.getElementById("modal-cart-action");
   if (modalCartWrap && (!sourceNode || !modalCartWrap.contains(sourceNode))) {
     const modalAddBtn = modalCartWrap.querySelector("[data-id]");
-    const modalActiveWrap = modalCartWrap.querySelector(".modal-cart-active-wrap");
-    const activeModalId = modalAddBtn?.getAttribute("data-id") || modalActiveWrap?.getAttribute("data-id");
+    const modalStepper = modalCartWrap.querySelector(".modal-cart-simple-stepper");
+    const activeModalId = modalAddBtn?.getAttribute("data-id") || modalStepper?.getAttribute("data-id");
     if (activeModalId === pId && product) {
       setupModalCart(modalCartWrap, product);
     }
+  }
+
+  // 1b. If on cart page, trigger re-render of cart table live
+  if (typeof window.renderCartPage === "function" && (!sourceNode || sourceNode.closest("#modal-overlay"))) {
+    window.renderCartPage();
   }
 
   // 2. Sync Steppers on Grid Cards

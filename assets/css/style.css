@@ -1299,45 +1299,35 @@
       text-align: center;
     }
 
-    /* Modal Cart Active State */
-    .modal-cart-active-wrap {
+    /* Simple, Sleek Modal Stepper (Same 44px footprint as Add to Cart button) */
+    .modal-cart-simple-stepper {
       width: 100%;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.85rem;
-      flex-wrap: wrap;
+      padding: 0 6px;
       background: #FDFBF8;
       border: 1.5px solid #C89850;
-      border-radius: 12px;
-      padding: 0.65rem 0.9rem;
-      animation: modalCartPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+      border-radius: 10px;
+      box-sizing: border-box;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      animation: modalCartPopIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     @keyframes modalCartPopIn {
-      from { transform: scale(0.96); opacity: 0; }
+      from { transform: scale(0.98); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
 
-    .modal-qty-stepper {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      background: #FFFFFF;
-      border: 1px solid #E8E2D8;
-      border-radius: 999px;
-      padding: 3px 6px;
-    }
-
-    .modal-qty-btn {
+    .modal-step-btn {
       width: 32px;
       height: 32px;
-      border-radius: 50%;
+      border-radius: 8px;
       background: #966A37;
       color: #FFFFFF;
       border: none;
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -1346,61 +1336,34 @@
       line-height: 1;
       padding: 0;
       transition: background 0.15s, transform 0.1s;
+      flex-shrink: 0;
     }
 
-    .modal-qty-btn:hover {
+    .modal-step-btn:hover {
       background: #7A5328;
-      transform: scale(1.08);
+      transform: scale(1.06);
     }
 
-    .modal-qty-btn:active {
+    .modal-step-btn:active {
       transform: scale(0.92);
     }
 
-    .modal-qty-num {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1rem;
-      font-weight: 800;
-      color: #1A1209;
-      min-width: 24px;
-      text-align: center;
-    }
-
-    .modal-cart-status {
+    .modal-step-info {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-    }
-
-    .modal-cart-status-badge {
+      gap: 6px;
       font-family: 'Montserrat', sans-serif;
-      font-size: 0.78rem;
+      font-size: 0.88rem;
       font-weight: 700;
-      color: #27AE60;
-      letter-spacing: 0.02em;
+      color: #1A1209;
+      user-select: none;
     }
 
-    .modal-view-cart-link {
+    .modal-step-num {
       font-family: 'Montserrat', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #FFFFFF;
-      background: linear-gradient(135deg, #C89850 0%, #966A37 100%);
-      padding: 0.45rem 0.95rem;
-      border-radius: 8px;
-      text-decoration: none;
-      letter-spacing: 0.04em;
-      transition: transform 0.15s, box-shadow 0.15s;
-      white-space: nowrap;
-      margin-left: auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .modal-view-cart-link:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(200, 152, 80, 0.3);
+      font-weight: 800;
+      color: #966A37;
+      font-size: 1.05rem;
     }
 
     /* Cart Toast Notification */
