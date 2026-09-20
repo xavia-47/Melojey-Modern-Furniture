@@ -3,9 +3,9 @@
  * Cache-first strategy for static assets, network-first for HTML/data
  */
 
-const CACHE_NAME = 'melojey-v4';
-const STATIC_CACHE = 'melojey-static-v4';
-const DATA_CACHE = 'melojey-data-v4';
+const CACHE_NAME = 'melojey-v5';
+const STATIC_CACHE = 'melojey-static-v5';
+const DATA_CACHE = 'melojey-data-v5';
 
 const STATIC_ASSETS = [
   '/',

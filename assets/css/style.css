@@ -1681,6 +1681,15 @@
       .footer-bottom { flex-direction: column; }
     }
 
+    /* Cart Order Summary Sticky Box */
+    .cart-summary-box {
+      position: sticky;
+      top: 122px;
+      z-index: 50;
+      max-height: calc(100vh - 134px);
+      overflow-y: auto;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
