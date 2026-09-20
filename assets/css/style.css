@@ -1029,6 +1029,117 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    .modal-img.changing {
+      opacity: 0.15;
+      transform: scale(0.97);
+    }
+
+    /* Modal Gallery Left & Right Navigation Arrows */
+    .modal-gallery-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1.5px solid rgba(200, 152, 80, 0.45);
+      color: #3D2D1E;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 0;
+      line-height: 1;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      outline: none;
+    }
+
+    .modal-gallery-arrow:hover {
+      background: #C89850;
+      color: #FFFFFF;
+      border-color: #966A37;
+      transform: translateY(-50%) scale(1.12);
+      box-shadow: 0 6px 18px rgba(200, 152, 80, 0.4);
+    }
+
+    .modal-gallery-arrow:active {
+      transform: translateY(-50%) scale(0.94);
+    }
+
+    .modal-prev-btn {
+      left: 12px;
+    }
+
+    .modal-next-btn {
+      right: 12px;
+    }
+
+    .modal-gallery-arrow svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+    }
+
+    /* Angle Counter Badge */
+    .modal-gallery-counter {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(15, 10, 5, 0.72);
+      color: #FFFDF8;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 3px 9px;
+      border-radius: 999px;
+      backdrop-filter: blur(6px);
+      z-index: 5;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    /* Gallery Indicator Dots */
+    .modal-gallery-dots {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      z-index: 10;
+      padding: 4px 10px;
+      background: rgba(0, 0, 0, 0.45);
+      border-radius: 999px;
+      backdrop-filter: blur(6px);
+    }
+
+    .modal-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.55);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .modal-dot:hover {
+      background: rgba(255, 255, 255, 0.95);
+      transform: scale(1.2);
+    }
+
+    .modal-dot.active {
+      background: #C89850;
+      width: 20px;
+      border-radius: 999px;
     }
 
     .modal-discount-tag {
@@ -1186,6 +1297,197 @@
       color: #1A1209;
       min-width: 32px;
       text-align: center;
+    }
+
+    /* Modal Cart Active State */
+    .modal-cart-active-wrap {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+      background: #FDFBF8;
+      border: 1.5px solid #C89850;
+      border-radius: 12px;
+      padding: 0.65rem 0.9rem;
+      animation: modalCartPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    @keyframes modalCartPopIn {
+      from { transform: scale(0.96); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-qty-stepper {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #FFFFFF;
+      border: 1px solid #E8E2D8;
+      border-radius: 999px;
+      padding: 3px 6px;
+    }
+
+    .modal-qty-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #966A37;
+      color: #FFFFFF;
+      border: none;
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .modal-qty-btn:hover {
+      background: #7A5328;
+      transform: scale(1.08);
+    }
+
+    .modal-qty-btn:active {
+      transform: scale(0.92);
+    }
+
+    .modal-qty-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #1A1209;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .modal-cart-status {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .modal-cart-status-badge {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #27AE60;
+      letter-spacing: 0.02em;
+    }
+
+    .modal-view-cart-link {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      background: linear-gradient(135deg, #C89850 0%, #966A37 100%);
+      padding: 0.45rem 0.95rem;
+      border-radius: 8px;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: transform 0.15s, box-shadow 0.15s;
+      white-space: nowrap;
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .modal-view-cart-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(200, 152, 80, 0.3);
+    }
+
+    /* Cart Toast Notification */
+    .cart-toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 99999;
+      background: #090E0F;
+      color: #FFFFFF;
+      padding: 0.85rem 1.25rem;
+      border-radius: 12px;
+      border: 1px solid rgba(200, 152, 80, 0.45);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      transform: translateY(-80px);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 90vw;
+    }
+
+    .cart-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .cart-toast-body {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .cart-toast-check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #C89850;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .cart-toast-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-toast-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #C89850;
+      letter-spacing: 0.05em;
+    }
+
+    .cart-toast-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.76rem;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 220px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cart-toast-link {
+      margin-left: 0.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      background: rgba(200, 152, 80, 0.35);
+      border: 1px solid rgba(200, 152, 80, 0.6);
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+
+    .cart-toast-link:hover {
+      background: #C89850;
     }
 
     .modal-order-options {

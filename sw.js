@@ -3,9 +3,9 @@
  * Cache-first strategy for static assets, network-first for HTML/data
  */
 
-const CACHE_NAME = 'melojey-v1';
-const STATIC_CACHE = 'melojey-static-v1';
-const DATA_CACHE = 'melojey-data-v1';
+const CACHE_NAME = 'melojey-v3';
+const STATIC_CACHE = 'melojey-static-v3';
+const DATA_CACHE = 'melojey-data-v3';
 
 const STATIC_ASSETS = [
   '/',
@@ -14,8 +14,11 @@ const STATIC_ASSETS = [
   '/assets/css/style.css',
   '/assets/css/showcase.css',
   '/assets/css/shop.css',
+  '/assets/js/cart.js',
+  '/assets/js/wishlist.js',
   '/assets/js/showcase.js',
   '/assets/js/category.js',
+  '/assets/js/script.js',
   '/assets/images/logo.png',
   '/assets/images/favicon.png',
   '/assets/images/pwa-icon-192.png',
@@ -48,7 +51,7 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch — cache-first for static assets, network-first for HTML/JSON
+// Fetch — network-first for HTML, JS, CSS, and API; fallback to cache
 self.addEventListener('fetch', event => {
   const { request } = event;
   const url = new URL(request.url);
@@ -58,14 +61,20 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // HTML & JSON — network-first, fallback to cache
-  if (request.headers.get('Accept').includes('text/html') || request.url.endsWith('.json')) {
+  // HTML, JS, CSS, JSON — Network first, then cache fallback
+  if (
+    request.headers.get('Accept')?.includes('text/html') ||
+    request.url.endsWith('.html') ||
+    request.url.endsWith('.js') ||
+    request.url.endsWith('.css') ||
+    request.url.endsWith('.json')
+  ) {
     event.respondWith(
       fetch(request)
         .then(response => {
-          if (response.ok) {
+          if (response && response.ok) {
             const clone = response.clone();
-            caches.open(DATA_CACHE).then(cache => cache.put(request, clone));
+            caches.open(STATIC_CACHE).then(cache => cache.put(request, clone));
           }
           return response;
         })
@@ -74,7 +83,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // CSS, JS, images, fonts — cache-first, then network
+  // Static images, fonts — cache-first, then network
   event.respondWith(
     caches.match(request).then(cached => {
       if (cached) return cached;

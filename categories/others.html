@@ -204,7 +204,15 @@
   <div class="modal">
     <button class="modal-close-btn" id="modal-close" aria-label="Close dialog" type="button">✕</button>
     <div class="modal-img-col">
+      <button class="modal-gallery-arrow modal-prev-btn" id="modal-prev-btn" aria-label="Previous angle" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
       <img class="modal-img" id="modal-img" src="" alt="" />
+      <button class="modal-gallery-arrow modal-next-btn" id="modal-next-btn" aria-label="Next angle" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+      <span class="modal-gallery-counter" id="modal-gallery-counter">1 / 3</span>
+      <div class="modal-gallery-dots" id="modal-gallery-dots"></div>
       <span class="modal-discount-tag" id="modal-discount-tag"></span>
     </div>
     <div class="modal-body">
@@ -260,10 +268,10 @@
   </div>
 </footer>
 
-<script src="../data/products.js"></script>
-<script src="../assets/js/cart.js"></script>
-<script src="../assets/js/wishlist.js"></script>
-<script src="../assets/js/category.js"></script>
+<script src="../data/products.js?v=2.2"></script>
+<script src="../assets/js/cart.js?v=2.2"></script>
+<script src="../assets/js/wishlist.js?v=2.2"></script>
+<script src="../assets/js/category.js?v=2.2"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {

@@ -325,16 +325,25 @@
     if (orderLine1) orderLine1.href = waLink(WA_LINE_1, p);
     if (orderLine2) orderLine2.href = waLink(WA_LINE_2, p);
 
+    const overlay = document.getElementById("modal-overlay");
+
+    // Initialize Gallery (Left/Right arrows, angle counter & dots)
+    if (window.MelojeyGallery && window.MelojeyGallery.setup && overlay) {
+      window.MelojeyGallery.setup(overlay, p);
+    }
+
+    // Initialize Add to Cart button / Active Stepper in modal
     const modalCartWrap = document.getElementById("modal-cart-action");
     if (modalCartWrap) {
-      modalCartWrap.innerHTML = `<button class="btn-add-cart modal-add-cart-btn" data-id="${p.id}" type="button">Add to Cart</button>`;
-      if (window.MelojeyCart) {
+      if (window.MelojeyCart && window.MelojeyCart.setupModal) {
+        window.MelojeyCart.setupModal(modalCartWrap, p);
+      } else if (window.MelojeyCart && window.MelojeyCart.initStepper) {
+        modalCartWrap.innerHTML = `<button class="btn-add-cart modal-add-cart-btn" data-id="${p.id}" type="button">Add to Cart</button>`;
         window.MelojeyCart.initStepper(modalCartWrap, p);
       }
     }
 
     if (floatMenu) floatMenu.classList.remove("open");
-    const overlay = document.getElementById("modal-overlay");
     if (overlay) overlay.classList.add("open");
     document.body.style.overflow = "hidden";
   }
