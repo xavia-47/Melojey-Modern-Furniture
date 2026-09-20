@@ -91,6 +91,10 @@ function initWishlistStar(cardEl, product) {
   });
 }
 
+function wishlistClear() {
+  wishlistSave([]);
+}
+
 /* Expose globally */
 window.MelojeyWishlist = {
   getAll: wishlistGetAll,
@@ -100,6 +104,7 @@ window.MelojeyWishlist = {
   isWishlisted: wishlistIsWishlisted,
   updateBadges: wishlistUpdateBadges,
   initStar: initWishlistStar,
+  clear: wishlistClear,
 };
 
 /* Init badges on load */

@@ -102,11 +102,10 @@ function buildCartWaLink(number) {
   return `https://wa.me/${number}?text=${encodeURIComponent(msg)}`;
 }
 
-/* ── Init stepper on a product card ─────────────────────── */
+/* ── Init stepper on a product card or modal wrapper ─────────────────────── */
 function initCartStepper(cardEl, product) {
-  const footer = cardEl.querySelector(".card-footer");
-  if (!footer) return;
-
+  if (!cardEl) return;
+  const footer = cardEl.querySelector(".card-footer") || cardEl;
   const existingBtn = footer.querySelector(".btn-add-cart");
   if (!existingBtn) return;
 
@@ -119,6 +118,36 @@ function initCartStepper(cardEl, product) {
       e.stopPropagation();
       cartAddItem(product, 1);
       replaceBtnWithStepper(existingBtn, product, 1);
+      syncOtherSteppers(product.id, 1, product, existingBtn);
+    });
+  }
+}
+
+function syncOtherSteppers(productId, qty, product, sourceNode) {
+  document.querySelectorAll(`.qty-stepper[data-id="${productId}"]`).forEach(stepper => {
+    if (stepper === sourceNode || stepper.contains(sourceNode)) return;
+    if (qty <= 0) {
+      const addBtn = document.createElement("button");
+      addBtn.className = "btn-add-cart";
+      if (stepper.parentElement && stepper.parentElement.id === "modal-cart-action") {
+        addBtn.classList.add("modal-add-cart-btn");
+      }
+      addBtn.setAttribute("data-id", productId);
+      addBtn.type = "button";
+      addBtn.textContent = "Add to Cart";
+      const container = stepper.closest(".product-card") || stepper.parentElement;
+      stepper.replaceWith(addBtn);
+      if (container) initCartStepper(container, product);
+    } else {
+      const numEl = stepper.querySelector(".qty-num");
+      if (numEl) numEl.textContent = qty;
+    }
+  });
+
+  if (qty > 0) {
+    document.querySelectorAll(`.btn-add-cart[data-id="${productId}"]`).forEach(btn => {
+      if (btn === sourceNode || btn.contains(sourceNode)) return;
+      replaceBtnWithStepper(btn, product, qty);
     });
   }
 }
@@ -141,8 +170,10 @@ function replaceBtnWithStepper(btn, product, initialQty) {
 
   plusBtn.addEventListener("click", e => {
     e.stopPropagation();
-    const items = cartSetQty(product.id, cartGetQty(product.id) + 1);
-    numEl.textContent = cartGetQty(product.id);
+    const newQty = cartGetQty(product.id) + 1;
+    cartSetQty(product.id, newQty);
+    numEl.textContent = newQty;
+    syncOtherSteppers(product.id, newQty, product, stepper);
   });
 
   minusBtn.addEventListener("click", e => {
@@ -153,13 +184,20 @@ function replaceBtnWithStepper(btn, product, initialQty) {
       cartSetQty(product.id, 0);
       const addBtn = document.createElement("button");
       addBtn.className = "btn-add-cart";
+      if (stepper.parentElement && stepper.parentElement.id === "modal-cart-action") {
+        addBtn.classList.add("modal-add-cart-btn");
+      }
+      addBtn.setAttribute("data-id", product.id);
       addBtn.type = "button";
       addBtn.textContent = "Add to Cart";
+      const container = stepper.closest(".product-card") || stepper.parentElement;
       stepper.replaceWith(addBtn);
-      initCartStepper(addBtn.closest(".product-card"), product);
+      if (container) initCartStepper(container, product);
+      syncOtherSteppers(product.id, 0, product, addBtn);
     } else {
       cartSetQty(product.id, newQty);
       numEl.textContent = newQty;
+      syncOtherSteppers(product.id, newQty, product, stepper);
     }
   });
 }

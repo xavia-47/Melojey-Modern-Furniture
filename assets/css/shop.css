@@ -633,16 +633,16 @@
 .product-grid.list-view {
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
+  gap: 1rem;
 }
 
 .product-grid.list-view .product-card {
   display: flex;
   flex-direction: row;
-  align-items: stretch;
-  gap: 1.25rem;
-  padding: 0.95rem;
-  min-height: 160px;
+  align-items: center;
+  gap: 1.15rem;
+  padding: 0.85rem;
+  min-height: auto;
   border-radius: 14px;
   background: #FFFFFF;
   border: 1px solid #E8E4DC;
@@ -657,9 +657,9 @@
 }
 
 .product-grid.list-view .card-img-wrap {
-  width: 200px;
-  min-width: 200px;
-  height: 150px;
+  width: 140px;
+  min-width: 140px;
+  height: 125px;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -667,6 +667,7 @@
   border: 1px solid #EDE8E0;
   margin-bottom: 0;
   aspect-ratio: auto;
+  flex-shrink: 0;
 }
 
 .product-grid.list-view .card-img-wrap .card-img,
@@ -682,56 +683,122 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 0.2rem 0 0;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0;
+  min-width: 0;
 }
 
+/* Line 1: Category */
+.product-grid.list-view .card-cat {
+  font-size: 0.64rem;
+  line-height: 1.2;
+  margin-bottom: 0.1rem;
+}
+
+/* Line 2: Title */
 .product-grid.list-view .card-name {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
+  line-height: 1.3;
+  margin-bottom: 0.2rem;
   min-height: auto;
-  margin-bottom: 0.35rem;
-}
-
-.product-grid.list-view .card-desc {
+  max-height: 2.6em;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.78rem;
-  color: #7A6E62;
-  margin: 0.2rem 0 0.5rem;
-  line-height: 1.5;
+  text-overflow: ellipsis;
 }
 
+/* Remove description in list view */
+.product-grid.list-view .card-desc {
+  display: none !important;
+}
+
+/* Line 3 (Price) & Line 4 (Add to Cart) stacked */
 .product-grid.list-view .card-footer {
-  margin-top: auto;
-  padding-top: 0.5rem;
-  border-top: 1px solid #F0ECE6;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  margin-top: 0.1rem;
+  padding-top: 0;
+  border-top: none;
+}
+
+.product-grid.list-view .card-price-group {
+  margin-bottom: 0;
+  line-height: 1.2;
+}
+
+.product-grid.list-view .btn-add-cart {
+  width: auto;
+  align-self: flex-start;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.72rem;
+}
+
+.product-grid.list-view .qty-stepper {
+  width: auto;
+  align-self: flex-start;
 }
 
 @media (max-width: 640px) {
+  .product-grid.list-view {
+    gap: 0.75rem;
+  }
   .product-grid.list-view .product-card {
-    gap: 0.85rem;
-    padding: 0.75rem;
-    min-height: 120px;
+    gap: 0.75rem;
+    padding: 0.6rem;
+    min-height: auto;
+    align-items: center;
   }
   .product-grid.list-view .card-img-wrap {
-    width: 110px;
-    min-width: 110px;
-    height: 110px;
+    width: 95px;
+    min-width: 95px;
+    height: 95px;
+    border-radius: 8px;
+  }
+  .product-grid.list-view .card-body {
+    gap: 0.15rem;
+  }
+  .product-grid.list-view .card-cat {
+    font-size: 0.58rem;
+    margin-bottom: 0.05rem;
   }
   .product-grid.list-view .card-name {
-    font-size: 0.8rem;
-    min-height: auto;
-    margin-bottom: 0.2rem;
+    font-size: 0.78rem;
+    line-height: 1.25;
+    margin-bottom: 0.1rem;
+    max-height: 2.5em;
   }
-  .product-grid.list-view .card-desc {
-    display: none;
+  .product-grid.list-view .card-footer {
+    gap: 0.25rem;
+    margin-top: 0.05rem;
   }
   .product-grid.list-view .card-price {
+    font-size: 0.82rem;
+  }
+  .product-grid.list-view .card-price-original {
+    font-size: 0.64rem;
+  }
+  .product-grid.list-view .btn-add-cart {
+    font-size: 0.66rem;
+    padding: 0.24rem 0.6rem;
+  }
+  .product-grid.list-view .qty-stepper {
+    height: 28px;
+    padding: 0.15rem 0.3rem;
+  }
+  .product-grid.list-view .qty-btn {
+    width: 24px;
+    height: 24px;
     font-size: 0.85rem;
+  }
+  .product-grid.list-view .qty-num {
+    font-size: 0.75rem;
+    padding: 0 0.35rem;
   }
 }
 
