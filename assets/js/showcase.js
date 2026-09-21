@@ -712,6 +712,8 @@ function initFloatingWhatsApp() {
   const floatLine1 = document.getElementById("wa-float-line-1");
   const floatLine2 = document.getElementById("wa-float-line-2");
 
+  if (!floatBtn || !floatMenu) return;
+
   const WA_LINE_1 = "2348033218845";
   const WA_LINE_2 = "2348037768889";
   const defaultEnquiry = encodeURIComponent("Hello Melojey Modern Furniture! I am browsing your showroom collection and would like to make an enquiry.");
@@ -719,23 +721,47 @@ function initFloatingWhatsApp() {
   if (floatLine1) floatLine1.href = `https://wa.me/${WA_LINE_1}?text=${defaultEnquiry}`;
   if (floatLine2) floatLine2.href = `https://wa.me/${WA_LINE_2}?text=${defaultEnquiry}`;
 
-  if (floatBtn && floatMenu && !floatBtn.dataset.waBound) {
-    floatBtn.dataset.waBound = "true";
-    floatBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      floatMenu.classList.toggle("open");
-    });
+  if (floatBtn.dataset.waBound === "true") return;
+  floatBtn.dataset.waBound = "true";
 
-    document.addEventListener("click", (e) => {
-      if (!floatMenu.contains(e.target) && e.target !== floatBtn && !floatBtn.contains(e.target)) {
-        floatMenu.classList.remove("open");
-      }
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") floatMenu.classList.remove("open");
-    });
+  function setOpen(isOpen) {
+    if (isOpen) {
+      floatMenu.classList.add("open");
+      floatMenu.setAttribute("aria-hidden", "false");
+      floatBtn.setAttribute("aria-expanded", "true");
+    } else {
+      floatMenu.classList.remove("open");
+      floatMenu.setAttribute("aria-hidden", "true");
+      floatBtn.setAttribute("aria-expanded", "false");
+    }
   }
+
+  floatBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const willOpen = !floatMenu.classList.contains("open");
+    setOpen(willOpen);
+  });
+
+  // Clicking a showroom line closes the menu smoothly
+  if (floatLine1) {
+    floatLine1.addEventListener("click", () => setOpen(false));
+  }
+  if (floatLine2) {
+    floatLine2.addEventListener("click", () => setOpen(false));
+  }
+
+  document.addEventListener("click", (e) => {
+    if (!floatMenu.contains(e.target) && !floatBtn.contains(e.target) && e.target !== floatBtn) {
+      setOpen(false);
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" || e.key === "Esc") {
+      setOpen(false);
+    }
+  });
 }
 
 /* ═══════════════════════════════════════════

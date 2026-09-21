@@ -222,13 +222,15 @@
     const grid  = document.getElementById("product-grid");
     const count = document.getElementById("product-count");
 
+    if (!grid) return;
+
     if (!products.length) {
       grid.innerHTML = `<div class="state-box"><div class="icon">🪑</div><p>No products in this category yet.</p></div>`;
-      count.textContent = "0 products";
+      if (count) count.textContent = "0 products";
       return;
     }
 
-    count.textContent = `${products.length} item${products.length !== 1 ? "s" : ""}`;
+    if (count) count.textContent = `${products.length} item${products.length !== 1 ? "s" : ""}`;
 
     grid.innerHTML = products.map(p => {
       const discountPct = getDiscountPct(p);
@@ -343,7 +345,8 @@
       }
     }
 
-    if (floatMenu) floatMenu.classList.remove("open");
+    const waMenu = document.getElementById("wa-float-menu");
+    if (waMenu) waMenu.classList.remove("open");
     if (overlay) overlay.classList.add("open");
     document.body.style.overflow = "hidden";
   }
@@ -372,35 +375,15 @@
   window.fmt = fmt;
 
   /* ── Floating WhatsApp Showroom Selector ── */
-  const floatBtn   = document.getElementById("wa-float-btn");
-  const floatMenu  = document.getElementById("wa-float-menu");
-  const floatLine1 = document.getElementById("wa-float-line-1");
-  const floatLine2 = document.getElementById("wa-float-line-2");
-
-  const defaultEnquiry = encodeURIComponent("Hello Melojey Modern Furniture! I am browsing your showroom collection and would like to make an enquiry.");
-  if (floatLine1) floatLine1.href = `https://wa.me/${WA_LINE_1}?text=${defaultEnquiry}`;
-  if (floatLine2) floatLine2.href = `https://wa.me/${WA_LINE_2}?text=${defaultEnquiry}`;
-
-  if (floatBtn && floatMenu) {
-    floatBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      floatMenu.classList.toggle("open");
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!floatMenu.contains(e.target) && e.target !== floatBtn) {
-        floatMenu.classList.remove("open");
-      }
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") floatMenu.classList.remove("open");
-    });
+  // Initialization is handled by showcase.js (initFloatingWhatsApp) to prevent duplicate bindings.
+  if (typeof window.initFloatingWhatsApp === "function") {
+    window.initFloatingWhatsApp();
   }
 
   function buildChips(products) {
-    const cats = ["All", ...new Set(products.map(p => p.category))];
     const wrap = document.getElementById("chips");
+    if (!wrap) return;
+    const cats = ["All", ...new Set(products.map(p => p.category))];
     wrap.innerHTML = cats.map(c =>
       `<button class="chip${c === activeCategory ? " active" : ""}" data-cat="${c}">${c}</button>`
     ).join("");
@@ -495,7 +478,8 @@
       allProducts = PLACEHOLDER_PRODUCTS;
       buildChips(allProducts);
       renderProducts(allProducts);
-      document.getElementById("product-count").textContent = `${allProducts.length} items (sample)`;
+      const countEl = document.getElementById("product-count");
+      if (countEl) countEl.textContent = `${allProducts.length} items (sample)`;
       return;
     }
 
@@ -508,14 +492,16 @@
       allProducts = parsed;
       buildChips(allProducts);
       renderProducts(allProducts);
-      document.getElementById("product-count").textContent = `${allProducts.length} items`;
+      const countEl = document.getElementById("product-count");
+      if (countEl) countEl.textContent = `${allProducts.length} items`;
     } catch (err) {
       console.warn("Could not load Google Sheet live data yet:", err.message);
       console.info("Serving sample placeholder products. (To enable live sheet data: in your Google Sheet, click Share > set General access to 'Anyone with the link' or File > Share > Publish to web > CSV).");
       allProducts = PLACEHOLDER_PRODUCTS;
       buildChips(allProducts);
       renderProducts(allProducts);
-      document.getElementById("product-count").textContent = `${allProducts.length} items (sample)`;
+      const countEl = document.getElementById("product-count");
+      if (countEl) countEl.textContent = `${allProducts.length} items (sample)`;
     }
   }
 

@@ -765,7 +765,7 @@
       position: fixed;
       bottom: 24px;
       right: 24px;
-      z-index: 200;
+      z-index: 999;
     }
 
     .wa-float {
@@ -779,6 +779,8 @@
       justify-content: center;
       outline: none;
       cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
       transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s, border-color 0.2s;
     }
