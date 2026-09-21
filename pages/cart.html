@@ -15,9 +15,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=2.8" />
-  <link rel="stylesheet" href="../assets/css/showcase.css?v=2.8" />
-  <link rel="stylesheet" href="../assets/css/shop.css?v=2.8" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=2.9" />
+  <link rel="stylesheet" href="../assets/css/showcase.css?v=2.9" />
+  <link rel="stylesheet" href="../assets/css/shop.css?v=2.9" />
   <style>
     /* ═══ CART PAGE RESPONSIVE STYLES ═══ */
     .cart-page-wrap {
@@ -93,31 +93,6 @@
     .cart-item-thumb {
       position: relative;
       cursor: pointer;
-    }
-    .cart-item-thumb::after {
-      content: '🔍';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.6);
-      background: rgba(15, 10, 5, 0.65);
-      color: #FFFFFF;
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      opacity: 0;
-      transition: all 0.2s ease;
-      pointer-events: none;
-    }
-    .cart-item-card:hover .cart-item-thumb::after {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
-    .cart-item-thumb {
       width: 100px;
       height: 85px;
       border-radius: 10px;
@@ -125,6 +100,36 @@
       background: #F5EFEB;
       flex-shrink: 0;
       border: 1px solid #EFEAE3;
+    }
+    .cart-item-thumb::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.65);
+      background-color: rgba(9, 14, 15, 0.78);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C89850' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 15px 15px;
+      border: 1.5px solid rgba(200, 152, 80, 0.75);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      opacity: 0;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, border-color 0.2s, box-shadow 0.2s;
+      pointer-events: none;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .cart-item-card:hover .cart-item-thumb::after {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .cart-item-card:hover .cart-item-thumb:hover::after {
+      border-color: #C89850;
+      box-shadow: 0 4px 16px rgba(200, 152, 80, 0.45);
     }
     .cart-item-thumb img {
       width: 100%;
@@ -879,10 +884,10 @@
   </div>
 </div>
 
-<script src="../data/products.js?v=2.8"></script>
-<script src="../assets/js/cart.js?v=2.8"></script>
-<script src="../assets/js/wishlist.js?v=2.8"></script>
-<script src="../assets/js/showcase.js?v=2.8"></script>
+<script src="../data/products.js?v=2.9"></script>
+<script src="../assets/js/cart.js?v=2.9"></script>
+<script src="../assets/js/wishlist.js?v=2.9"></script>
+<script src="../assets/js/showcase.js?v=2.9"></script>
 
 <script>
   const WA_LINE_1 = "2348033218845";
