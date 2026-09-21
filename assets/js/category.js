@@ -1070,12 +1070,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Also scroll-to-visible when any tab is clicked (before navigation fires)
-  document.querySelectorAll(".cat-tab").forEach(tab => {
-    tab.addEventListener("click", () => {
-      tab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
-    });
-  });
 
   const modalClose = document.getElementById("modal-close");
   modalClose?.addEventListener("click", closeCategoryModal);
