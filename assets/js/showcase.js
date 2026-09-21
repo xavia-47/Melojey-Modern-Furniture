@@ -467,6 +467,42 @@ function initCategoriesNav() {
       window.location.href = "categories/sofas.html";
     });
   }
+
+  // Smoothly snap to #catalogue with full header clearance
+  const catalogueLinks = document.querySelectorAll('a[href="#catalogue"], a[href$="index.html#catalogue"]');
+  catalogueLinks.forEach(link => {
+    link.addEventListener("click", (e) => {
+      const isHomePage = window.location.pathname.endsWith("index.html") || 
+                         window.location.pathname === "/" || 
+                         window.location.pathname.endsWith("/");
+      const catalogue = document.getElementById("catalogue");
+      if (isHomePage && catalogue) {
+        e.preventDefault();
+        catalogue.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (history.pushState) {
+          history.pushState(null, "", "#catalogue");
+        }
+      }
+    });
+  });
+
+  // Smoothly snap to #about with full header clearance
+  const aboutLinks = document.querySelectorAll('a[href="#about"], a[href$="index.html#about"]');
+  aboutLinks.forEach(link => {
+    link.addEventListener("click", (e) => {
+      const isHomePage = window.location.pathname.endsWith("index.html") || 
+                         window.location.pathname === "/" || 
+                         window.location.pathname.endsWith("/");
+      const about = document.getElementById("about");
+      if (isHomePage && about) {
+        e.preventDefault();
+        about.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (history.pushState) {
+          history.pushState(null, "", "#about");
+        }
+      }
+    });
+  });
 }
 
 function selectCategoryTab(catName) {
