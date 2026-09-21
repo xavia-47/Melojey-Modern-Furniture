@@ -950,20 +950,28 @@
     padding: 0 4%;
     position: sticky;
     top: 0;
+    gap: 0.25rem;
   }
 
   .nav-search-container {
     flex: initial;
     margin-left: auto;
-    margin-right: 0.15rem;
+    margin-right: 0;
     min-width: auto;
   }
 
-  /* Show the mobile search icon button (pure icon, aligned beside wishlist & cart) */
+  /* Show the mobile search icon button (pure icon, aligned beside wishlist & cart with identical spacing) */
   .nav-search-toggle-btn {
     display: flex;
     width: 40px;
     height: 40px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .nav-icon-cluster {
+    margin-left: 0;
+    gap: 0.25rem;
   }
 
   /* Search input is initially hidden on mobile */
