@@ -440,9 +440,24 @@ const CATEGORY_PAGES = {
 function initCategoriesNav() {
   const tabs = document.querySelectorAll(".cat-tab");
 
+  // On page load: scroll the active tab into view so it's visible on mobile.
+  // Uses block:'nearest', inline:'nearest' — does the minimum scroll needed,
+  // never forces the tab to center if it's already on screen.
+  const activeTab = document.querySelector(".cat-tab.active");
+  if (activeTab) {
+    // requestAnimationFrame ensures the layout is fully painted before we scroll
+    requestAnimationFrame(() => {
+      activeTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+    });
+  }
+
   tabs.forEach(tab => {
     tab.addEventListener("click", (e) => {
       const category = (tab.getAttribute("data-category") || "HOME").toUpperCase();
+
+      // Scroll the clicked tab into view (mobile bar may need horizontal scroll)
+      tab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+
       if (category === "HOME") {
         const catalogue = document.getElementById("catalogue");
         // Only prevent default if we are already on the homepage where #catalogue exists

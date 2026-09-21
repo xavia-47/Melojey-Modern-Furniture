@@ -1060,6 +1060,23 @@ document.addEventListener("DOMContentLoaded", () => {
   initCategorySearch();
   initFloatingWhatsApp();
 
+  // ── Scroll active category tab into view on mobile ──
+  // Uses inline:'nearest' so it only scrolls the minimum needed to reveal
+  // the tab — never forces centering if it's already visible.
+  const activeTab = document.querySelector(".cat-tab.active");
+  if (activeTab) {
+    requestAnimationFrame(() => {
+      activeTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+    });
+  }
+
+  // Also scroll-to-visible when any tab is clicked (before navigation fires)
+  document.querySelectorAll(".cat-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      tab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+    });
+  });
+
   const modalClose = document.getElementById("modal-close");
   modalClose?.addEventListener("click", closeCategoryModal);
 
