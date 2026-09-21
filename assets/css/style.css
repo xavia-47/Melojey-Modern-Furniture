@@ -736,26 +736,44 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ═══════════════════════════════════════════
-       ABOUT STRIP
+       ABOUT & FOOTER UNIFIED CLOSING SECTION
+       Fills the remaining screen viewport below the sticky navbars
+       so clicking "About Us" fits the full screen cleanly.
     ═══════════════════════════════════════════ */
-    .about-strip,
+    .about-footer-wrap,
     #about {
       background: var(--dark-texture);
       color: #fff;
-      padding: 56px 5%;
+      min-height: calc(100vh - 118px);
+      min-height: calc(100dvh - 118px);
+      scroll-margin-top: 118px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .about-strip {
+      flex: 1 1 auto;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.15fr 0.85fr;
       gap: 3.5rem;
       align-items: center;
-      scroll-margin-top: 120px;
+      padding: 3.5rem 5% 2rem;
+      max-width: 1380px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .about-strip h2 {
       font-family: 'Cinzel', 'Times New Roman', serif;
-      font-size: 2.1rem;
+      font-size: clamp(1.85rem, 3vw, 2.5rem);
       font-weight: 800;
       margin-bottom: 1rem;
-      line-height: 1.25;
+      line-height: 1.22;
       letter-spacing: 0.03em;
     }
 
@@ -769,22 +787,26 @@
     .about-strip p {
       font-family: 'Montserrat', sans-serif;
       color: rgba(255,255,255,0.72);
-      font-size: 0.88rem;
+      font-size: clamp(0.85rem, 1.05vw, 0.95rem);
       font-weight: 400;
       line-height: 1.85;
+      max-width: 620px;
     }
 
     .about-stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
+      gap: 2rem 1.75rem;
     }
 
-    .stat { border-left: 3px solid var(--gold); padding-left: 1rem; }
+    .stat { 
+      border-left: 3px solid var(--gold); 
+      padding-left: 1.15rem; 
+    }
 
     .stat-num {
       font-family: 'Cinzel', 'Times New Roman', serif;
-      font-size: 2.1rem;
+      font-size: clamp(1.9rem, 2.8vw, 2.5rem);
       font-weight: 800;
       color: var(--gold);
       line-height: 1;
@@ -797,7 +819,17 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.6);
-      margin-top: 0.35rem;
+      margin-top: 0.4rem;
+    }
+
+    /* Scoped footer inside about-footer-wrap (on homepage) */
+    .about-footer-wrap footer {
+      flex-shrink: 0;
+      background: transparent;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 1.35rem 5% 1.15rem;
+      margin-top: auto;
+      box-sizing: border-box;
     }
 
     /* ═══════════════════════════════════════════
@@ -1736,7 +1768,41 @@
       /* Hero: single column, no enforced min-height, comfortable padding */
       .hero { grid-template-columns: 1fr; min-height: auto; padding: 2rem 5% 2.5rem; }
       .hero-visual { display: none !important; }
-      .about-strip { grid-template-columns: 1fr; gap: 2rem; }
+      .about-footer-wrap,
+      #about {
+        min-height: calc(100vh - 108px);
+        min-height: calc(100dvh - 108px);
+        scroll-margin-top: 108px;
+      }
+      .about-strip {
+        grid-template-columns: 1fr;
+        gap: 1.65rem;
+        padding: 2rem 5% 1.25rem;
+      }
+      .about-strip h2 {
+        font-size: 1.85rem;
+        margin-bottom: 0.75rem;
+      }
+      .about-strip p {
+        font-size: 0.85rem;
+        line-height: 1.7;
+      }
+      .about-stats {
+        gap: 1.25rem 1rem;
+      }
+      .stat {
+        padding-left: 0.85rem;
+      }
+      .stat-num {
+        font-size: 1.85rem;
+      }
+      .stat-label {
+        font-size: 0.66rem;
+        margin-top: 0.25rem;
+      }
+      .about-footer-wrap footer {
+        padding: 1.15rem 5% 1rem;
+      }
       .nav-links { display: none; }
       .product-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.85rem; }
       .product-card {
@@ -1791,6 +1857,44 @@
       z-index: 50;
       max-height: calc(100vh - 134px);
       overflow-y: auto;
+    }
+
+    @media (max-width: 480px) {
+      .about-footer-wrap,
+      #about {
+        min-height: calc(100vh - 108px);
+        min-height: calc(100dvh - 108px);
+        scroll-margin-top: 108px;
+      }
+      .about-strip {
+        padding: 1.25rem 4% 0.75rem;
+        gap: 1.1rem;
+      }
+      .about-strip h2 {
+        font-size: 1.45rem;
+        margin-bottom: 0.45rem;
+        line-height: 1.2;
+      }
+      .about-strip p {
+        font-size: 0.76rem;
+        line-height: 1.55;
+      }
+      .about-stats {
+        gap: 0.85rem 0.65rem;
+      }
+      .stat {
+        padding-left: 0.65rem;
+      }
+      .stat-num {
+        font-size: 1.45rem;
+      }
+      .stat-label {
+        font-size: 0.58rem;
+        margin-top: 0.15rem;
+      }
+      .about-footer-wrap footer {
+        padding: 0.85rem 4% 0.75rem;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {

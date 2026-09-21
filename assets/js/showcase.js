@@ -811,6 +811,17 @@ function initShowcaseApp() {
   initCategoriesNav();
   initSearchSuggestions();
   initFloatingWhatsApp();
+
+  // If page was loaded with a hash (e.g. #about or #catalogue), snap smoothly after layout settles
+  if (window.location.hash) {
+    const hash = window.location.hash;
+    const target = document.querySelector(hash);
+    if (target) {
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 120);
+    }
+  }
 }
 
 if (document.readyState === "loading") {

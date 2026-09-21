@@ -16,10 +16,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- FONTS: Cinzel (luxury regal serif for headings & insignia) + Montserrat (classic haute-couture typography) -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/style.css?v=2.9">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.0">
   <!-- SHOWCASE STYLES: Controls the navbar search, categories bar, 8 showcase cards, and recently viewed -->
-  <link rel="stylesheet" href="assets/css/showcase.css?v=2.9">
-  <link rel="stylesheet" href="assets/css/shop.css?v=2.9">
+  <link rel="stylesheet" href="assets/css/showcase.css?v=3.0">
+  <link rel="stylesheet" href="assets/css/shop.css?v=3.0">
 </head>
 <body>
 
@@ -150,38 +150,72 @@
   </div>
 </section>
 
-<!-- ═══ ABOUT ═══════════════════════════════ -->
-<section class="about-strip" id="about">
-  <div>
-    <!-- ABOUT TEXT — edit to match your dad's actual story / years in business -->
-    <h2>Built for<br><span class="orange">Nigerian</span> homes.</h2>
-    <p>
-      Melojey Modern Furniture has been furnishing homes, offices, and hospitality spaces
-      across Nigeria for years. From our two showrooms we offer everything — statement
-      sofas, bedroom suites, dining sets, office furniture, rugs, paintings, and decorative
-      accessories — all at fair prices with personal service.
-    </p>
-  </div>
-  <div class="about-stats">
-    <!-- STATS — update these numbers to reflect reality -->
-    <div class="stat">
-      <div class="stat-num">2</div>
-      <div class="stat-label">Showroom locations</div>
+<!-- ═══ ABOUT & FOOTER (UNIFIED FULL-VIEWPORT CLOSING SECTION) ═════ -->
+<div class="about-footer-wrap" id="about">
+  <section class="about-strip">
+    <div class="about-text-col">
+      <!-- ABOUT TEXT — edit to match your dad's actual story / years in business -->
+      <h2>Built for<br><span class="orange">Nigerian</span> homes.</h2>
+      <p>
+        Melojey Modern Furniture has been furnishing homes, offices, and hospitality spaces
+        across Nigeria for years. From our two showrooms we offer everything — statement
+        sofas, bedroom suites, dining sets, office furniture, rugs, paintings, and decorative
+        accessories — all at fair prices with personal service.
+      </p>
     </div>
-    <div class="stat">
-      <div class="stat-num">500+</div>
-      <div class="stat-label">Products available</div>
+    <div class="about-stats">
+      <!-- STATS — update these numbers to reflect reality -->
+      <div class="stat">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Showroom locations</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">500+</div>
+        <div class="stat-label">Products available</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">1k+</div>
+        <div class="stat-label">Happy customers</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">NG</div>
+        <div class="stat-label">Nationwide delivery</div>
+      </div>
     </div>
-    <div class="stat">
-      <div class="stat-num">1k+</div>
-      <div class="stat-label">Happy customers</div>
+  </section>
+
+  <!-- ═══ FOOTER ═══════════════════════════════
+    Kept small on purpose: one brand row, one contact line, one thin
+    copyright line. No per-person labels — the WhatsApp button above
+    already handles ordering, this is just for people who prefer to call.
+  ═══════════════════════════════════════════ -->
+  <footer id="contact">
+    <div class="footer-row">
+      <div class="footer-brand">
+        <div class="logo-badge">
+          <img src="assets/images/logo.png" alt="Melojey Modern Furniture">
+        </div>
+        <div class="footer-brand-group">
+          <div class="footer-brand-name">MELOJEY</div>
+          <div class="footer-brand-sub">Modern Furniture</div>
+        </div>
+      </div>
+
+      <!-- CONTACT — all numbers from the business card, no names attached -->
+      <div class="footer-contact">
+        <a href="tel:+2348033218845">0803 321 8845</a>
+        <a href="tel:+2348037768889">0803 776 8889</a>
+        <a href="tel:+2348150622838">0815 062 2838</a>
+        <a href="mailto:melojey@yahoo.com">melojey@yahoo.com</a>
+      </div>
     </div>
-    <div class="stat">
-      <div class="stat-num">NG</div>
-      <div class="stat-label">Nationwide delivery</div>
+
+    <div class="footer-bottom">
+      <span>Plot 1 Factory Road (beside UBA, near Railway Road) &amp; 48 St Michael's Road, Aba</span>
+      <span>© 2026 Melojey Modern Furniture</span>
     </div>
-  </div>
-</section>
+  </footer>
+</div>
 
 <!-- ═══ FLOATING WHATSAPP WIDGET ═══════════════ -->
 <div class="wa-float-wrapper">
@@ -280,38 +314,6 @@
   </div>
 </div>
 
-<!-- ═══ FOOTER ═══════════════════════════════
-  Kept small on purpose: one brand row, one contact line, one thin
-  copyright line. No per-person labels — the WhatsApp button above
-  already handles ordering, this is just for people who prefer to call.
-═══════════════════════════════════════════ -->
-<footer id="contact">
-  <div class="footer-row">
-    <div class="footer-brand">
-      <div class="logo-badge">
-        <img src="assets/images/logo.png" alt="Melojey Modern Furniture">
-      </div>
-      <div class="footer-brand-group">
-        <div class="footer-brand-name">MELOJEY</div>
-        <div class="footer-brand-sub">Modern Furniture</div>
-      </div>
-    </div>
-
-    <!-- CONTACT — all numbers from the business card, no names attached -->
-    <div class="footer-contact">
-      <a href="tel:+2348033218845">0803 321 8845</a>
-      <a href="tel:+2348037768889">0803 776 8889</a>
-      <a href="tel:+2348150622838">0815 062 2838</a>
-      <a href="mailto:melojey@yahoo.com">melojey@yahoo.com</a>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <span>Plot 1 Factory Road (beside UBA, near Railway Road) & 48 St Michael's Road, Aba</span>
-    <span>© 2026 Melojey Modern Furniture</span>
-  </div>
-</footer>
-
 <!-- ═══ JAVASCRIPT ════════════════════════════
   HOW TO CONNECT GOOGLE SHEETS:
   1. Create a Sheet with columns: id, name, category, price, description, image_url
@@ -319,12 +321,12 @@
   3. Paste the URL into SHEET_URL below
   4. Delete or leave PLACEHOLDER_PRODUCTS as backup
 ═══════════════════════════════════════════ -->
-<script src="data/products.js?v=2.9"></script>
-<script src="assets/js/cart.js?v=2.9"></script>
-<script src="assets/js/wishlist.js?v=2.9"></script>
-<script src="assets/js/script.js?v=2.9"></script>
+<script src="data/products.js?v=3.0"></script>
+<script src="assets/js/cart.js?v=3.0"></script>
+<script src="assets/js/wishlist.js?v=3.0"></script>
+<script src="assets/js/script.js?v=3.0"></script>
 <!-- SHOWCASE CONTROLLER: Controls category switching, 8 cards, and recently viewed -->
-<script src="assets/js/showcase.js?v=2.9"></script>
+<script src="assets/js/showcase.js?v=3.0"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
