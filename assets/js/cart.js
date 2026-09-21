@@ -134,7 +134,7 @@ function showCartToast(product, qty = 1) {
       <div class="cart-toast-check">✓</div>
       <div class="cart-toast-info">
         <span class="cart-toast-title">Added to Cart</span>
-        <span class="cart-toast-name">${name}</span>
+        <span class="cart-toast-name" title="${name}">${name}</span>
       </div>
       <a href="${cartUrl}" class="cart-toast-link">View Cart &rarr;</a>
     </div>

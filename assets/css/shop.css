@@ -520,47 +520,67 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(4px);
-  border: none;
+  border: 1px solid rgba(200, 152, 80, 0.28);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 1.05rem;
   line-height: 1;
-  color: #C0A882;
+  color: #B5976D;
   z-index: 3;
-  transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), background 0.15s, color 0.15s;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.12);
+  transition: transform 0.2s cubic-bezier(.34, 1.56, .64, 1), background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-touch-callout: none !important;
 }
 
-.card-wishlist-btn:hover {
-  transform: scale(1.15);
-  color: #C89850;
+@media (hover: hover) and (pointer: fine) {
+  .card-wishlist-btn:hover {
+    transform: scale(1.15);
+    color: #C89850;
+    border-color: #C89850;
+    background: #FFFFFF;
+  }
 }
 
-.card-wishlist-btn.wishlisted {
-  color: #C89850;
-  background: #FFF4E0;
+.card-wishlist-btn:active {
+  transform: scale(0.92);
 }
 
-.card-wishlist-btn.wishlisted:hover {
-  color: #E04040;
-  background: #FFF0F0;
+.card-wishlist-btn.wishlisted,
+.card-wishlist-btn.active {
+  color: #C89850 !important;
+  background: #FFF5E4 !important;
+  border: 1.5px solid #C89850 !important;
+  box-shadow: 0 2px 10px rgba(200, 152, 80, 0.35);
 }
 
-/* Heartbeat animation when added */
-@keyframes heartbeat {
+@media (hover: hover) and (pointer: fine) {
+  .card-wishlist-btn.wishlisted:hover,
+  .card-wishlist-btn.active:hover {
+    transform: scale(1.15);
+    color: #C89850 !important;
+    background: #FFF1D6 !important;
+    border-color: #966A37 !important;
+  }
+}
+
+/* Star pop animation when toggled */
+@keyframes starPop {
   0%   { transform: scale(1); }
-  30%  { transform: scale(1.4); }
-  60%  { transform: scale(0.95); }
-  80%  { transform: scale(1.15); }
+  35%  { transform: scale(1.38); }
+  65%  { transform: scale(0.92); }
   100% { transform: scale(1); }
 }
 
 .card-wishlist-btn.pop {
-  animation: heartbeat 0.45s ease forwards;
+  animation: starPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 /* ── PRODUCT CARD — ADD TO CART / STEPPER ──────────────── */

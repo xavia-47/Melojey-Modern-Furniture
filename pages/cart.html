@@ -15,9 +15,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../assets/css/style.css?v=2.5" />
-  <link rel="stylesheet" href="../assets/css/showcase.css?v=2.5" />
-  <link rel="stylesheet" href="../assets/css/shop.css?v=2.5" />
+  <link rel="stylesheet" href="../assets/css/style.css?v=2.8" />
+  <link rel="stylesheet" href="../assets/css/showcase.css?v=2.8" />
+  <link rel="stylesheet" href="../assets/css/shop.css?v=2.8" />
   <style>
     /* ═══ CART PAGE RESPONSIVE STYLES ═══ */
     .cart-page-wrap {
@@ -594,11 +594,12 @@
         font-size: 0.95rem;
       }
       .cart-summary-box {
-        position: sticky;
-        top: 116px;
-        z-index: 60;
-        max-height: calc(100vh - 124px);
-        overflow-y: auto;
+        position: static;
+        top: auto;
+        z-index: 10;
+        max-height: none;
+        overflow-y: visible;
+        scroll-margin-top: 85px;
       }
       .summary-card-body {
         padding: 1.1rem;
@@ -619,11 +620,13 @@
         align-items: center;
         justify-content: space-between;
         gap: 1rem;
-        animation: mobileBarSlideUp 0.3s ease;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+        will-change: transform, opacity;
       }
-      @keyframes mobileBarSlideUp {
-        from { transform: translateY(100%); }
-        to { transform: translateY(0); }
+      .mobile-sticky-checkout-bar.is-hidden {
+        transform: translateY(115%);
+        opacity: 0;
+        pointer-events: none;
       }
       .mobile-sticky-details {
         display: flex;
@@ -876,10 +879,10 @@
   </div>
 </div>
 
-<script src="../data/products.js?v=2.5"></script>
-<script src="../assets/js/cart.js?v=2.5"></script>
-<script src="../assets/js/wishlist.js?v=2.5"></script>
-<script src="../assets/js/showcase.js?v=2.5"></script>
+<script src="../data/products.js?v=2.8"></script>
+<script src="../assets/js/cart.js?v=2.8"></script>
+<script src="../assets/js/wishlist.js?v=2.8"></script>
+<script src="../assets/js/showcase.js?v=2.8"></script>
 
 <script>
   const WA_LINE_1 = "2348033218845";
@@ -1085,6 +1088,8 @@
       mobileOrderBtn.addEventListener("click", e => {
         e.preventDefault();
         const box = document.getElementById("cart-summary-box");
+        const stickyBar = document.getElementById("mobile-sticky-checkout-bar");
+        if (stickyBar) stickyBar.classList.add("is-hidden");
         if (box) {
           box.scrollIntoView({ behavior: "smooth", block: "start" });
         }
@@ -1145,7 +1150,29 @@
         }
       });
     }
+
+    // Immediately calculate sticky checkout bar position
+    updateMobileStickyBar();
   }
+
+  function updateMobileStickyBar() {
+    const stickyBar = document.getElementById("mobile-sticky-checkout-bar");
+    const summaryBox = document.getElementById("cart-summary-box");
+    if (!stickyBar || !summaryBox) return;
+
+    const rect = summaryBox.getBoundingClientRect();
+    // If the top of the summary box has entered the viewport or has been scrolled past:
+    // the user is viewing or below the order summary -> hide sticky checkout bar.
+    // If the user scrolls back up above the order summary -> show sticky checkout bar.
+    if (rect.top <= window.innerHeight - 60) {
+      stickyBar.classList.add("is-hidden");
+    } else {
+      stickyBar.classList.remove("is-hidden");
+    }
+  }
+
+  window.addEventListener("scroll", updateMobileStickyBar, { passive: true });
+  window.addEventListener("resize", updateMobileStickyBar, { passive: true });
 
   function openCartItemModal(product) {
     const overlay = document.getElementById("modal-overlay");
