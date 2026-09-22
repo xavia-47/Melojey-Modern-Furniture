@@ -384,7 +384,168 @@
     return Math.round(Number(sellingPrice) * (1 + pct / 100));
   }
 
-  // Flattened master catalog array
+  // Preserve initial defaults as fallback
+  const DEFAULT_PRODUCTS = JSON.parse(JSON.stringify(PRODUCTS));
+
+  // 5. Live Google Sheets Data Synchronizer
+  const SHEET_URL = "https://docs.google.com/spreadsheets/d/1nto5s696VQBhEGbhDGLYqx_hSI-lBI9Lm18JXSOnUqo/edit?usp=sharing";
+  const CACHE_KEY = "melojey_live_sheet_cache_v2";
+
+  function getCsvUrl(url) {
+    if (!url) return "";
+    const idMatch = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+    if (idMatch) {
+      return `https://docs.google.com/spreadsheets/d/${idMatch[1]}/export?format=csv`;
+    }
+    return url;
+  }
+
+  function formatImageUrl(url) {
+    if (!url) return "";
+    const driveMatch = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9_-]+)/);
+    if (driveMatch) {
+      return `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
+    }
+    return url.trim();
+  }
+
+  function splitCSVRow(row) {
+    const cells = [];
+    let cur = "";
+    let inQuotes = false;
+    for (let i = 0; i < row.length; i++) {
+      const c = row[i];
+      if (c === '"') {
+        if (inQuotes && row[i + 1] === '"') {
+          cur += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (c === ',' && !inQuotes) {
+        cells.push(cur.trim());
+        cur = "";
+      } else {
+        cur += c;
+      }
+    }
+    cells.push(cur.trim());
+    return cells;
+  }
+
+  function mapCategory(rawCat) {
+    if (!rawCat) return { key: "OTHERS", label: "Others" };
+    const str = rawCat.toLowerCase().trim();
+    if (str.includes("sofa") || str.includes("couch") || str.includes("living")) return { key: "SOFAS", label: "Sofas" };
+    if (str.includes("bed") || str.includes("mattress")) return { key: "BEDS", label: "Beds" };
+    if (str.includes("din")) return { key: "DINING", label: "Dining" };
+    if (str.includes("office") || str.includes("desk")) return { key: "OFFICE", label: "Office" };
+    if (str.includes("wardrobe") || str.includes("closet")) return { key: "WARDROBES", label: "Wardrobes" };
+    if (str.includes("bar")) return { key: "BAR", label: "Bar" };
+    if (str.includes("table")) return { key: "TABLES", label: "Tables" };
+    if (str.includes("rug") || str.includes("carpet") || str.includes("textile")) return { key: "RUGS", label: "Rugs" };
+    if (str.includes("decor") || str.includes("vase") || str.includes("chandelier") || str.includes("light")) return { key: "DECOR", label: "Decor" };
+    return { key: "OTHERS", label: rawCat.trim() || "Others" };
+  }
+
+  function parseCSV(csv) {
+    const rawLines = csv.trim().split(/\r?\n/).filter(l => l.trim().length > 0);
+    if (rawLines.length === 0) return [];
+
+    let headerIdx = rawLines.findIndex(l => /name/i.test(l) && (/price/i.test(l) || /category/i.test(l)));
+    if (headerIdx === -1) headerIdx = 0;
+
+    const headers = splitCSVRow(rawLines[headerIdx]).map(h => h.replace(/^"|"$/g, "").trim().toLowerCase());
+
+    const items = [];
+    let autoIndex = 1;
+
+    for (let i = headerIdx + 1; i < rawLines.length; i++) {
+      const vals = splitCSVRow(rawLines[i]);
+      const obj = {};
+      headers.forEach((h, idx) => {
+        obj[h] = (vals[idx] || "").replace(/^"|"$/g, "").trim();
+      });
+
+      const name = obj.name || obj["product name"] || "";
+      if (!name || name.toLowerCase().includes("product name shown") || name.startsWith("✏️")) {
+        continue;
+      }
+
+      const priceNum = Number((obj.price || "0").replace(/[^0-9.]/g, "")) || 0;
+      const catInfo = mapCategory(obj.category);
+      const id = obj.id || `P${String(autoIndex).padStart(3, "0")}`;
+      autoIndex++;
+
+      const discountPct = 15;
+      const origPrice = calculateOriginalPrice(priceNum, discountPct);
+
+      const rawStock = obj.quantity || obj.qty || obj.stock || obj["quantity available"] || obj["qty available"] || obj.available;
+      const stock = (rawStock !== undefined && rawStock !== "" && !isNaN(Number(rawStock)))
+        ? Math.max(0, parseInt(rawStock, 10))
+        : null;
+
+      items.push({
+        id: id,
+        name: name,
+        category: catInfo.label,
+        categoryKey: catInfo.key,
+        price: priceNum,
+        originalPrice: origPrice,
+        discountPct: discountPct,
+        description: obj.description || "",
+        image: formatImageUrl(obj.image_url || obj.image || "") || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=450&fit=crop",
+        stock: stock
+      });
+    }
+    return items;
+  }
+
+  function buildCatalogFromSheet(sheetItems) {
+    const grouped = {
+      SOFAS: [],
+      BEDS: [],
+      DINING: [],
+      OFFICE: [],
+      WARDROBES: [],
+      BAR: [],
+      TABLES: [],
+      RUGS: [],
+      DECOR: [],
+      OTHERS: []
+    };
+
+    sheetItems.forEach(item => {
+      const key = item.categoryKey || "OTHERS";
+      if (grouped[key]) {
+        grouped[key].push(item);
+      } else {
+        grouped.OTHERS.push(item);
+      }
+    });
+
+    // For any category without items in the sheet yet, backfill with default products so the page isn't empty
+    Object.keys(grouped).forEach(k => {
+      if (grouped[k].length === 0 && DEFAULT_PRODUCTS[k]) {
+        grouped[k] = DEFAULT_PRODUCTS[k];
+      }
+    });
+
+    const flat = Object.values(grouped).flat();
+    return { grouped, flat };
+  }
+
+  // Load from local storage cache if available for instantaneous first paint
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const parsedCache = JSON.parse(cached);
+      if (parsedCache && parsedCache.grouped && parsedCache.flat && parsedCache.flat.length > 0) {
+        Object.assign(PRODUCTS, parsedCache.grouped);
+      }
+    }
+  } catch (e) {}
+
   const ALL_PRODUCTS_LIST = Object.values(PRODUCTS).flat();
 
   // Export to Global Object
@@ -394,7 +555,47 @@
     PRODUCTS: PRODUCTS,
     ALL_PRODUCTS: ALL_PRODUCTS_LIST,
     formatCurrency: formatCurrency,
-    calculateOriginalPrice: calculateOriginalPrice
+    calculateOriginalPrice: calculateOriginalPrice,
+    isLive: false,
+    fetchLiveProducts: fetchLiveProducts
   };
+
+  async function fetchLiveProducts() {
+    const csvUrl = getCsvUrl(SHEET_URL);
+    if (!csvUrl) return ALL_PRODUCTS_LIST;
+
+    try {
+      // Use no-cache query to guarantee fresh spreadsheet edits
+      const cacheBusted = csvUrl + (csvUrl.includes("?") ? "&" : "?") + "_t=" + Date.now();
+      const res = await fetch(cacheBusted, { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const csvText = await res.text();
+      const sheetItems = parseCSV(csvText);
+
+      if (sheetItems.length > 0) {
+        const { grouped, flat } = buildCatalogFromSheet(sheetItems);
+        window.MELOJEY_DATA.PRODUCTS = grouped;
+        window.MELOJEY_DATA.ALL_PRODUCTS = flat;
+        window.MELOJEY_DATA.isLive = true;
+
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ grouped, flat, timestamp: Date.now() }));
+        } catch (e) {}
+
+        // Broadcast to all active page controllers
+        window.dispatchEvent(new CustomEvent("melojey:products-updated", {
+          detail: { products: flat, grouped: grouped, isLive: true }
+        }));
+
+        return flat;
+      }
+    } catch (err) {
+      console.warn("Could not load live Google Sheet data, using backup catalogue:", err.message);
+    }
+    return ALL_PRODUCTS_LIST;
+  }
+
+  // Automatically start background fetch on load
+  window.MELOJEY_DATA.readyPromise = fetchLiveProducts();
 
 })(window);

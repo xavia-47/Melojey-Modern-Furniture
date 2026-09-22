@@ -839,3 +839,8 @@ if (document.readyState === "loading") {
   initShowcaseApp();
 }
 
+window.addEventListener("melojey:products-updated", () => {
+  renderShowcaseCards();
+});
+
+

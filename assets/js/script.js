@@ -463,46 +463,25 @@
     }).filter(p => p && p.name);
   }
 
-  function getCsvUrl(url) {
-    if (!url) return "";
-    const idMatch = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
-    if (idMatch) {
-      return `https://docs.google.com/spreadsheets/d/${idMatch[1]}/export?format=csv`;
+  function syncProducts(products) {
+    if (Array.isArray(products) && products.length > 0) {
+      allProducts = products;
+    } else if (window.MELOJEY_DATA && window.MELOJEY_DATA.ALL_PRODUCTS && window.MELOJEY_DATA.ALL_PRODUCTS.length > 0) {
+      allProducts = window.MELOJEY_DATA.ALL_PRODUCTS;
+    } else {
+      allProducts = PLACEHOLDER_PRODUCTS;
     }
-    return url;
+    buildChips(allProducts);
+    renderProducts(allProducts);
+    const countEl = document.getElementById("product-count");
+    if (countEl) countEl.textContent = `${allProducts.length} items`;
   }
 
-  async function loadProducts() {
-    const csvUrl = getCsvUrl(SHEET_URL);
-    if (!csvUrl) {
-      allProducts = PLACEHOLDER_PRODUCTS;
-      buildChips(allProducts);
-      renderProducts(allProducts);
-      const countEl = document.getElementById("product-count");
-      if (countEl) countEl.textContent = `${allProducts.length} items (sample)`;
-      return;
+  window.addEventListener("melojey:products-updated", (e) => {
+    if (e.detail && e.detail.products) {
+      syncProducts(e.detail.products);
     }
+  });
 
-    try {
-      const res = await fetch(csvUrl);
-      if (!res.ok) throw new Error(`Google Sheet returned HTTP ${res.status}`);
-      const text = await res.text();
-      const parsed = parseCSV(text);
-      if (parsed.length === 0) throw new Error("No products found in sheet");
-      allProducts = parsed;
-      buildChips(allProducts);
-      renderProducts(allProducts);
-      const countEl = document.getElementById("product-count");
-      if (countEl) countEl.textContent = `${allProducts.length} items`;
-    } catch (err) {
-      console.warn("Could not load Google Sheet live data yet:", err.message);
-      console.info("Serving sample placeholder products. (To enable live sheet data: in your Google Sheet, click Share > set General access to 'Anyone with the link' or File > Share > Publish to web > CSV).");
-      allProducts = PLACEHOLDER_PRODUCTS;
-      buildChips(allProducts);
-      renderProducts(allProducts);
-      const countEl = document.getElementById("product-count");
-      if (countEl) countEl.textContent = `${allProducts.length} items (sample)`;
-    }
-  }
-
-  loadProducts();
+  // Initial synchronization with central repository
+  syncProducts(window.MELOJEY_DATA ? window.MELOJEY_DATA.ALL_PRODUCTS : []);

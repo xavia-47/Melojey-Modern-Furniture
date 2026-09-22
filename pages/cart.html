@@ -1123,7 +1123,22 @@
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
         const id = btn.getAttribute("data-id");
-        MelojeyCart.setQty(id, MelojeyCart.getQty(id) + 1);
+        const currentQty = MelojeyCart.getQty(id);
+        const catalogItem = (window.MELOJEY_DATA && window.MELOJEY_DATA.ALL_PRODUCTS)
+          ? window.MELOJEY_DATA.ALL_PRODUCTS.find(p => String(p.id) === String(id))
+          : null;
+        const stock = (catalogItem && catalogItem.stock !== null && catalogItem.stock !== undefined)
+          ? Number(catalogItem.stock)
+          : null;
+
+        if (stock !== null && currentQty >= stock) {
+          if (typeof MelojeyCart.showToast === "function") {
+            MelojeyCart.showToast(catalogItem || { name: "Item" }, stock, `Only ${stock} piece(s) available in showroom!`, true);
+          }
+          return;
+        }
+
+        MelojeyCart.setQty(id, currentQty + 1);
         renderCartPage();
       });
     });

@@ -276,6 +276,9 @@
   const fmt = n => `₦${Number(n).toLocaleString("en-NG")}`;
 
   function getAllProductsList() {
+    if (window.MELOJEY_DATA && window.MELOJEY_DATA.ALL_PRODUCTS && window.MELOJEY_DATA.ALL_PRODUCTS.length > 0) {
+      return window.MELOJEY_DATA.ALL_PRODUCTS;
+    }
     if (window.MELOJEY_DATA && window.MELOJEY_DATA.PRODUCTS) {
       return Object.values(window.MELOJEY_DATA.PRODUCTS).flat();
     }
@@ -418,23 +421,31 @@
         const discountPct = p.discountPct || 15;
         const orig = p.originalPrice || Math.round(p.price * 1.15);
         const imgSrc = p.image.startsWith('../') ? p.image : (p.image.startsWith('http') ? p.image : '../' + p.image);
+        const isSoldOut = p.stock !== null && p.stock !== undefined && Number(p.stock) <= 0;
+        const isLowStock = !isSoldOut && p.stock !== null && p.stock !== undefined && Number(p.stock) > 0 && Number(p.stock) <= 3;
+
         return `
-          <div class="product-card" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(p.name)}">
+          <div class="product-card${isSoldOut ? ' card-sold-out' : ''}" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(p.name)}">
             <div class="card-img-wrap">
               <img class="card-img" src="${imgSrc}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='../assets/images/logo.png';" />
-              <span class="card-discount-badge">-${discountPct}%</span>
+              ${isSoldOut
+                ? `<span class="card-sold-out-badge">Sold Out</span>`
+                : `<span class="card-discount-badge">-${discountPct}%</span>`}
               <button class="card-wishlist-btn" data-id="${p.id}" type="button" aria-label="Add to wishlist">☆</button>
             </div>
             <div class="card-body">
               <div class="card-cat">${escapeHtml(p.category || "Furniture")}</div>
               <div class="card-name" title="${escapeHtml(p.name)}">${formatTwoToneTitle(p.name)}</div>
               <div class="card-desc">${escapeHtml(p.description || "")}</div>
+              ${isLowStock ? `<div class="card-stock-hint"><span class="stock-dot"></span> Only ${p.stock} available</div>` : ''}
               <div class="card-footer">
                 <div class="card-price-group">
                   <span class="card-price">${fmt(p.price)}</span>
                   <span class="card-price-original">${fmt(orig)}</span>
                 </div>
-                <button class="btn-add-cart" data-id="${p.id}" type="button">Add to Cart</button>
+                <button class="btn-add-cart${isSoldOut ? ' btn-sold-out' : ''}" data-id="${p.id}" type="button"${isSoldOut ? ' disabled' : ''}>
+                  ${isSoldOut ? 'Sold Out' : 'Add to Cart'}
+                </button>
               </div>
             </div>
           </div>
@@ -880,6 +891,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", executeSearchPage);
+  window.addEventListener("melojey:products-updated", executeSearchPage);
 </script>
 <script>
   if ('serviceWorker' in navigator) {

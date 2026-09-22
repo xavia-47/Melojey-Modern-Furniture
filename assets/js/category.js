@@ -402,23 +402,31 @@ function getCategoryWaLink(number, product) {
 function buildCardHtml(p) {
   const discountPct = p.discountPct || 15;
   const orig = p.originalPrice || Math.round(p.price * 1.15);
+  const isSoldOut = p.stock !== null && p.stock !== undefined && Number(p.stock) <= 0;
+  const isLowStock = !isSoldOut && p.stock !== null && p.stock !== undefined && Number(p.stock) > 0 && Number(p.stock) <= 3;
+
   return `
-    <div class="product-card" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(p.name)}">
+    <div class="product-card${isSoldOut ? ' card-sold-out' : ''}" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(p.name)}">
       <div class="card-img-wrap">
         <img class="card-img" src="${p.image}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.onerror=null;this.src='../assets/images/logo.png';" />
-        <span class="card-discount-badge">-${discountPct}%</span>
+        ${isSoldOut
+          ? `<span class="card-sold-out-badge">Sold Out</span>`
+          : `<span class="card-discount-badge">-${discountPct}%</span>`}
         <button class="card-wishlist-btn" data-id="${p.id}" type="button" aria-label="Add to wishlist">☆</button>
       </div>
       <div class="card-body">
         <div class="card-cat">${escapeHtml(p.category)}</div>
         <div class="card-name" title="${escapeHtml(p.name)}">${formatTwoToneTitle(p.name)}</div>
         <div class="card-desc">${escapeHtml(p.description || "")}</div>
+        ${isLowStock ? `<div class="card-stock-hint"><span class="stock-dot"></span> Only ${p.stock} available</div>` : ''}
         <div class="card-footer">
           <div class="card-price-group">
             <span class="card-price">${fmt(p.price)}</span>
             <span class="card-price-original">${fmt(orig)}</span>
           </div>
-          <button class="btn-add-cart" data-id="${p.id}" type="button">Add to Cart</button>
+          <button class="btn-add-cart${isSoldOut ? ' btn-sold-out' : ''}" data-id="${p.id}" type="button"${isSoldOut ? ' disabled' : ''}>
+            ${isSoldOut ? 'Sold Out' : 'Add to Cart'}
+          </button>
         </div>
       </div>
     </div>
@@ -1081,6 +1089,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") closeCategoryModal();
+  });
+
+  // Re-render when live Google Sheets products are fetched / updated
+  window.addEventListener("melojey:products-updated", () => {
+    const updatedProducts = getPageProducts();
+    renderCategoryGrid();
+    buildSidebar(updatedProducts);
   });
 });
 

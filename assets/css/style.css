@@ -1902,3 +1902,59 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
+
+    .btn-add-cart.btn-sold-out,
+    .btn-sold-out {
+      background: #2a2a2a !important;
+      color: #888 !important;
+      border: 1px solid #444 !important;
+      cursor: not-allowed !important;
+      opacity: 0.65 !important;
+      transform: none !important;
+    }
+
+    .card-sold-out-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(9, 14, 15, 0.88);
+      color: #C89850;
+      border: 1px solid rgba(200, 152, 80, 0.35);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 4px;
+      backdrop-filter: blur(4px);
+      z-index: 2;
+    }
+
+    .card-stock-hint {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.70rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: #966A37;
+      margin-top: 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stock-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #C89850;
+      display: inline-block;
+      box-shadow: 0 0 5px rgba(200, 152, 80, 0.7);
+      animation: stockPulse 2s infinite ease-in-out;
+    }
+
+    @keyframes stockPulse {
+      0% { transform: scale(0.9); opacity: 0.75; }
+      50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 7px rgba(200, 152, 80, 0.95); }
+      100% { transform: scale(0.9); opacity: 0.75; }
+    }

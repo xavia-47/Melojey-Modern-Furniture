@@ -50,13 +50,46 @@ function cartTotalQty() {
   return cartGetAll().reduce((sum, i) => sum + (Number(i.qty) || 1), 0);
 }
 
+/* ── Stock Checker Helper ─────────────────────────────────── */
+function getProductStock(productId, fallbackProduct) {
+  if (fallbackProduct && fallbackProduct.stock !== undefined && fallbackProduct.stock !== null) {
+    return Number(fallbackProduct.stock);
+  }
+  if (typeof window !== "undefined" && window.MELOJEY_DATA && Array.isArray(window.MELOJEY_DATA.ALL_PRODUCTS)) {
+    const found = window.MELOJEY_DATA.ALL_PRODUCTS.find(p => String(p.id) === String(productId));
+    if (found && found.stock !== undefined && found.stock !== null) {
+      return Number(found.stock);
+    }
+  }
+  return null;
+}
+
 function cartAddItem(product, qty = 1) {
-  if (!product || !product.id) return;
+  if (!product || !product.id) return false;
+  const stock = getProductStock(product.id, product);
+  if (stock !== null && stock <= 0) {
+    showCartToast(product, 0, "Sorry, this item is sold out!", true);
+    return false;
+  }
+
   let items = cartGetAll();
   const idx = items.findIndex(i => String(i.id) === String(product.id));
-  const addQty = Math.max(1, Number(qty) || 1);
+  const currentQty = idx > -1 ? (Number(items[idx].qty) || 0) : 0;
+  let addQty = Math.max(1, Number(qty) || 1);
+
+  if (stock !== null && currentQty + addQty > stock) {
+    const allowed = Math.max(0, stock - currentQty);
+    if (allowed === 0) {
+      showCartToast(product, currentQty, `Only ${stock} piece(s) available in showroom!`, true);
+      return false;
+    }
+    addQty = allowed;
+    showCartToast(product, stock, `Only ${stock} piece(s) available in showroom!`, true);
+  }
+
   if (idx > -1) {
-    items[idx].qty = (Number(items[idx].qty) || 1) + addQty;
+    items[idx].qty = currentQty + addQty;
+    if (stock !== null) items[idx].stock = stock;
   } else {
     items.push({
       id: product.id,
@@ -66,21 +99,35 @@ function cartAddItem(product, qty = 1) {
       originalPrice: Number(product.originalPrice) || Math.round((Number(product.price) || 0) * 1.15),
       discountPct: Number(product.discountPct) || 15,
       image: product.image || "",
+      stock: stock,
       qty: addQty
     });
   }
   cartSave(items);
+  return true;
 }
 
 function cartSetQty(productId, qty) {
   let items = cartGetAll();
   const idx = items.findIndex(i => String(i.id) === String(productId));
   const newQty = Number(qty);
+  const stock = getProductStock(productId, idx > -1 ? items[idx] : null);
+
+  if (stock !== null && newQty > stock) {
+    showCartToast(items[idx] || { name: "Item" }, stock, `Only ${stock} piece(s) available!`, true);
+    if (idx > -1) {
+      items[idx].qty = stock;
+      cartSave(items);
+    }
+    return items;
+  }
+
   if (idx > -1) {
     if (newQty <= 0) {
       items.splice(idx, 1);
     } else {
       items[idx].qty = newQty;
+      if (stock !== null) items[idx].stock = stock;
     }
   }
   cartSave(items);
@@ -116,7 +163,7 @@ function cartUpdateBadges() {
 
 /* ── Toast Notification ───────────────────────────────────── */
 let toastTimeout = null;
-function showCartToast(product, qty = 1) {
+function showCartToast(product, qty = 1, customMsg = null, isError = false) {
   if (!product) return;
   let toastEl = document.getElementById("cart-toast");
   if (!toastEl) {
@@ -129,12 +176,16 @@ function showCartToast(product, qty = 1) {
   const name = product.name || "Item";
   const cartUrl = getCartPageUrl();
 
+  const iconSvg = isError
+    ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C89850" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`
+    : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C89850" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+
   toastEl.innerHTML = `
-    <div class="cart-toast-body">
-      <div class="cart-toast-check">✓</div>
+    <div class="cart-toast-body" style="${isError ? 'border-left: 3px solid #C89850;' : ''}">
+      <div class="cart-toast-check" style="display:flex;align-items:center;justify-content:center;">${iconSvg}</div>
       <div class="cart-toast-info">
-        <span class="cart-toast-title">Added to Cart</span>
-        <span class="cart-toast-name" title="${name}">${name}</span>
+        <span class="cart-toast-title" style="${isError ? 'color:#C89850;' : ''}">${isError ? 'Inventory Limit' : 'Added to Cart'}</span>
+        <span class="cart-toast-name" title="${name}">${customMsg || name}</span>
       </div>
       <a href="${cartUrl}" class="cart-toast-link">View Cart &rarr;</a>
     </div>
@@ -516,7 +567,18 @@ function setupModalCart(wrapEl, product) {
     const qty = cartGetQty(product.id);
     const cartUrl = getCartPageUrl();
 
+    const stock = getProductStock(product.id, product);
+
     if (qty <= 0) {
+      if (stock !== null && stock <= 0) {
+        wrapEl.innerHTML = `
+          <button class="btn-add-cart modal-add-cart-btn btn-sold-out" disabled type="button">
+            Sold Out
+          </button>
+        `;
+        return;
+      }
+
       wrapEl.innerHTML = `
         <button class="btn-add-cart modal-add-cart-btn" data-id="${product.id}" type="button">
           Add to Cart
@@ -526,10 +588,12 @@ function setupModalCart(wrapEl, product) {
       if (btn) {
         btn.onclick = e => {
           e.stopPropagation();
-          cartAddItem(product, 1);
-          showCartToast(product, 1);
-          renderModalCartState();
-          syncOtherSteppers(product.id, 1, product, wrapEl);
+          const added = cartAddItem(product, 1);
+          if (added !== false) {
+            showCartToast(product, 1);
+            renderModalCartState();
+            syncOtherSteppers(product.id, 1, product, wrapEl);
+          }
         };
       }
     } else {
@@ -549,7 +613,12 @@ function setupModalCart(wrapEl, product) {
       if (plusBtn) {
         plusBtn.onclick = e => {
           e.stopPropagation();
-          const nextQty = cartGetQty(product.id) + 1;
+          const current = cartGetQty(product.id);
+          if (stock !== null && current >= stock) {
+            showCartToast(product, stock, `Only ${stock} piece(s) available in showroom!`, true);
+            return;
+          }
+          const nextQty = current + 1;
           cartSetQty(product.id, nextQty);
           renderModalCartState();
           syncOtherSteppers(product.id, nextQty, product, wrapEl);
@@ -588,6 +657,14 @@ function initCartStepper(cardEl, product) {
   const existingBtn = footer.querySelector(".btn-add-cart");
   if (!existingBtn) return;
 
+  const stock = getProductStock(product.id, product);
+  if (stock !== null && stock <= 0) {
+    existingBtn.disabled = true;
+    existingBtn.textContent = "Sold Out";
+    existingBtn.classList.add("btn-sold-out");
+    return;
+  }
+
   const currentQty = cartGetQty(product.id);
 
   if (currentQty > 0) {
@@ -595,10 +672,12 @@ function initCartStepper(cardEl, product) {
   } else {
     existingBtn.onclick = e => {
       e.stopPropagation();
-      cartAddItem(product, 1);
-      showCartToast(product, 1);
-      replaceBtnWithStepper(existingBtn, product, 1);
-      syncOtherSteppers(product.id, 1, product, existingBtn);
+      const added = cartAddItem(product, 1);
+      if (added !== false) {
+        showCartToast(product, 1);
+        replaceBtnWithStepper(existingBtn, product, 1);
+        syncOtherSteppers(product.id, 1, product, existingBtn);
+      }
     };
   }
 }
@@ -669,7 +748,13 @@ function replaceBtnWithStepper(btn, product, initialQty) {
 
   plusBtn.onclick = e => {
     e.stopPropagation();
-    const newQty = cartGetQty(product.id) + 1;
+    const stock = getProductStock(product.id, product);
+    const current = cartGetQty(product.id);
+    if (stock !== null && current >= stock) {
+      showCartToast(product, stock, `Only ${stock} piece(s) available in showroom!`, true);
+      return;
+    }
+    const newQty = current + 1;
     cartSetQty(product.id, newQty);
     numEl.textContent = newQty;
     syncOtherSteppers(product.id, newQty, product, stepper);
