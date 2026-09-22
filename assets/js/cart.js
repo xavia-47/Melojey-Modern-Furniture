@@ -358,8 +358,19 @@ const CATEGORY_FALLBACK_ANGLES = {
 
 function getProductAngles(product) {
   if (!product) return [];
+  const isSubfolder = window.location.pathname.includes("/pages/") || window.location.pathname.includes("/categories/");
+  const fixPath = url => {
+    if (!url) return "";
+    let clean = url.trim();
+    if (isSubfolder && !clean.startsWith("http") && !clean.startsWith("../") && !clean.startsWith("/") && !clean.startsWith("data:")) {
+      return "../" + clean;
+    }
+    return clean;
+  };
+
+  // If the product has multiple images defined (from Google Sheet or catalog), use them directly
   if (Array.isArray(product.images) && product.images.length > 1) {
-    return product.images;
+    return product.images.map(fixPath).slice(0, 5);
   }
 
   const pId = String(product.id || "").toUpperCase();
@@ -376,12 +387,8 @@ function getProductAngles(product) {
 
   // Ensure product's main image is at index 0
   if (product.image) {
-    let cleanMain = product.image;
-    const isSubfolder = window.location.pathname.includes("/pages/") || window.location.pathname.includes("/categories/");
-    if (isSubfolder && !cleanMain.startsWith("http") && !cleanMain.startsWith("../") && !cleanMain.startsWith("/")) {
-      cleanMain = "../" + cleanMain;
-    }
-    list = [cleanMain, ...list.filter(url => url !== cleanMain && url !== product.image)];
+    const cleanMain = fixPath(product.image);
+    list = [cleanMain, ...list.map(fixPath).filter(url => url !== cleanMain && url !== product.image)];
   }
 
   return list.slice(0, 3);
@@ -455,6 +462,12 @@ function setupModalGallery(modalContainer, product) {
 
   const angles = getProductAngles(product);
   let currentIndex = 0;
+
+  const hasMultiple = angles.length > 1;
+  if (prevBtn) prevBtn.style.display = hasMultiple ? "flex" : "none";
+  if (nextBtn) nextBtn.style.display = hasMultiple ? "flex" : "none";
+  if (counterEl) counterEl.style.display = hasMultiple ? "block" : "none";
+  if (dotsContainer) dotsContainer.style.display = hasMultiple ? "flex" : "none";
 
   // Build dots
   dotsContainer.innerHTML = angles.map((_, i) =>

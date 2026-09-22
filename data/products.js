@@ -389,7 +389,7 @@
 
   // 5. Live Google Sheets Data Synchronizer
   const SHEET_URL = "https://docs.google.com/spreadsheets/d/1nto5s696VQBhEGbhDGLYqx_hSI-lBI9Lm18JXSOnUqo/edit?usp=sharing";
-  const CACHE_KEY = "melojey_live_sheet_cache_v3";
+  const CACHE_KEY = "melojey_live_sheet_cache_v4";
 
   function getCsvUrl(url) {
     if (!url) return "";
@@ -407,6 +407,47 @@
       return `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
     }
     return url.trim();
+  }
+
+  function extractImagesFromRow(obj) {
+    const rawList = [];
+
+    function addCellUrls(str) {
+      if (!str || typeof str !== "string") return;
+      const parts = str.split(/[\r\n|;]+|,\s*(?=https?:\/\/)/i)
+        .map(s => s.trim().replace(/^"|"$/g, ""))
+        .filter(s => s.length > 5);
+      rawList.push(...parts);
+    }
+
+    // 1. Primary image fields (image_url, image, image_1, photo, view1, etc.)
+    addCellUrls(obj.image_url || obj.image || obj.image1 || obj.image_1 || obj.photo || obj.photo1 || obj.view1 || obj.angle1);
+
+    // 2. Secondary image fields (image_url_2, image_2, image2, view2, angle2, etc.)
+    addCellUrls(obj.image_url_2 || obj.image_url2 || obj.image_2 || obj.image2 || obj.photo2 || obj.photo_2 || obj.view2 || obj.view_2 || obj.angle2 || obj.angle_2);
+
+    // 3. Tertiary image fields (image_url_3, image_3, image3, view3, angle3, etc.)
+    addCellUrls(obj.image_url_3 || obj.image_url3 || obj.image_3 || obj.image3 || obj.photo3 || obj.photo_3 || obj.view3 || obj.view_3 || obj.angle3 || obj.angle_3);
+
+    // 4. Any other column matching image/photo/view/angle numbers (e.g. image_4, etc.)
+    Object.keys(obj).forEach(k => {
+      if (/^(image|photo|view|angle)[_ -]?[0-9]+/i.test(k)) {
+        if (!k.includes("1") && !k.includes("2") && !k.includes("3")) {
+          addCellUrls(obj[k]);
+        }
+      }
+    });
+
+    // Format all URLs (converting Google Drive links, trimming) and deduplicate
+    const finalImages = [];
+    rawList.forEach(raw => {
+      const formatted = formatImageUrl(raw);
+      if (formatted && !finalImages.includes(formatted)) {
+        finalImages.push(formatted);
+      }
+    });
+
+    return finalImages;
   }
 
   function splitCSVRow(row) {
@@ -499,6 +540,12 @@
         }
       }
 
+      const images = extractImagesFromRow(obj);
+      const mainImage = images[0] || formatImageUrl(obj.image_url || obj.image || "") || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=450&fit=crop";
+      if (images.length === 0) {
+        images.push(mainImage);
+      }
+
       items.push({
         id: id,
         name: name,
@@ -508,7 +555,8 @@
         originalPrice: origPrice,
         discountPct: discountPct,
         description: obj.description || "",
-        image: formatImageUrl(obj.image_url || obj.image || "") || "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=450&fit=crop",
+        image: mainImage,
+        images: images,
         stock: stock
       });
     }
