@@ -25,8 +25,10 @@ function escapeHtml(str) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
+window.escapeHtml = escapeHtml;
 
 /* Format currency */
 const fmt = n => `₦${Number(n).toLocaleString("en-NG")}`;
@@ -403,7 +405,7 @@ function buildCardHtml(p) {
   const discountPct = p.discountPct || 15;
   const orig = p.originalPrice || Math.round(p.price * 1.15);
   const isSoldOut = p.stock !== null && p.stock !== undefined && Number(p.stock) <= 0;
-  const isLowStock = !isSoldOut && p.stock !== null && p.stock !== undefined && Number(p.stock) > 0 && Number(p.stock) <= 3;
+  const isLowStock = !isSoldOut && p.stock !== null && p.stock !== undefined && Number(p.stock) > 0 && Number(p.stock) <= 10;
 
   return `
     <div class="product-card${isSoldOut ? ' card-sold-out' : ''}" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(p.name)}">
@@ -834,7 +836,10 @@ function initToolbar() {
 
 /* ── MODAL ─────────────────────────────────────────────── */
 function openCategoryModal(id) {
-  const p = ALL_CAT_PRODUCTS.find(x => x.id === id);
+  const allList = (window.MELOJEY_DATA && Array.isArray(window.MELOJEY_DATA.ALL_PRODUCTS) && window.MELOJEY_DATA.ALL_PRODUCTS.length > 0)
+    ? window.MELOJEY_DATA.ALL_PRODUCTS
+    : ALL_CAT_PRODUCTS;
+  const p = allList.find(x => String(x.id) === String(id));
   if (!p) return;
 
   const modalOverlay = document.getElementById("modal-overlay");

@@ -389,7 +389,7 @@
 
   // 5. Live Google Sheets Data Synchronizer
   const SHEET_URL = "https://docs.google.com/spreadsheets/d/1nto5s696VQBhEGbhDGLYqx_hSI-lBI9Lm18JXSOnUqo/edit?usp=sharing";
-  const CACHE_KEY = "melojey_live_sheet_cache_v2";
+  const CACHE_KEY = "melojey_live_sheet_cache_v3";
 
   function getCsvUrl(url) {
     if (!url) return "";
@@ -464,7 +464,10 @@
       const vals = splitCSVRow(rawLines[i]);
       const obj = {};
       headers.forEach((h, idx) => {
-        obj[h] = (vals[idx] || "").replace(/^"|"$/g, "").trim();
+        const val = (vals[idx] || "").replace(/^"|"$/g, "").trim();
+        if (obj[h] === undefined || (obj[h] === "" && val !== "")) {
+          obj[h] = val;
+        }
       });
 
       const name = obj.name || obj["product name"] || "";
@@ -480,10 +483,21 @@
       const discountPct = 15;
       const origPrice = calculateOriginalPrice(priceNum, discountPct);
 
-      const rawStock = obj.quantity || obj.qty || obj.stock || obj["quantity available"] || obj["qty available"] || obj.available;
-      const stock = (rawStock !== undefined && rawStock !== "" && !isNaN(Number(rawStock)))
-        ? Math.max(0, parseInt(rawStock, 10))
-        : null;
+      const rawStock = obj.quantity || obj.qty || obj.stock || obj["quantity available"] || obj["qty available"] || obj.available || obj["available stock"];
+      let stock = null;
+      if (rawStock !== undefined && rawStock !== null) {
+        const clean = String(rawStock).trim();
+        if (clean !== "") {
+          if (/^(out of stock|sold out|none|unavailable|0)$/i.test(clean)) {
+            stock = 0;
+          } else {
+            const parsed = parseInt(clean.replace(/[^0-9]/g, ""), 10);
+            if (!isNaN(parsed)) {
+              stock = Math.max(0, parsed);
+            }
+          }
+        }
+      }
 
       items.push({
         id: id,

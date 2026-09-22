@@ -267,13 +267,24 @@
   </div>
 </footer>
 
-<script src="../data/products.js?v=2.5"></script>
+<script src="../data/products.js?v=2.6"></script>
 <script src="../assets/js/cart.js?v=2.5"></script>
 <script src="../assets/js/wishlist.js?v=2.5"></script>
 <script src="../assets/js/showcase.js?v=2.5"></script>
 
 <script>
   const fmt = n => `₦${Number(n).toLocaleString("en-NG")}`;
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+  window.escapeHtml = escapeHtml;
 
   function getAllProductsList() {
     if (window.MELOJEY_DATA && window.MELOJEY_DATA.ALL_PRODUCTS && window.MELOJEY_DATA.ALL_PRODUCTS.length > 0) {
@@ -422,7 +433,7 @@
         const orig = p.originalPrice || Math.round(p.price * 1.15);
         const imgSrc = p.image.startsWith('../') ? p.image : (p.image.startsWith('http') ? p.image : '../' + p.image);
         const isSoldOut = p.stock !== null && p.stock !== undefined && Number(p.stock) <= 0;
-        const isLowStock = !isSoldOut && p.stock !== null && p.stock !== undefined && Number(p.stock) > 0 && Number(p.stock) <= 3;
+        const isLowStock = !isSoldOut && p.stock !== null && p.stock !== undefined && Number(p.stock) > 0 && Number(p.stock) <= 10;
 
         return `
           <div class="product-card${isSoldOut ? ' card-sold-out' : ''}" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(p.name)}">
