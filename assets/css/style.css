@@ -1517,6 +1517,17 @@
       min-width: 0;
     }
 
+    .cart-toast-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: contain;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(200, 152, 80, 0.4);
+      background: #0A0704;
+    }
+
     .cart-toast-check {
       width: 28px;
       height: 28px;
@@ -1905,30 +1916,24 @@
 
     .btn-add-cart.btn-sold-out,
     .btn-sold-out {
-      background: #2a2a2a !important;
-      color: #888 !important;
-      border: 1px solid #444 !important;
+      background: #3A3A3C !important;
+      color: #A0A0A5 !important;
+      border: 1px solid #48484A !important;
       cursor: not-allowed !important;
-      opacity: 0.65 !important;
+      opacity: 0.85 !important;
       transform: none !important;
+      box-shadow: none !important;
+      pointer-events: none;
     }
 
     .card-sold-out-badge {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: rgba(9, 14, 15, 0.88);
-      color: #C89850;
-      border: 1px solid rgba(200, 152, 80, 0.35);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 4px;
-      backdrop-filter: blur(4px);
-      z-index: 2;
+      display: none !important;
+    }
+
+    .product-card.card-sold-out .card-img {
+      opacity: 0.88;
+      filter: grayscale(10%);
+      transition: opacity 0.3s ease, filter 0.3s ease;
     }
 
     .card-stock-hint {

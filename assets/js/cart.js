@@ -175,14 +175,12 @@ function showCartToast(product, qty = 1, customMsg = null, isError = false) {
 
   const name = product.name || "Item";
   const cartUrl = getCartPageUrl();
-
-  const iconSvg = isError
-    ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C89850" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`
-    : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C89850" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+  const isSubfolder = window.location.pathname.includes("/pages/") || window.location.pathname.includes("/categories/");
+  const faviconUrl = isSubfolder ? "../assets/images/favicon.png" : "assets/images/favicon.png";
 
   toastEl.innerHTML = `
-    <div class="cart-toast-body" style="${isError ? 'border-left: 3px solid #C89850;' : ''}">
-      <div class="cart-toast-check" style="display:flex;align-items:center;justify-content:center;">${iconSvg}</div>
+    <div class="cart-toast-body">
+      <img src="${faviconUrl}" alt="Melojey" class="cart-toast-icon" />
       <div class="cart-toast-info">
         <span class="cart-toast-title" style="${isError ? 'color:#C89850;' : ''}">${isError ? 'Inventory Limit' : 'Added to Cart'}</span>
         <span class="cart-toast-name" title="${name}">${customMsg || name}</span>

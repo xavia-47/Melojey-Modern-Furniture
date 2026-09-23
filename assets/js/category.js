@@ -411,9 +411,7 @@ function buildCardHtml(p) {
     <div class="product-card${isSoldOut ? ' card-sold-out' : ''}" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(p.name)}">
       <div class="card-img-wrap">
         <img class="card-img" src="${p.image}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.onerror=null;this.src='../assets/images/logo.png';" />
-        ${isSoldOut
-          ? `<span class="card-sold-out-badge">Sold Out</span>`
-          : `<span class="card-discount-badge">-${discountPct}%</span>`}
+        ${!isSoldOut ? `<span class="card-discount-badge">-${discountPct}%</span>` : ''}
         <button class="card-wishlist-btn" data-id="${p.id}" type="button" aria-label="Add to wishlist">☆</button>
       </div>
       <div class="card-body">
@@ -498,9 +496,18 @@ function renderCategoryGrid() {
 
   grid.innerHTML = sorted.map(buildCardHtml).join("");
 
+  // Build a unified lookup that merges live data + static fallback
+  // so cards always find their product regardless of which data source rendered them
+  const liveAll = (window.MELOJEY_DATA && Array.isArray(window.MELOJEY_DATA.ALL_PRODUCTS) && window.MELOJEY_DATA.ALL_PRODUCTS.length > 0)
+    ? window.MELOJEY_DATA.ALL_PRODUCTS
+    : [];
+  const lookupList = liveAll.length > 0 ? liveAll : ALL_CAT_PRODUCTS;
+
   grid.querySelectorAll(".product-card").forEach(card => {
     const id = card.dataset.id;
-    const product = ALL_CAT_PRODUCTS.find(p => p.id === id);
+    // Search live data first, then fall back to static list
+    const product = lookupList.find(p => String(p.id) === String(id))
+                 || ALL_CAT_PRODUCTS.find(p => String(p.id) === String(id));
     if (product) attachCardInteractions(card, product);
   });
 }
@@ -854,8 +861,21 @@ function openCategoryModal(id) {
   const origEl = document.getElementById("modal-price-original");
   if (origEl) origEl.textContent = fmt(p.originalPrice);
 
+  const isSoldOut = p.stock !== null && p.stock !== undefined && Number(p.stock) <= 0;
   const discEl = document.getElementById("modal-discount-tag");
-  if (discEl) discEl.textContent = `-${p.discountPct}% OFF`;
+  if (discEl) {
+    if (isSoldOut) {
+      discEl.textContent = "SOLD OUT";
+      discEl.style.background = "#3A3A3C";
+      discEl.style.borderColor = "#48484A";
+      discEl.style.color = "#A0A0A5";
+    } else {
+      discEl.textContent = `-${p.discountPct || 15}% OFF`;
+      discEl.style.background = "";
+      discEl.style.borderColor = "";
+      discEl.style.color = "";
+    }
+  }
 
   document.getElementById("modal-desc").textContent = p.description;
 

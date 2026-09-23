@@ -439,9 +439,7 @@
           <div class="product-card${isSoldOut ? ' card-sold-out' : ''}" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(p.name)}">
             <div class="card-img-wrap">
               <img class="card-img" src="${imgSrc}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='../assets/images/logo.png';" />
-              ${isSoldOut
-                ? `<span class="card-sold-out-badge">Sold Out</span>`
-                : `<span class="card-discount-badge">-${discountPct}%</span>`}
+              ${!isSoldOut ? `<span class="card-discount-badge">-${discountPct}%</span>` : ''}
               <button class="card-wishlist-btn" data-id="${p.id}" type="button" aria-label="Add to wishlist">☆</button>
             </div>
             <div class="card-body">
