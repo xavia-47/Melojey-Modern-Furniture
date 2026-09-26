@@ -389,7 +389,7 @@
 
   // 5. Live Google Sheets Data Synchronizer
   const SHEET_URL = "https://docs.google.com/spreadsheets/d/1nto5s696VQBhEGbhDGLYqx_hSI-lBI9Lm18JXSOnUqo/edit?usp=sharing";
-  const CACHE_KEY = "melojey_live_sheet_cache_v4";
+  const CACHE_KEY = "melojey_live_sheet_cache_v5";
 
   function getCsvUrl(url) {
     if (!url) return "";
@@ -402,11 +402,13 @@
 
   function formatImageUrl(url) {
     if (!url) return "";
-    const driveMatch = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=)([a-zA-Z0-9_-]+)/);
+    let clean = String(url).trim().replace(/^"|"$/g, "");
+    // Handles Google Drive direct file links, export, thumbnail, and view parameters
+    const driveMatch = clean.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:.*&)?id=|thumbnail\?id=)([a-zA-Z0-9_-]+)/);
     if (driveMatch) {
       return `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
     }
-    return url.trim();
+    return clean;
   }
 
   function extractImagesFromRow(obj) {
@@ -420,18 +422,36 @@
       rawList.push(...parts);
     }
 
-    // 1. Primary image fields (image_url, image, image_1, photo, view1, etc.)
-    addCellUrls(obj.image_url || obj.image || obj.image1 || obj.image_1 || obj.photo || obj.photo1 || obj.view1 || obj.angle1);
+    // 1. Primary image fields (image_url, image, image_1, image 1, photo, photo 1, view1, angle1, etc.)
+    addCellUrls(
+      obj.image_url || obj.image || obj["image 1"] || obj.image1 || obj.image_1 ||
+      obj.photo || obj["photo 1"] || obj.photo1 || obj.photo_1 ||
+      obj["view 1"] || obj.view1 || obj.view_1 || obj["angle 1"] || obj.angle1 || obj.angle_1 ||
+      obj["picture 1"] || obj.picture1 || obj.img1 || obj["img 1"]
+    );
 
-    // 2. Secondary image fields (image_url_2, image_2, image2, view2, angle2, etc.)
-    addCellUrls(obj.image_url_2 || obj.image_url2 || obj.image_2 || obj.image2 || obj.photo2 || obj.photo_2 || obj.view2 || obj.view_2 || obj.angle2 || obj.angle_2);
+    // 2. Secondary image fields (image_url_2, image_2, image 2, image2, photo 2, etc.)
+    addCellUrls(
+      obj.image_url_2 || obj.image_url2 || obj.image_2 || obj["image 2"] || obj.image2 ||
+      obj.photo2 || obj["photo 2"] || obj.photo_2 ||
+      obj["view 2"] || obj.view2 || obj.view_2 || obj["angle 2"] || obj.angle2 || obj.angle_2 ||
+      obj["picture 2"] || obj.picture2 || obj.img2 || obj["img 2"]
+    );
 
-    // 3. Tertiary image fields (image_url_3, image_3, image3, view3, angle3, etc.)
-    addCellUrls(obj.image_url_3 || obj.image_url3 || obj.image_3 || obj.image3 || obj.photo3 || obj.photo_3 || obj.view3 || obj.view_3 || obj.angle3 || obj.angle_3);
+    // 3. Tertiary image fields (image_url_3, image_3, image 3, image3, photo 3, etc.)
+    addCellUrls(
+      obj.image_url_3 || obj.image_url3 || obj.image_3 || obj["image 3"] || obj.image3 ||
+      obj.photo3 || obj["photo 3"] || obj.photo_3 ||
+      obj["view 3"] || obj.view3 || obj.view_3 || obj["angle 3"] || obj.angle3 || obj.angle_3 ||
+      obj["picture 3"] || obj.picture3 || obj.img3 || obj["img 3"]
+    );
 
-    // 4. Any other column matching image/photo/view/angle numbers (e.g. image_4, etc.)
+    // 4. Check for any combined 'images' or 'photos' column with multiple URLs
+    addCellUrls(obj.images || obj.photos || obj.pictures || obj["all images"]);
+
+    // 5. Any other column matching image/photo/view/angle numbers (e.g. image_4, etc.)
     Object.keys(obj).forEach(k => {
-      if (/^(image|photo|view|angle)[_ -]?[0-9]+/i.test(k)) {
+      if (/^(image|photo|view|angle|picture|img)[_ -]?[0-9]+/i.test(k)) {
         if (!k.includes("1") && !k.includes("2") && !k.includes("3")) {
           addCellUrls(obj[k]);
         }
@@ -521,8 +541,36 @@
       const id = obj.id || `P${String(autoIndex).padStart(3, "0")}`;
       autoIndex++;
 
-      const discountPct = 15;
-      const origPrice = calculateOriginalPrice(priceNum, discountPct);
+      // Dynamic discount from spreadsheet column (discount, discount %, original_price, etc.)
+      const rawDiscount = obj.discount || obj["discount %"] || obj.discount_pct || obj["discount percent"] || obj["discount percentage"] || obj.original_price || obj["original price"] || obj["old price"] || obj["slash price"] || "";
+      let discountPct = 0;
+      let origPrice = null;
+
+      if (rawDiscount) {
+        const cleanDisc = String(rawDiscount).trim();
+        if (cleanDisc && !/^(0|none|no|false|null|-)$/i.test(cleanDisc)) {
+          const isPctStr = cleanDisc.includes("%");
+          const discNum = Number(cleanDisc.replace(/[^0-9.]/g, "")) || 0;
+
+          if (discNum > 0) {
+            if (isPctStr || (discNum <= 99 && priceNum > 1000)) {
+              // Percentage provided e.g. "15%" or "20"
+              discountPct = Math.round(discNum);
+              if (discountPct > 0 && discountPct < 100) {
+                origPrice = Math.round(priceNum / (1 - discountPct / 100));
+              }
+            } else if (discNum > priceNum) {
+              // Original / slash price provided e.g. 350000
+              origPrice = Math.round(discNum);
+              discountPct = Math.round(((origPrice - priceNum) / origPrice) * 100);
+            } else if (discNum > 0 && discNum < priceNum && discNum > 99) {
+              // Cash amount off provided e.g. 50000
+              origPrice = Math.round(priceNum + discNum);
+              discountPct = Math.round((discNum / origPrice) * 100);
+            }
+          }
+        }
+      }
 
       const rawStock = obj.quantity || obj.qty || obj.stock || obj["quantity available"] || obj["qty available"] || obj.available || obj["available stock"];
       let stock = null;
@@ -554,9 +602,13 @@
         price: priceNum,
         originalPrice: origPrice,
         discountPct: discountPct,
+        negotiable: true,
         description: obj.description || "",
         image: mainImage,
+        image2: images[1] || "",
+        image3: images[2] || "",
         images: images,
+        fromSheet: true,
         stock: stock
       });
     }

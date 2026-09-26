@@ -387,31 +387,81 @@ function filterProducts(products) {
 }
 
 /* WhatsApp Order Link with Photo URL */
+/* Helper to retrieve up to 3 angles for card preview */
+function getCardImages(p) {
+  if (window.MelojeyGallery && typeof window.MelojeyGallery.getAngles === "function") {
+    const angles = window.MelojeyGallery.getAngles(p);
+    if (Array.isArray(angles) && angles.length > 0) return angles;
+  }
+  if (Array.isArray(p.images) && p.images.length > 0) {
+    return p.images;
+  }
+  const list = [p.image, p.image2, p.image3, p.image4].filter(Boolean);
+  return list.length > 0 ? list : [p.image || ""];
+}
+
+/* Skeleton Grid Generator */
+function getSkeletonGridHtml(count = 6) {
+  return Array.from({ length: count }).map(() => `
+    <div class="skeleton-card" aria-hidden="true">
+      <div class="skeleton-img-wrap skeleton-shimmer"></div>
+      <div class="skeleton-body">
+        <div class="skeleton-tag skeleton-shimmer"></div>
+        <div class="skeleton-title skeleton-shimmer"></div>
+        <div class="skeleton-title-sub skeleton-shimmer"></div>
+        <div class="skeleton-desc skeleton-shimmer"></div>
+        <div class="skeleton-footer">
+          <div class="skeleton-price skeleton-shimmer"></div>
+          <div class="skeleton-btn skeleton-shimmer"></div>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+window.getSkeletonGridHtml = getSkeletonGridHtml;
+
+/* WhatsApp Order Link with Photo URL & Negotiable Query */
 function getCategoryWaLink(number, product) {
   const cleanImg = product.image ? (product.image.startsWith("http") ? product.image : (window.location.origin && !window.location.origin.startsWith("file") ? `${window.location.origin}/${product.image.replace(/^(\.\.\/)+/, "").replace(/^\//, "")}` : product.image)) : "";
+  const hasDiscount = Boolean(product.discountPct && Number(product.discountPct) > 0);
+  const priceLine = hasDiscount && product.originalPrice
+    ? `• Listed Price: ${fmt(product.price)} (Save ${Math.round(product.discountPct)}% off ${fmt(product.originalPrice)})\n`
+    : `• Listed Price: ${fmt(product.price)}\n`;
   const msg =
     `Hello! I'd like to order from Melojey Modern Furniture:\n\n` +
     `*${product.name}*\n` +
     `• Category: ${product.category}\n` +
-    `• Price: ${fmt(product.price)} (Save ${product.discountPct}% off ${fmt(product.originalPrice)})\n` +
+    priceLine +
+    `• Status: Price Negotiable (I would like to discuss your best showroom offer)\n` +
     `• Item Code: ${product.id}\n` +
     `• 📷 Photo: ${cleanImg}\n\n` +
     `Is this currently available in your showroom?`;
   return `https://wa.me/${number}?text=${encodeURIComponent(msg)}`;
 }
 
-/* ── BUILD ONE PRODUCT CARD HTML (Replicates Recently Viewed Card Design) ── */
+/* ── BUILD ONE PRODUCT CARD HTML (3 Angles + Subtle Inline (negotiable) + Conditional Discount) ── */
 function buildCardHtml(p) {
-  const discountPct = p.discountPct || 15;
-  const orig = p.originalPrice || Math.round(p.price * 1.15);
+  const hasDiscount = Boolean(p.discountPct && Number(p.discountPct) > 0);
+  const discountPct = hasDiscount ? Math.round(Number(p.discountPct)) : 0;
+  const orig = hasDiscount ? (p.originalPrice || Math.round(p.price * (1 + discountPct / 100))) : null;
   const isSoldOut = p.stock !== null && p.stock !== undefined && Number(p.stock) <= 0;
   const isLowStock = !isSoldOut && p.stock !== null && p.stock !== undefined && Number(p.stock) > 0 && Number(p.stock) <= 10;
+  const images = getCardImages(p);
+  const mainImg = images[0] || p.image || "../assets/images/logo.png";
+  const hasMultiple = images.length > 1;
 
   return `
     <div class="product-card${isSoldOut ? ' card-sold-out' : ''}" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(p.name)}">
       <div class="card-img-wrap">
-        <img class="card-img" src="${p.image}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.onerror=null;this.src='../assets/images/logo.png';" />
-        ${!isSoldOut ? `<span class="card-discount-badge">-${discountPct}%</span>` : ''}
+        <img class="card-img" src="${mainImg}" alt="${escapeHtml(p.name)}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.onerror=null;this.src='../assets/images/logo.png';" />
+        ${!isSoldOut && hasDiscount ? `<span class="card-discount-badge">-${discountPct}%</span>` : ''}
+        ${hasMultiple ? `
+        <div class="card-angle-dots" aria-label="Product angles">
+          ${images.map((img, i) => `
+            <button type="button" class="card-angle-dot ${i === 0 ? 'active' : ''}" data-idx="${i}" data-src="${escapeHtml(img)}" aria-label="View angle ${i + 1}"></button>
+          `).join("")}
+        </div>
+        ` : ''}
         <button class="card-wishlist-btn" data-id="${p.id}" type="button" aria-label="Add to wishlist">☆</button>
       </div>
       <div class="card-body">
@@ -421,8 +471,11 @@ function buildCardHtml(p) {
         ${isLowStock ? `<div class="card-stock-hint"><span class="stock-dot"></span> Only ${p.stock} available</div>` : ''}
         <div class="card-footer">
           <div class="card-price-group">
-            <span class="card-price">${fmt(p.price)}</span>
-            <span class="card-price-original">${fmt(orig)}</span>
+            <div class="card-price-row">
+              <span class="card-price">${fmt(p.price)}</span>
+              <span class="card-price-negotiable">(negotiable)</span>
+              ${hasDiscount && orig ? `<span class="card-price-original">${fmt(orig)}</span>` : ''}
+            </div>
           </div>
           <button class="btn-add-cart${isSoldOut ? ' btn-sold-out' : ''}" data-id="${p.id}" type="button"${isSoldOut ? ' disabled' : ''}>
             ${isSoldOut ? 'Sold Out' : 'Add to Cart'}
@@ -435,11 +488,29 @@ function buildCardHtml(p) {
 
 /* ── ATTACH CARD INTERACTIONS ──────────────────────────── */
 function attachCardInteractions(cardEl, product) {
+  // Angle preview dots hover / click
+  const dots = cardEl.querySelectorAll(".card-angle-dot");
+  const cardImg = cardEl.querySelector(".card-img");
+  dots.forEach(dot => {
+    const switchAngle = e => {
+      e.stopPropagation();
+      const src = dot.getAttribute("data-src");
+      if (src && cardImg) {
+        cardImg.src = src;
+        dots.forEach(d => d.classList.remove("active"));
+        dot.classList.add("active");
+      }
+    };
+    dot.addEventListener("mouseenter", switchAngle);
+    dot.addEventListener("click", switchAngle);
+  });
+
   // Click card body → open modal
   cardEl.addEventListener("click", e => {
     if (
       e.target.closest(".card-wishlist-btn") ||
       e.target.closest(".btn-add-cart") ||
+      e.target.closest(".card-angle-dot") ||
       e.target.closest(".qty-stepper")
     ) return;
     openCategoryModal(product.id);
@@ -858,22 +929,51 @@ function openCategoryModal(id) {
   document.getElementById("modal-name").textContent = p.name;
   document.getElementById("modal-price").textContent = fmt(p.price);
 
+  const hasDiscount = Boolean(p.discountPct && Number(p.discountPct) > 0);
   const origEl = document.getElementById("modal-price-original");
-  if (origEl) origEl.textContent = fmt(p.originalPrice);
+  if (origEl) {
+    if (hasDiscount && p.originalPrice) {
+      origEl.textContent = fmt(p.originalPrice);
+      origEl.style.display = "";
+    } else {
+      origEl.textContent = "";
+      origEl.style.display = "none";
+    }
+  }
+
+  // Ensure subtle negotiable tag exists in modal price row
+  const oldNegBadge = modalOverlay.querySelector(".modal-negotiable-badge");
+  if (oldNegBadge) oldNegBadge.remove();
+
+  let negInline = modalOverlay.querySelector(".modal-price-negotiable");
+  if (!negInline) {
+    const priceRow = modalOverlay.querySelector(".modal-price-row");
+    if (priceRow) {
+      negInline = document.createElement("span");
+      negInline.className = "modal-price-negotiable";
+      negInline.textContent = "(negotiable)";
+      priceRow.appendChild(negInline);
+    }
+  }
 
   const isSoldOut = p.stock !== null && p.stock !== undefined && Number(p.stock) <= 0;
   const discEl = document.getElementById("modal-discount-tag");
   if (discEl) {
     if (isSoldOut) {
       discEl.textContent = "SOLD OUT";
+      discEl.style.display = "";
       discEl.style.background = "#3A3A3C";
       discEl.style.borderColor = "#48484A";
       discEl.style.color = "#A0A0A5";
-    } else {
-      discEl.textContent = `-${p.discountPct || 15}% OFF`;
+    } else if (hasDiscount) {
+      discEl.textContent = `-${Math.round(p.discountPct)}% OFF`;
+      discEl.style.display = "";
       discEl.style.background = "";
       discEl.style.borderColor = "";
       discEl.style.color = "";
+    } else {
+      discEl.textContent = "";
+      discEl.style.display = "none";
     }
   }
 

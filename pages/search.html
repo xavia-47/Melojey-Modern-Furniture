@@ -17,7 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/css/style.css?v=2.5" />
   <link rel="stylesheet" href="../assets/css/showcase.css?v=2.5" />
-  <link rel="stylesheet" href="../assets/css/shop.css?v=2.5" />
+  <link rel="stylesheet" href="../assets/css/shop.css?v=3.0" />
 </head>
 <body data-page="SEARCH">
 
@@ -100,6 +100,7 @@
   <h1>Results for &ldquo;<span class="gold-accent" id="search-query-display"></span>&rdquo;</h1>
   <p>Showing matching handcrafted furniture and home decor across all showroom categories.</p>
   <div class="cat-header-meta" id="search-header-count">Searching…</div>
+  <div class="cat-negotiable-pill">💬 All Prices Negotiable</div>
 </section>
 
 <!-- ═══ SEARCH RESULTS CONTAINER ═══════════════════ -->
@@ -145,7 +146,15 @@
   <!-- Shop Layout: Sidebar + Results Grid (Identical layout to Category pages) -->
   <div class="shop-layout">
     <aside class="shop-sidebar" id="shop-sidebar"></aside>
-    <div class="product-grid" id="search-product-grid"></div>
+    <div class="product-grid" id="search-product-grid">
+      <!-- Initial Shimmer Skeleton Loading Grid -->
+      <div class="skeleton-card"><div class="skeleton-img-wrap skeleton-shimmer"></div><div class="skeleton-body"><div class="skeleton-tag skeleton-shimmer"></div><div class="skeleton-title skeleton-shimmer"></div><div class="skeleton-title-sub skeleton-shimmer"></div><div class="skeleton-desc skeleton-shimmer"></div><div class="skeleton-footer"><div class="skeleton-price skeleton-shimmer"></div><div class="skeleton-btn skeleton-shimmer"></div></div></div></div>
+      <div class="skeleton-card"><div class="skeleton-img-wrap skeleton-shimmer"></div><div class="skeleton-body"><div class="skeleton-tag skeleton-shimmer"></div><div class="skeleton-title skeleton-shimmer"></div><div class="skeleton-title-sub skeleton-shimmer"></div><div class="skeleton-desc skeleton-shimmer"></div><div class="skeleton-footer"><div class="skeleton-price skeleton-shimmer"></div><div class="skeleton-btn skeleton-shimmer"></div></div></div></div>
+      <div class="skeleton-card"><div class="skeleton-img-wrap skeleton-shimmer"></div><div class="skeleton-body"><div class="skeleton-tag skeleton-shimmer"></div><div class="skeleton-title skeleton-shimmer"></div><div class="skeleton-title-sub skeleton-shimmer"></div><div class="skeleton-desc skeleton-shimmer"></div><div class="skeleton-footer"><div class="skeleton-price skeleton-shimmer"></div><div class="skeleton-btn skeleton-shimmer"></div></div></div></div>
+      <div class="skeleton-card"><div class="skeleton-img-wrap skeleton-shimmer"></div><div class="skeleton-body"><div class="skeleton-tag skeleton-shimmer"></div><div class="skeleton-title skeleton-shimmer"></div><div class="skeleton-title-sub skeleton-shimmer"></div><div class="skeleton-desc skeleton-shimmer"></div><div class="skeleton-footer"><div class="skeleton-price skeleton-shimmer"></div><div class="skeleton-btn skeleton-shimmer"></div></div></div></div>
+      <div class="skeleton-card"><div class="skeleton-img-wrap skeleton-shimmer"></div><div class="skeleton-body"><div class="skeleton-tag skeleton-shimmer"></div><div class="skeleton-title skeleton-shimmer"></div><div class="skeleton-title-sub skeleton-shimmer"></div><div class="skeleton-desc skeleton-shimmer"></div><div class="skeleton-footer"><div class="skeleton-price skeleton-shimmer"></div><div class="skeleton-btn skeleton-shimmer"></div></div></div></div>
+      <div class="skeleton-card"><div class="skeleton-img-wrap skeleton-shimmer"></div><div class="skeleton-body"><div class="skeleton-tag skeleton-shimmer"></div><div class="skeleton-title skeleton-shimmer"></div><div class="skeleton-title-sub skeleton-shimmer"></div><div class="skeleton-desc skeleton-shimmer"></div><div class="skeleton-footer"><div class="skeleton-price skeleton-shimmer"></div><div class="skeleton-btn skeleton-shimmer"></div></div></div></div>
+    </div>
   </div>
 </main>
 <div class="sidebar-overlay" id="sidebar-overlay"></div>
@@ -267,10 +276,10 @@
   </div>
 </footer>
 
-<script src="../data/products.js?v=2.6"></script>
-<script src="../assets/js/cart.js?v=2.5"></script>
+<script src="../data/products.js?v=3.0"></script>
+<script src="../assets/js/cart.js?v=3.0"></script>
 <script src="../assets/js/wishlist.js?v=2.5"></script>
-<script src="../assets/js/showcase.js?v=2.5"></script>
+<script src="../assets/js/showcase.js?v=3.0"></script>
 
 <script>
   const fmt = n => `₦${Number(n).toLocaleString("en-NG")}`;
@@ -428,18 +437,39 @@
         return;
       }
 
+      const getCardImages = p => {
+        if (window.MelojeyGallery && typeof window.MelojeyGallery.getAngles === "function") {
+          const angles = window.MelojeyGallery.getAngles(p);
+          if (Array.isArray(angles) && angles.length > 0) return angles;
+        }
+        if (Array.isArray(p.images) && p.images.length > 0) return p.images;
+        const list = [p.image, p.image2, p.image3, p.image4].filter(Boolean);
+        return list.length > 0 ? list : [p.image || ""];
+      };
+
       grid.innerHTML = list.map(p => {
-        const discountPct = p.discountPct || 15;
-        const orig = p.originalPrice || Math.round(p.price * 1.15);
-        const imgSrc = p.image.startsWith('../') ? p.image : (p.image.startsWith('http') ? p.image : '../' + p.image);
+        const hasDiscount = Boolean(p.discountPct && Number(p.discountPct) > 0);
+        const discountPct = hasDiscount ? Math.round(Number(p.discountPct)) : 0;
+        const orig = hasDiscount ? (p.originalPrice || Math.round(p.price * (1 + discountPct / 100))) : null;
+        const images = getCardImages(p);
+        const imgSrc = images[0].startsWith('../') ? images[0] : (images[0].startsWith('http') ? images[0] : '../' + images[0]);
+        const hasMultiple = images.length > 1;
         const isSoldOut = p.stock !== null && p.stock !== undefined && Number(p.stock) <= 0;
         const isLowStock = !isSoldOut && p.stock !== null && p.stock !== undefined && Number(p.stock) > 0 && Number(p.stock) <= 10;
 
         return `
           <div class="product-card${isSoldOut ? ' card-sold-out' : ''}" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(p.name)}">
             <div class="card-img-wrap">
-              <img class="card-img" src="${imgSrc}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='../assets/images/logo.png';" />
-              ${!isSoldOut ? `<span class="card-discount-badge">-${discountPct}%</span>` : ''}
+              <img class="card-img" src="${imgSrc}" alt="${escapeHtml(p.name)}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='../assets/images/logo.png';" />
+              ${!isSoldOut && hasDiscount ? `<span class="card-discount-badge">-${discountPct}%</span>` : ''}
+              ${hasMultiple ? `
+              <div class="card-angle-dots" aria-label="Product angles">
+                ${images.map((img, i) => {
+                  const resolvedDotSrc = img.startsWith('../') ? img : (img.startsWith('http') ? img : '../' + img);
+                  return `<button type="button" class="card-angle-dot ${i === 0 ? 'active' : ''}" data-idx="${i}" data-src="${escapeHtml(resolvedDotSrc)}" aria-label="View angle ${i + 1}"></button>`;
+                }).join("")}
+              </div>
+              ` : ''}
               <button class="card-wishlist-btn" data-id="${p.id}" type="button" aria-label="Add to wishlist">☆</button>
             </div>
             <div class="card-body">
@@ -449,8 +479,11 @@
               ${isLowStock ? `<div class="card-stock-hint"><span class="stock-dot"></span> Only ${p.stock} available</div>` : ''}
               <div class="card-footer">
                 <div class="card-price-group">
-                  <span class="card-price">${fmt(p.price)}</span>
-                  <span class="card-price-original">${fmt(orig)}</span>
+                  <div class="card-price-row">
+                    <span class="card-price">${fmt(p.price)}</span>
+                    <span class="card-price-negotiable">(negotiable)</span>
+                    ${hasDiscount && orig ? `<span class="card-price-original">${fmt(orig)}</span>` : ''}
+                  </div>
                 </div>
                 <button class="btn-add-cart${isSoldOut ? ' btn-sold-out' : ''}" data-id="${p.id}" type="button"${isSoldOut ? ' disabled' : ''}>
                   ${isSoldOut ? 'Sold Out' : 'Add to Cart'}
@@ -467,10 +500,28 @@
         const product = allProducts.find(p => p.id === id);
         if (!product) return;
 
+        // Angle preview dots hover / click
+        const dots = card.querySelectorAll(".card-angle-dot");
+        const cardImg = card.querySelector(".card-img");
+        dots.forEach(dot => {
+          const switchAngle = e => {
+            e.stopPropagation();
+            const src = dot.getAttribute("data-src");
+            if (src && cardImg) {
+              cardImg.src = src;
+              dots.forEach(d => d.classList.remove("active"));
+              dot.classList.add("active");
+            }
+          };
+          dot.addEventListener("mouseenter", switchAngle);
+          dot.addEventListener("click", switchAngle);
+        });
+
         card.addEventListener("click", e => {
           if (
             e.target.closest(".card-wishlist-btn") ||
             e.target.closest(".btn-add-cart") ||
+            e.target.closest(".card-angle-dot") ||
             e.target.closest(".qty-stepper")
           ) return;
           openSearchModal(product);
@@ -855,17 +906,55 @@
     catEl.textContent = product.category || "Furniture";
     nameEl.textContent = product.name;
     priceEl.textContent = fmt(product.price);
-    const orig = product.originalPrice || Math.round(product.price * 1.15);
-    origPriceEl.textContent = fmt(orig);
-    discountEl.textContent = `-${product.discountPct || 15}% OFF`;
+    const hasDiscount = Boolean(product.discountPct && Number(product.discountPct) > 0);
+    const orig = hasDiscount ? (product.originalPrice || Math.round(product.price * (1 + Number(product.discountPct) / 100))) : null;
+
+    if (origPriceEl) {
+      if (hasDiscount && orig) {
+        origPriceEl.textContent = fmt(orig);
+        origPriceEl.style.display = "";
+      } else {
+        origPriceEl.textContent = "";
+        origPriceEl.style.display = "none";
+      }
+    }
+
+    // Ensure subtle negotiable tag in modal
+    const oldNeg = overlay.querySelector(".modal-negotiable-badge");
+    if (oldNeg) oldNeg.remove();
+
+    let negInline = overlay.querySelector(".modal-price-negotiable");
+    if (!negInline) {
+      const priceRow = overlay.querySelector(".modal-price-row");
+      if (priceRow) {
+        negInline = document.createElement("span");
+        negInline.className = "modal-price-negotiable";
+        negInline.textContent = "(negotiable)";
+        priceRow.appendChild(negInline);
+      }
+    }
+
+    if (discountEl) {
+      if (hasDiscount) {
+        discountEl.textContent = `-${Math.round(product.discountPct)}% OFF`;
+        discountEl.style.display = "";
+      } else {
+        discountEl.textContent = "";
+        discountEl.style.display = "none";
+      }
+    }
     descEl.textContent = product.description || "Crafted with master woodworking and premium materials for luxury Nigerian spaces.";
 
     const cleanImg = product.image ? (product.image.startsWith("http") ? product.image : (window.location.origin && !window.location.origin.startsWith("file") ? `${window.location.origin}/${product.image.replace(/^(\.\.\/)+/, "").replace(/^\//, "")}` : product.image)) : "";
+    const priceLine = hasDiscount && orig
+      ? `• Listed Price: ${fmt(product.price)} (Save ${Math.round(product.discountPct)}% off ${fmt(orig)})\n`
+      : `• Listed Price: ${fmt(product.price)}\n`;
     const msg =
       `Hello! I'd like to order from Melojey Modern Furniture:\n\n` +
       `*${product.name}*\n` +
       `• Category: ${product.category || "Furniture"}\n` +
-      `• Price: ${fmt(product.price)} (Save ${product.discountPct || 15}% off ${fmt(orig)})\n` +
+      priceLine +
+      `• Status: Price Negotiable (I'd like to discuss your best showroom offer)\n` +
       `• Item Code: ${product.id}\n` +
       `• 📷 Photo: ${cleanImg}\n\n` +
       `Is this available in your showroom?`;

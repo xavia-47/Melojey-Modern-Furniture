@@ -17,7 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/css/style.css?v=2.5" />
   <link rel="stylesheet" href="../assets/css/showcase.css?v=2.5" />
-  <link rel="stylesheet" href="../assets/css/shop.css?v=2.5" />
+  <link rel="stylesheet" href="../assets/css/shop.css?v=3.0" />
 </head>
 <body data-page-category="DECOR">
 
@@ -101,6 +101,7 @@
   <h1>Chandeliers, Vases &amp; <span class="gold-accent">Luxury Lighting</span></h1>
   <p>K9 crystal pendant chandeliers, sculptural sunburst mirrors, and textured ceramic and brushed gold vases.</p>
   <div class="cat-header-meta" id="category-product-count">Loading Collection…</div>
+  <div class="cat-negotiable-pill">💬 All Prices Negotiable</div>
 </section>
 
 <!-- ═══ PRODUCTS GRID ═════════════════════════ -->
@@ -147,7 +148,15 @@
   <!-- Shop Main Layout: Grouped Sidebar + Products Grid -->
   <div class="shop-layout">
     <aside class="shop-sidebar" id="shop-sidebar" aria-label="Filters"></aside>
-    <div class="product-grid" id="category-product-grid"></div>
+    <div class="product-grid" id="category-product-grid">
+      <!-- Initial Shimmer Skeleton Loading Grid -->
+      <div class="skeleton-card"><div class="skeleton-img-wrap skeleton-shimmer"></div><div class="skeleton-body"><div class="skeleton-tag skeleton-shimmer"></div><div class="skeleton-title skeleton-shimmer"></div><div class="skeleton-title-sub skeleton-shimmer"></div><div class="skeleton-desc skeleton-shimmer"></div><div class="skeleton-footer"><div class="skeleton-price skeleton-shimmer"></div><div class="skeleton-btn skeleton-shimmer"></div></div></div></div>
+      <div class="skeleton-card"><div class="skeleton-img-wrap skeleton-shimmer"></div><div class="skeleton-body"><div class="skeleton-tag skeleton-shimmer"></div><div class="skeleton-title skeleton-shimmer"></div><div class="skeleton-title-sub skeleton-shimmer"></div><div class="skeleton-desc skeleton-shimmer"></div><div class="skeleton-footer"><div class="skeleton-price skeleton-shimmer"></div><div class="skeleton-btn skeleton-shimmer"></div></div></div></div>
+      <div class="skeleton-card"><div class="skeleton-img-wrap skeleton-shimmer"></div><div class="skeleton-body"><div class="skeleton-tag skeleton-shimmer"></div><div class="skeleton-title skeleton-shimmer"></div><div class="skeleton-title-sub skeleton-shimmer"></div><div class="skeleton-desc skeleton-shimmer"></div><div class="skeleton-footer"><div class="skeleton-price skeleton-shimmer"></div><div class="skeleton-btn skeleton-shimmer"></div></div></div></div>
+      <div class="skeleton-card"><div class="skeleton-img-wrap skeleton-shimmer"></div><div class="skeleton-body"><div class="skeleton-tag skeleton-shimmer"></div><div class="skeleton-title skeleton-shimmer"></div><div class="skeleton-title-sub skeleton-shimmer"></div><div class="skeleton-desc skeleton-shimmer"></div><div class="skeleton-footer"><div class="skeleton-price skeleton-shimmer"></div><div class="skeleton-btn skeleton-shimmer"></div></div></div></div>
+      <div class="skeleton-card"><div class="skeleton-img-wrap skeleton-shimmer"></div><div class="skeleton-body"><div class="skeleton-tag skeleton-shimmer"></div><div class="skeleton-title skeleton-shimmer"></div><div class="skeleton-title-sub skeleton-shimmer"></div><div class="skeleton-desc skeleton-shimmer"></div><div class="skeleton-footer"><div class="skeleton-price skeleton-shimmer"></div><div class="skeleton-btn skeleton-shimmer"></div></div></div></div>
+      <div class="skeleton-card"><div class="skeleton-img-wrap skeleton-shimmer"></div><div class="skeleton-body"><div class="skeleton-tag skeleton-shimmer"></div><div class="skeleton-title skeleton-shimmer"></div><div class="skeleton-title-sub skeleton-shimmer"></div><div class="skeleton-desc skeleton-shimmer"></div><div class="skeleton-footer"><div class="skeleton-price skeleton-shimmer"></div><div class="skeleton-btn skeleton-shimmer"></div></div></div></div>
+    </div>
   </div>
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
 </main>
@@ -269,10 +278,10 @@
   </div>
 </footer>
 
-<script src="../data/products.js?v=2.6"></script>
-<script src="../assets/js/cart.js?v=2.5"></script>
+<script src="../data/products.js?v=3.0"></script>
+<script src="../assets/js/cart.js?v=3.0"></script>
 <script src="../assets/js/wishlist.js?v=2.5"></script>
-<script src="../assets/js/category.js?v=2.7"></script>
+<script src="../assets/js/category.js?v=3.0"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {

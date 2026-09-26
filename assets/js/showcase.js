@@ -329,11 +329,16 @@ function renderRecentlyViewed() {
     return;
   }
 
-  container.innerHTML = itemsToDisplay.map(item => `
+  container.innerHTML = itemsToDisplay.map(item => {
+    const hasDiscount = Boolean(item.discountPct && Number(item.discountPct) > 0);
+    const discountPct = hasDiscount ? Math.round(Number(item.discountPct)) : 0;
+    const orig = hasDiscount ? (item.originalPrice || Math.round(item.price * (1 + discountPct / 100))) : null;
+
+    return `
     <div class="recent-card product-card" data-id="${item.id}" tabindex="0" role="button" aria-label="View ${escapeHtml(item.name)}">
       <div class="card-img-wrap recent-img-wrap">
         <img class="card-img" src="${item.image}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/logo.png';" />
-        <span class="recent-discount-badge">-${item.discountPct || 15}%</span>
+        ${hasDiscount ? `<span class="recent-discount-badge">-${discountPct}%</span>` : ''}
         <button class="card-wishlist-btn" data-id="${item.id}" type="button" aria-label="Add to wishlist">☆</button>
       </div>
       <div class="card-body recent-info">
@@ -341,14 +346,17 @@ function renderRecentlyViewed() {
         <div class="card-name recent-name" title="${escapeHtml(item.name)}">${formatTwoToneTitle(item.name)}</div>
         <div class="card-footer">
           <div class="card-price-group recent-price-group">
-            <span class="card-price recent-price">${formatCurrency(item.price)}</span>
-            <span class="card-price-original recent-original-price">${formatCurrency(item.originalPrice)}</span>
+            <div class="card-price-row">
+              <span class="card-price recent-price">${formatCurrency(item.price)}</span>
+              <span class="card-price-negotiable">(negotiable)</span>
+              ${hasDiscount && orig ? `<span class="card-price-original recent-original-price">${formatCurrency(orig)}</span>` : ''}
+            </div>
           </div>
           <button class="btn-add-cart" data-id="${item.id}" type="button">Add to Cart</button>
         </div>
       </div>
     </div>
-  `).join("");
+  `;}).join("");
 
   // Attach card interactions: Wishlist star, Cart Stepper, Modal click
   container.querySelectorAll(".recent-card").forEach(card => {

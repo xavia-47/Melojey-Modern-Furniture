@@ -178,9 +178,11 @@
 
   const fmt = (n) => `NGN ${Number(n).toLocaleString("en-NG")}`.replace("NGN ", "\u20A6");
 
-  // Deterministic discount percentage between 6% and 19% (strictly 1% - 20% range)
   function getDiscountPct(p) {
-    if (p.discount && p.discount > 0 && p.discount <= 20) return Math.round(p.discount);
+    if (!p) return 0;
+    if (p.discountPct !== undefined && p.discountPct !== null) return Math.round(Number(p.discountPct));
+    if (p.discount !== undefined && p.discount !== null) return Math.round(Number(p.discount));
+    if (p.fromSheet) return 0;
     const charSum = (p.id || "P001").split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
     const presets = [10, 15, 12, 18, 14, 8, 16, 20, 11, 13, 17, 9];
     return presets[charSum % presets.length];
@@ -194,13 +196,18 @@
 
   function waLink(number, product) {
     const discountPct = getDiscountPct(product);
-    const originalPrice = product.originalPrice || getOriginalPrice(product.price, discountPct);
+    const hasDiscount = discountPct > 0;
+    const originalPrice = hasDiscount ? (product.originalPrice || getOriginalPrice(product.price, discountPct)) : null;
     const cleanImg = product.image ? (product.image.startsWith("http") ? product.image : (window.location.origin && !window.location.origin.startsWith("file") ? `${window.location.origin}/${product.image.replace(/^(\.\.\/)+/, "").replace(/^\//, "")}` : product.image)) : "";
+    const priceLine = hasDiscount && originalPrice
+      ? `• Discounted Price: ${fmt(product.price)} (Save ${discountPct}% off ${fmt(originalPrice)})\n`
+      : `• Price: ${fmt(product.price)}\n`;
     const msg =
       `Hello! I'd like to order from Melojey Modern Furniture:\n\n` +
       `*${product.name}*\n` +
       `• Category: ${product.category || "Furniture"}\n` +
-      `• Discounted Price: ${fmt(product.price)} (Save ${discountPct}% off ${fmt(originalPrice)})\n` +
+      priceLine +
+      `• Status: Price Negotiable (I'd like to discuss your best showroom offer)\n` +
       `• Item Code: ${product.id}\n` +
       `• 📷 Photo: ${cleanImg}\n\n` +
       `Is this available in your showroom?`;
@@ -234,7 +241,8 @@
 
     grid.innerHTML = products.map(p => {
       const discountPct = getDiscountPct(p);
-      const originalPrice = p.originalPrice || getOriginalPrice(p.price, discountPct);
+      const hasDiscount = discountPct > 0;
+      const originalPrice = hasDiscount ? (p.originalPrice || getOriginalPrice(p.price, discountPct)) : null;
 
       return `
       <div class="product-card" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${p.name}">
@@ -243,8 +251,9 @@
           <img class="card-img"
                src="${p.image || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop'}"
                alt="${p.name}" loading="lazy" width="300" height="225"
+               onload="this.classList.add('loaded')"
                onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop'" />
-          <span class="card-discount-badge">-${discountPct}%</span>
+          ${hasDiscount ? `<span class="card-discount-badge">-${discountPct}%</span>` : ''}
         </div>
         <div class="card-body">
           <div class="card-cat">${p.category}</div>
@@ -252,8 +261,11 @@
           <div class="card-desc">${p.description}</div>
           <div class="card-footer">
             <div class="card-price-group">
-              <span class="card-price">${fmt(p.price)}</span>
-              <span class="card-price-original">${fmt(originalPrice)}</span>
+              <div class="card-price-row">
+                <span class="card-price">${fmt(p.price)}</span>
+                <span class="card-price-negotiable">(negotiable)</span>
+                ${hasDiscount && originalPrice ? `<span class="card-price-original">${fmt(originalPrice)}</span>` : ''}
+              </div>
             </div>
             <button class="btn-add-cart" data-id="${p.id}" type="button">Add to Cart</button>
           </div>
@@ -297,7 +309,8 @@
     }
 
     const discountPct = getDiscountPct(p);
-    const originalPrice = p.originalPrice || getOriginalPrice(p.price, discountPct);
+    const hasDiscount = discountPct > 0;
+    const originalPrice = hasDiscount ? (p.originalPrice || getOriginalPrice(p.price, discountPct)) : null;
 
     const imgEl = document.getElementById("modal-img");
     if (imgEl) {
@@ -314,10 +327,41 @@
     if (priceEl) priceEl.textContent = fmt(p.price);
 
     const modalOrigEl = document.getElementById("modal-price-original");
-    if (modalOrigEl) modalOrigEl.textContent = fmt(originalPrice);
+    if (modalOrigEl) {
+      if (hasDiscount && originalPrice) {
+        modalOrigEl.textContent = fmt(originalPrice);
+        modalOrigEl.style.display = "";
+      } else {
+        modalOrigEl.textContent = "";
+        modalOrigEl.style.display = "none";
+      }
+    }
+
+    // Ensure subtle negotiable tag in modal
+    const oldNeg = overlay?.querySelector(".modal-negotiable-badge");
+    if (oldNeg) oldNeg.remove();
+
+    let negInline = overlay?.querySelector(".modal-price-negotiable");
+    if (!negInline && overlay) {
+      const priceRow = overlay.querySelector(".modal-price-row");
+      if (priceRow) {
+        negInline = document.createElement("span");
+        negInline.className = "modal-price-negotiable";
+        negInline.textContent = "(negotiable)";
+        priceRow.appendChild(negInline);
+      }
+    }
 
     const modalDiscountEl = document.getElementById("modal-discount-tag");
-    if (modalDiscountEl) modalDiscountEl.textContent = `-${discountPct}% OFF`;
+    if (modalDiscountEl) {
+      if (hasDiscount) {
+        modalDiscountEl.textContent = `-${discountPct}% OFF`;
+        modalDiscountEl.style.display = "";
+      } else {
+        modalDiscountEl.textContent = "";
+        modalDiscountEl.style.display = "none";
+      }
+    }
 
     const descEl = document.getElementById("modal-desc");
     if (descEl) descEl.textContent = p.description;
@@ -452,13 +496,22 @@
         return null;
       }
 
+      const img1 = formatImageUrl(obj.image_url || obj.image || obj["image 1"] || obj.image1 || "");
+      const img2 = formatImageUrl(obj.image_url_2 || obj.image_2 || obj["image 2"] || obj.image2 || "");
+      const img3 = formatImageUrl(obj.image_url_3 || obj.image_3 || obj["image 3"] || obj.image3 || "");
+      const images = [img1, img2, img3].filter(Boolean);
+
       return {
         id:          obj.id || `P${Math.random().toString(36).slice(2, 6).toUpperCase()}`,
         name:        name,
         category:    obj.category || "Uncategorised",
         price:       Number((obj.price || "0").replace(/[^0-9.]/g, "")),
+        negotiable:  true,
         description: obj.description || "",
-        image:       formatImageUrl(obj.image_url || obj.image || "")
+        image:       img1,
+        image2:      img2,
+        image3:      img3,
+        images:      images
       };
     }).filter(p => p && p.name);
   }

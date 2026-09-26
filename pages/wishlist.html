@@ -17,7 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/css/style.css?v=2.5" />
   <link rel="stylesheet" href="../assets/css/showcase.css?v=2.5" />
-  <link rel="stylesheet" href="../assets/css/shop.css?v=2.5" />
+  <link rel="stylesheet" href="../assets/css/shop.css?v=3.0" />
 </head>
 <body data-page="WISHLIST">
 
@@ -226,10 +226,10 @@
   </div>
 </footer>
 
-<script src="../data/products.js?v=2.6"></script>
-<script src="../assets/js/cart.js?v=2.5"></script>
+<script src="../data/products.js?v=3.0"></script>
+<script src="../assets/js/cart.js?v=3.0"></script>
 <script src="../assets/js/wishlist.js?v=2.5"></script>
-<script src="../assets/js/showcase.js?v=2.5"></script>
+<script src="../assets/js/showcase.js?v=3.0"></script>
 
 <script>
   const fmt = n => `₦${Number(n).toLocaleString("en-NG")}`;
@@ -266,11 +266,16 @@
       </div>
 
       <div class="product-grid" id="wishlist-grid">
-        ${items.map(p => `
+        ${items.map(p => {
+          const hasDiscount = Boolean(p.discountPct && Number(p.discountPct) > 0);
+          const discountPct = hasDiscount ? Math.round(Number(p.discountPct)) : 0;
+          const orig = hasDiscount ? (p.originalPrice || Math.round(p.price * (1 + discountPct / 100))) : null;
+
+          return `
           <div class="product-card" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${p.name}">
             <div class="card-img-wrap">
               <img class="card-img" src="${p.image.startsWith('../') ? p.image : (p.image.startsWith('http') ? p.image : '../' + p.image)}" alt="${p.name}" loading="lazy" onerror="this.src='../assets/images/logo.png';" />
-              <span class="card-discount-badge">-${p.discountPct || 15}%</span>
+              ${hasDiscount ? `<span class="card-discount-badge">-${discountPct}%</span>` : ''}
               <button class="card-wishlist-btn wishlisted" data-id="${p.id}" type="button" aria-label="Remove from wishlist">★</button>
             </div>
             <div class="card-body">
@@ -278,13 +283,17 @@
               <div class="card-name">${p.name}</div>
               <div class="card-footer">
                 <div class="card-price-group">
-                  <span class="card-price">${fmt(p.price)}</span>
-                  <span class="card-price-original">${fmt(p.originalPrice || Math.round(p.price * 1.15))}</span>
+                  <div class="card-price-row">
+                    <span class="card-price">${fmt(p.price)}</span>
+                    <span class="card-price-negotiable">(negotiable)</span>
+                    ${hasDiscount && orig ? `<span class="card-price-original">${fmt(orig)}</span>` : ''}
+                  </div>
                 </div>
                 <button class="btn-add-cart" data-id="${p.id}" type="button">Add to Cart</button>
               </div>
             </div>
           </div>
+        `;
         `).join("")}
       </div>
     `;
@@ -354,18 +363,40 @@
     imgEl.src = product.image.startsWith('../') ? product.image : (product.image.startsWith('http') ? product.image : '../' + product.image);
     catEl.textContent = product.category || "Furniture";
     nameEl.textContent = product.name;
-    priceEl.textContent = fmt(product.price);
-    const orig = product.originalPrice || Math.round(product.price * 1.15);
-    origPriceEl.textContent = fmt(orig);
-    discountEl.textContent = `-${product.discountPct || 15}% OFF`;
+    const hasDiscount = Boolean(product.discountPct && Number(product.discountPct) > 0);
+    const orig = hasDiscount ? (product.originalPrice || Math.round(product.price * (1 + Number(product.discountPct) / 100))) : null;
+
+    if (origPriceEl) {
+      if (hasDiscount && orig) {
+        origPriceEl.textContent = fmt(orig);
+        origPriceEl.style.display = "";
+      } else {
+        origPriceEl.textContent = "";
+        origPriceEl.style.display = "none";
+      }
+    }
+
+    if (discountEl) {
+      if (hasDiscount) {
+        discountEl.textContent = `-${Math.round(product.discountPct)}% OFF`;
+        discountEl.style.display = "";
+      } else {
+        discountEl.textContent = "";
+        discountEl.style.display = "none";
+      }
+    }
     descEl.textContent = product.description || "Crafted with master woodworking and premium materials for luxury Nigerian spaces.";
 
     const cleanImg = product.image ? (product.image.startsWith("http") ? product.image : (window.location.origin && !window.location.origin.startsWith("file") ? `${window.location.origin}/${product.image.replace(/^(\.\.\/)+/, "").replace(/^\//, "")}` : product.image)) : "";
+    const priceLine = hasDiscount && orig
+      ? `• Price: ${fmt(product.price)} (Save ${Math.round(product.discountPct)}% off ${fmt(orig)})\n`
+      : `• Price: ${fmt(product.price)}\n`;
     const msg =
       `Hello! I'd like to order from Melojey Modern Furniture:\n\n` +
       `*${product.name}*\n` +
       `• Category: ${product.category || "Furniture"}\n` +
-      `• Price: ${fmt(product.price)} (Save ${product.discountPct || 15}% off ${fmt(orig)})\n` +
+      priceLine +
+      `• Status: Price Negotiable\n` +
       `• Item Code: ${product.id}\n` +
       `• 📷 Photo: ${cleanImg}\n\n` +
       `Is this available in your showroom?`;

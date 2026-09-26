@@ -209,7 +209,8 @@ function buildCartWaLink(number) {
   const msg =
     `Hello Melojey Modern Furniture! I'd like to place an order (${count} item${count !== 1 ? "s" : ""}):\n\n` +
     `${lines}\n\n` +
-    `*Order Total: ${total}*\n\n` +
+    `*Order Total: ${total}*\n` +
+    `• Note: Showroom prices are negotiable — I'd like to discuss your best showroom offer & delivery details.\n\n` +
     `Please confirm showroom availability and delivery details. Thank you!`;
   return `https://wa.me/${number}?text=${encodeURIComponent(msg)}`;
 }
@@ -366,30 +367,50 @@ function getProductAngles(product) {
     return clean;
   };
 
-  // If the product has multiple images defined (from Google Sheet or catalog), use them directly
-  if (Array.isArray(product.images) && product.images.length > 1) {
-    return product.images.map(fixPath).slice(0, 5);
+  // 1. If product has an explicit images array (from Google Sheet, CSV, or custom catalog)
+  if (Array.isArray(product.images) && product.images.length > 0) {
+    const valid = product.images.map(fixPath).filter(Boolean);
+    // If it came from Google Sheet or has multiple images, return exactly the images provided (not locked to 3)
+    if (product.fromSheet || valid.length > 1) {
+      return valid;
+    }
   }
 
+  // 2. Check individual multi-image properties (image, image2, image3, image4... up to 10)
+  const individualImages = [];
+  for (let idx = 1; idx <= 10; idx++) {
+    const val = idx === 1
+      ? (product.image || product.image1 || product.image_1 || product.photo || product.photo1)
+      : (product[`image${idx}`] || product[`image_${idx}`] || product[`photo${idx}`] || product[`view${idx}`] || product[`angle${idx}`] || product[`img${idx}`]);
+    if (val) individualImages.push(val);
+  }
+  if (individualImages.length > 1) {
+    return individualImages.map(fixPath).filter(Boolean);
+  }
+
+  // 3. Fallbacks ONLY for standard demo products (e.g. SF01, WD01) when not from custom Google Sheet
   const pId = String(product.id || "").toUpperCase();
   const catKey = String(product.category || "").toUpperCase();
 
-  let list = [];
-  if (PRODUCT_ANGLE_CATALOG[pId]) {
-    list = [...PRODUCT_ANGLE_CATALOG[pId]];
-  } else if (CATEGORY_FALLBACK_ANGLES[catKey]) {
-    list = [...CATEGORY_FALLBACK_ANGLES[catKey]];
-  } else {
-    list = [...CATEGORY_FALLBACK_ANGLES.SOFAS];
+  if (PRODUCT_ANGLE_CATALOG[pId] && !product.fromSheet) {
+    let demoList = [...PRODUCT_ANGLE_CATALOG[pId]];
+    if (product.image) {
+      const cleanMain = fixPath(product.image);
+      demoList = [cleanMain, ...demoList.map(fixPath).filter(url => url !== cleanMain && url !== product.image)];
+    }
+    return demoList;
   }
 
-  // Ensure product's main image is at index 0
+  // 4. Default: single product image (if only 1 was provided by user, only show 1)
   if (product.image) {
-    const cleanMain = fixPath(product.image);
-    list = [cleanMain, ...list.map(fixPath).filter(url => url !== cleanMain && url !== product.image)];
+    return [fixPath(product.image)];
   }
 
-  return list.slice(0, 3);
+  if (CATEGORY_FALLBACK_ANGLES[catKey] && !product.fromSheet) {
+    return CATEGORY_FALLBACK_ANGLES[catKey].map(fixPath);
+  }
+
+  return [fixPath(product.image || "../assets/images/logo.png")];
 }
 
 // Active gallery state
@@ -458,6 +479,15 @@ function setupModalGallery(modalContainer, product) {
     imgCol.appendChild(dotsContainer);
   }
 
+  // Ensure interactive 3-image thumbnails container exists
+  let thumbsContainer = imgCol.querySelector(".modal-gallery-thumbs");
+  if (!thumbsContainer) {
+    thumbsContainer = document.createElement("div");
+    thumbsContainer.className = "modal-gallery-thumbs";
+    thumbsContainer.id = "modal-gallery-thumbs";
+    imgCol.appendChild(thumbsContainer);
+  }
+
   const angles = getProductAngles(product);
   let currentIndex = 0;
 
@@ -466,11 +496,19 @@ function setupModalGallery(modalContainer, product) {
   if (nextBtn) nextBtn.style.display = hasMultiple ? "flex" : "none";
   if (counterEl) counterEl.style.display = hasMultiple ? "block" : "none";
   if (dotsContainer) dotsContainer.style.display = hasMultiple ? "flex" : "none";
+  if (thumbsContainer) thumbsContainer.style.display = hasMultiple ? "flex" : "none";
 
   // Build dots
   dotsContainer.innerHTML = angles.map((_, i) =>
     `<span class="modal-dot ${i === 0 ? "active" : ""}" data-idx="${i}" aria-label="Angle ${i + 1}"></span>`
   ).join("");
+
+  // Build 3-image thumbnails
+  thumbsContainer.innerHTML = angles.map((url, i) => `
+    <button type="button" class="modal-thumb-btn ${i === 0 ? "active" : ""}" data-idx="${i}" aria-label="View angle ${i + 1}">
+      <img src="${url}" alt="Thumbnail ${i + 1}" loading="lazy" />
+    </button>
+  `).join("");
 
   function renderAngle(idx, animate = true) {
     if (angles.length === 0) return;
@@ -497,6 +535,11 @@ function setupModalGallery(modalContainer, product) {
     dotsContainer.querySelectorAll(".modal-dot").forEach((d, i) => {
       d.classList.toggle("active", i === currentIndex);
     });
+
+    // Update Thumbnails
+    thumbsContainer.querySelectorAll(".modal-thumb-btn").forEach((t, i) => {
+      t.classList.toggle("active", i === currentIndex);
+    });
   }
 
   // Initial render
@@ -518,6 +561,14 @@ function setupModalGallery(modalContainer, product) {
     d.onclick = e => {
       e.stopPropagation();
       const idx = Number(d.getAttribute("data-idx") || 0);
+      renderAngle(idx, true);
+    };
+  });
+
+  thumbsContainer.querySelectorAll(".modal-thumb-btn").forEach(t => {
+    t.onclick = e => {
+      e.stopPropagation();
+      const idx = Number(t.getAttribute("data-idx") || 0);
       renderAngle(idx, true);
     };
   });
