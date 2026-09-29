@@ -553,7 +553,7 @@ function renderCategoryGrid() {
   const total = rawProducts.length;
   const showing = sorted.length;
 
-  if (countEl) countEl.textContent = `${total} Item${total !== 1 ? "s" : ""}`;
+  if (countEl) countEl.textContent = `${total} Item${total !== 1 ? "s" : ""} • All Prices Negotiable`;
   if (toolbarCount) {
     toolbarCount.textContent = showing === total
       ? `${total} item${total !== 1 ? "s" : ""}`

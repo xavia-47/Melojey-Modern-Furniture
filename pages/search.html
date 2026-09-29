@@ -100,7 +100,6 @@
   <h1>Results for &ldquo;<span class="gold-accent" id="search-query-display"></span>&rdquo;</h1>
   <p>Showing matching handcrafted furniture and home decor across all showroom categories.</p>
   <div class="cat-header-meta" id="search-header-count">Searching…</div>
-  <div class="cat-negotiable-pill">💬 All Prices Negotiable</div>
 </section>
 
 <!-- ═══ SEARCH RESULTS CONTAINER ═══════════════════ -->
@@ -403,7 +402,7 @@
 
     function renderCards(list) {
       const total = list.length;
-      if (countEl) countEl.textContent = `${total} matching piece${total !== 1 ? "s" : ""}`;
+      if (countEl) countEl.textContent = `${total} matching piece${total !== 1 ? "s" : ""} • All Prices Negotiable`;
       if (toolbarCount) toolbarCount.textContent = `${total} item${total !== 1 ? "s" : ""}`;
 
       if (total === 0) {

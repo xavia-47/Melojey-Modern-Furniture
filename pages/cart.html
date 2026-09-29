@@ -543,6 +543,28 @@
 
     /* ── Mobile Layout (< 860px) ── */
     @media (max-width: 860px) {
+      .cat-header-eyebrow {
+        font-size: 0.66rem;
+        letter-spacing: 0.08em;
+        line-height: 1.4;
+      }
+      .cart-items-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.9rem;
+        padding-bottom: 0.55rem;
+      }
+      .cart-items-header-title {
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+      .btn-clear-cart {
+        font-size: 0.75rem;
+        white-space: nowrap;
+        padding: 0.2rem 0.35rem;
+      }
       .cart-page-wrap {
         padding: 1.25rem 1rem 5.5rem;
       }
@@ -867,7 +889,6 @@
           <span class="modal-price-original" id="modal-price-original"></span>
           <span class="modal-price-negotiable">(negotiable)</span>
         </div>
-        <small class="modal-negotiable-hint">💬 Prices are negotiable. Discuss best offers &amp; finishes on WhatsApp.</small>
         <div class="modal-desc" id="modal-desc"></div>
       </div>
       <div class="modal-actions">
@@ -933,7 +954,7 @@
         <!-- Left: Items List -->
         <div class="cart-items-column">
           <div class="cart-items-header">
-            <span class="cart-items-header-title">Selected Products (${items.length} ${items.length === 1 ? 'item' : 'items'}${totalQty !== items.length ? ` · ${totalQty} total units` : ''})</span>
+            <span class="cart-items-header-title">Selected Products (${totalQty} ${totalQty === 1 ? 'item' : 'items'})</span>
             <button id="btn-clear-cart" class="btn-clear-cart" type="button">Clear Cart</button>
           </div>
 
@@ -1027,7 +1048,7 @@
             <div class="cart-negotiable-callout">
               <div class="callout-icon">💬</div>
               <div>
-                <strong>💬 All Prices Negotiable</strong>
+                <strong>All Prices Negotiable</strong>
                 <span>All listed rates are guide showroom prices. Chat with our showroom managers on WhatsApp to negotiate bulk deals, package discounts, and custom finish options.</span>
               </div>
             </div>

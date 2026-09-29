@@ -237,7 +237,14 @@
   function renderWishlistPage() {
     const wrap = document.getElementById("wishlist-content-wrap");
     const countEl = document.getElementById("wishlist-header-count");
-    const items = MelojeyWishlist.getAll();
+    const savedItems = MelojeyWishlist.getAll();
+    const catalog = (window.MELOJEY_DATA && window.MELOJEY_DATA.ALL_PRODUCTS) || [];
+
+    // Sync saved items with catalog for up-to-date prices, multi-angle images, discounts, and inventory
+    const items = savedItems.map(si => {
+      const match = catalog.find(p => p.id === si.id);
+      return match ? { ...si, ...match } : si;
+    });
 
     if (countEl) countEl.textContent = `${items.length} item${items.length !== 1 ? "s" : ""} saved`;
 
@@ -270,12 +277,24 @@
           const hasDiscount = Boolean(p.discountPct && Number(p.discountPct) > 0);
           const discountPct = hasDiscount ? Math.round(Number(p.discountPct)) : 0;
           const orig = hasDiscount ? (p.originalPrice || Math.round(p.price * (1 + discountPct / 100))) : null;
+          const isSoldOut = Boolean(p.isSoldOut || (typeof p.stock === 'number' && p.stock <= 0));
+          const images = Array.isArray(p.images) && p.images.length > 0 ? p.images : (p.image ? [p.image] : ['../assets/images/logo.png']);
+          const hasMultiple = images.length > 1;
+          const mainImg = images[0].startsWith('../') ? images[0] : (images[0].startsWith('http') ? images[0] : '../' + images[0]);
 
           return `
           <div class="product-card" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${p.name}">
             <div class="card-img-wrap">
-              <img class="card-img" src="${p.image.startsWith('../') ? p.image : (p.image.startsWith('http') ? p.image : '../' + p.image)}" alt="${p.name}" loading="lazy" onerror="this.src='../assets/images/logo.png';" />
-              ${hasDiscount ? `<span class="card-discount-badge">-${discountPct}%</span>` : ''}
+              <img class="card-img" src="${mainImg}" alt="${p.name}" loading="lazy" onerror="this.src='../assets/images/logo.png';" />
+              ${!isSoldOut && hasDiscount ? `<span class="card-discount-badge">-${discountPct}%</span>` : ''}
+              ${hasMultiple ? `
+              <div class="card-angle-dots" aria-label="Product angles">
+                ${images.map((img, i) => {
+                  const resolvedDotSrc = img.startsWith('../') ? img : (img.startsWith('http') ? img : '../' + img);
+                  return `<button type="button" class="card-angle-dot ${i === 0 ? 'active' : ''}" data-idx="${i}" data-src="${resolvedDotSrc}" aria-label="View angle ${i + 1}"></button>`;
+                }).join("")}
+              </div>
+              ` : ''}
               <button class="card-wishlist-btn wishlisted" data-id="${p.id}" type="button" aria-label="Remove from wishlist">★</button>
             </div>
             <div class="card-body">
@@ -289,12 +308,14 @@
                     ${hasDiscount && orig ? `<span class="card-price-original">${fmt(orig)}</span>` : ''}
                   </div>
                 </div>
-                <button class="btn-add-cart" data-id="${p.id}" type="button">Add to Cart</button>
+                <button class="btn-add-cart${isSoldOut ? ' btn-sold-out' : ''}" data-id="${p.id}" type="button"${isSoldOut ? ' disabled' : ''}>
+                  ${isSoldOut ? 'Sold Out' : 'Add to Cart'}
+                </button>
               </div>
             </div>
           </div>
         `;
-        `).join("")}
+        }).join("")}
       </div>
     `;
 
@@ -306,12 +327,29 @@
         const product = items.find(p => p.id === id);
         if (!product) return;
 
+        // Angle preview dots hover / click
+        card.querySelectorAll(".card-angle-dot").forEach(dot => {
+          const switchAngle = e => {
+            e.stopPropagation();
+            const src = dot.getAttribute("data-src");
+            const cardImg = card.querySelector(".card-img");
+            if (src && cardImg) {
+              cardImg.src = src;
+              card.querySelectorAll(".card-angle-dot").forEach(d => d.classList.remove("active"));
+              dot.classList.add("active");
+            }
+          };
+          dot.addEventListener("mouseenter", switchAngle);
+          dot.addEventListener("click", switchAngle);
+        });
+
         // Click body -> open modal
         card.addEventListener("click", e => {
           if (
             e.target.closest(".card-wishlist-btn") ||
             e.target.closest(".btn-add-cart") ||
-            e.target.closest(".qty-stepper")
+            e.target.closest(".qty-stepper") ||
+            e.target.closest(".card-angle-dot")
           ) return;
           openWishlistModal(product);
         });
@@ -431,6 +469,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", renderWishlistPage);
+  window.addEventListener("melojey:products-updated", renderWishlistPage);
 </script>
 <script>
   if ('serviceWorker' in navigator) {

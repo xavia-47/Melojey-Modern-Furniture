@@ -1473,45 +1473,9 @@
   border-radius: 999px;
 }
 
-/* Modal 3-image thumbnail strip */
-.modal-gallery-thumbs {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 10px;
-  width: 100%;
-}
-
+.modal-gallery-thumbs,
 .modal-thumb-btn {
-  width: 62px;
-  height: 48px;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1.5px solid #DDD4C8;
-  background: #F4EFEA;
-  padding: 0;
-  cursor: pointer;
-  transition: all 0.18s ease;
-  flex-shrink: 0;
-}
-
-.modal-thumb-btn img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.modal-thumb-btn:hover {
-  border-color: #C89850;
-  transform: translateY(-2px);
-}
-
-.modal-thumb-btn.active {
-  border-color: #C89850;
-  box-shadow: 0 0 0 2px rgba(200, 152, 80, 0.4);
-  transform: translateY(-2px);
+  display: none !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1556,28 +1520,12 @@
 }
 
 .modal-negotiable-hint {
-  display: block;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.75rem;
-  color: #7A6A5A;
-  margin-top: 0.35rem;
-  line-height: 1.4;
+  display: none !important;
 }
 
 /* Category header negotiable pill */
 .cat-negotiable-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.76rem;
-  font-weight: 700;
-  color: #8C5E28;
-  background: #FFF8EE;
-  border: 1px solid #E2D0B6;
-  padding: 0.25rem 0.85rem;
-  border-radius: 999px;
-  margin-top: 0.5rem;
+  display: none !important;
 }
 
 /* Cart Page Negotiable Banner */

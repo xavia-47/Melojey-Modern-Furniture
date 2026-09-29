@@ -479,14 +479,8 @@ function setupModalGallery(modalContainer, product) {
     imgCol.appendChild(dotsContainer);
   }
 
-  // Ensure interactive 3-image thumbnails container exists
-  let thumbsContainer = imgCol.querySelector(".modal-gallery-thumbs");
-  if (!thumbsContainer) {
-    thumbsContainer = document.createElement("div");
-    thumbsContainer.className = "modal-gallery-thumbs";
-    thumbsContainer.id = "modal-gallery-thumbs";
-    imgCol.appendChild(thumbsContainer);
-  }
+  // Clean up any legacy thumbnail containers
+  imgCol.querySelectorAll(".modal-gallery-thumbs").forEach(el => el.remove());
 
   const angles = getProductAngles(product);
   let currentIndex = 0;
@@ -496,19 +490,11 @@ function setupModalGallery(modalContainer, product) {
   if (nextBtn) nextBtn.style.display = hasMultiple ? "flex" : "none";
   if (counterEl) counterEl.style.display = hasMultiple ? "block" : "none";
   if (dotsContainer) dotsContainer.style.display = hasMultiple ? "flex" : "none";
-  if (thumbsContainer) thumbsContainer.style.display = hasMultiple ? "flex" : "none";
 
   // Build dots
   dotsContainer.innerHTML = angles.map((_, i) =>
     `<span class="modal-dot ${i === 0 ? "active" : ""}" data-idx="${i}" aria-label="Angle ${i + 1}"></span>`
   ).join("");
-
-  // Build 3-image thumbnails
-  thumbsContainer.innerHTML = angles.map((url, i) => `
-    <button type="button" class="modal-thumb-btn ${i === 0 ? "active" : ""}" data-idx="${i}" aria-label="View angle ${i + 1}">
-      <img src="${url}" alt="Thumbnail ${i + 1}" loading="lazy" />
-    </button>
-  `).join("");
 
   function renderAngle(idx, animate = true) {
     if (angles.length === 0) return;
@@ -535,11 +521,6 @@ function setupModalGallery(modalContainer, product) {
     dotsContainer.querySelectorAll(".modal-dot").forEach((d, i) => {
       d.classList.toggle("active", i === currentIndex);
     });
-
-    // Update Thumbnails
-    thumbsContainer.querySelectorAll(".modal-thumb-btn").forEach((t, i) => {
-      t.classList.toggle("active", i === currentIndex);
-    });
   }
 
   // Initial render
@@ -561,14 +542,6 @@ function setupModalGallery(modalContainer, product) {
     d.onclick = e => {
       e.stopPropagation();
       const idx = Number(d.getAttribute("data-idx") || 0);
-      renderAngle(idx, true);
-    };
-  });
-
-  thumbsContainer.querySelectorAll(".modal-thumb-btn").forEach(t => {
-    t.onclick = e => {
-      e.stopPropagation();
-      const idx = Number(t.getAttribute("data-idx") || 0);
       renderAngle(idx, true);
     };
   });
